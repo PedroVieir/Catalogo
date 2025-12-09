@@ -105,6 +105,7 @@ export async function getProductsPaginated(page = 1, limit = 20, filters = {}) {
 
 export async function getConjuntosPaginated(page = 1, limit = 20, filters = {}) {
   const conjuntos = await getAllConjuntos();
+  const products = await getAllProducts();
 
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 20;
@@ -112,31 +113,70 @@ export async function getConjuntosPaginated(page = 1, limit = 20, filters = {}) 
   if (limit > 100) limit = 100;
   if (limit < 1) limit = 1;
 
-  let filtered = conjuntos;
+  // Group by parent (pai) to build conjunto parents with children
+  const parentsMap = new Map();
+  const productMap = new Map(products.map(p => [p.codigo, p]));
 
-  // Filtros simples
+  conjuntos.forEach((row) => {
+    const pai = row.pai;
+    if (!parentsMap.has(pai)) {
+      const prod = productMap.get(pai) || {};
+      parentsMap.set(pai, {
+        codigo: pai,
+        descricao: prod.descricao || pai,
+        grupo: prod.grupo || "",
+        children: []
+      });
+    }
+
+    const parent = parentsMap.get(pai);
+    // Normalize qtd_explosao: treat values like '6.000' as 6, ignore zero quantities
+    let qtd = 1;
+    if (row.qtd_explosao !== undefined && row.qtd_explosao !== null) {
+      const n = Number(row.qtd_explosao);
+      if (!Number.isNaN(n)) {
+        qtd = Math.round(n);
+      }
+    }
+
+    if (qtd > 0) {
+      parent.children.push({
+        filho: row.filho,
+        filho_des: row.filho_des,
+        qtd_explosao: qtd
+      });
+    }
+  });
+
+  // Convert to array of parents
+  let parents = Array.from(parentsMap.values());
+
+  // Apply filters at parent-level: search in parent codigo/descricao or in child codigo/descricao
   if (filters.search) {
     const searchLower = filters.search.toLowerCase();
-    filtered = filtered.filter(c => 
-      c.pai.toLowerCase().includes(searchLower) ||
-      c.filho.toLowerCase().includes(searchLower) ||
-      (c.filho_des && c.filho_des.toLowerCase().includes(searchLower))
-    );
+    parents = parents.filter(parent => {
+      if ((parent.codigo || "").toLowerCase().includes(searchLower)) return true;
+      if ((parent.descricao || "").toLowerCase().includes(searchLower)) return true;
+      // check children
+      return parent.children.some(ch =>
+        (ch.codigo || "").toLowerCase().includes(searchLower) ||
+        (ch.descricao || "").toLowerCase().includes(searchLower)
+      );
+    });
   }
 
   if (filters.grupo) {
-    filtered = filtered.filter(c => c.grupo === filters.grupo);
+    parents = parents.filter(p => p.grupo === filters.grupo);
   }
 
-  // Calcular paginação
-  const total = filtered.length;
+  const total = parents.length;
   const totalPages = Math.ceil(total / limit) || 1;
   const offset = (page - 1) * limit;
 
-  const paginated = filtered.slice(offset, offset + limit);
+  const paginatedParents = parents.slice(offset, offset + limit);
 
   return {
-    data: paginated,
+    data: paginatedParents,
     pagination: {
       page,
       limit,
