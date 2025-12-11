@@ -1,0 +1,262 @@
+/* Galeria de Conjuntos */
+.conjunto-gallery {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  margin-top: 2rem;
+  border: 1px solid var(--color-border);
+}
+
+.conjunto-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--accent);
+}
+
+.conjunto-header h2 {
+  font-size: 1.5rem;
+  color: #0052a3;
+  margin: 0;
+  font-weight: 600;
+}
+
+.conjunto-count {
+  background: var(--accent);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Grid de Peças */
+.conjunto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.5rem;
+}
+
+.conjunto-item {
+  cursor: pointer;
+}
+
+.conjunto-item {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--primary);
+  overflow: hidden;
+  transition: all 0.3s ease-out;
+  height: 100%;
+}
+
+.conjunto-item:hover {
+  border-color: var(--accent);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Imagem da Peça */
+.conjunto-item-image {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #f5f7fb 0%, #ffffff 100%);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.conjunto-item-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  padding: 0.75rem;
+}
+
+.conjunto-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f3f7 0%, #e8eaee 100%);
+  color: var(--color-text-muted);
+}
+
+.placeholder-icon {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+/* Informações da Peça */
+.conjunto-item-info {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 0.6rem;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.conjunto-codigo {
+  font-size: 0.95rem;
+  color: #fff;
+  font-weight: 700;
+  word-break: break-word;
+  background: var(--primary);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.conjunto-codigo strong {
+  display: block;
+  font-family: "Courier New", monospace;
+  font-size: 0.9rem;
+}
+
+.conjunto-descricao {
+  font-size: 0.8rem;
+  color: #003d99;
+  line-height: 1.3;
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conjunto-quantidade {
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+}
+
+.qtd-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .conjunto-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .conjunto-item-image {
+    height: 120px;
+  }
+
+  .conjunto-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .conjunto-header h2 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .conjunto-gallery {
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .conjunto-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+  }
+
+  .conjunto-item {
+    border-radius: var(--radius-sm);
+  }
+
+  .conjunto-item-image {
+    height: 100px;
+  }
+
+  .conjunto-item-info {
+    padding: 0.75rem;
+    gap: 0.4rem;
+  }
+
+  .conjunto-codigo strong {
+    font-size: 0.8rem;
+  }
+
+  .conjunto-descricao {
+    font-size: 0.75rem;
+  }
+
+  .conjunto-header h2 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .conjunto-gallery {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .conjunto-header {
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .conjunto-header h2 {
+    font-size: 1rem;
+    flex: 1;
+  }
+
+  .conjunto-count {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .conjunto-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .conjunto-item-image {
+    height: 80px;
+  }
+
+  .conjunto-item-info {
+    padding: 0.6rem;
+    gap: 0.3rem;
+  }
+
+  .placeholder-icon {
+    font-size: 1.8rem;
+  }
+
+  .conjunto-descricao {
+    font-size: 0.7rem;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+
+  .qtd-badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}

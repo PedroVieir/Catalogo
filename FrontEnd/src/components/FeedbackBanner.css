@@ -1,0 +1,12 @@
+.feedback-banner{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.06);background:#fff;color:#1f2937;margin:12px 0;border:1px solid #e5e7eb}
+.feedback-banner__content{display:flex;gap:12px;align-items:flex-start}
+.feedback-banner__icon{flex:0 0 28px;color:#3b82f6}
+.feedback-banner__title{margin:0;font-size:15px}
+.feedback-banner__message{margin:0;font-size:14px;color:#374151}
+.feedback-banner__actions{display:flex;gap:8px;align-items:center}
+.feedback-banner__action-btn{background:#111827;color:#fff;border:none;padding:6px 10px;border-radius:6px;cursor:pointer}
+.feedback-banner__close{background:transparent;border:none;cursor:pointer;color:rgba(31,41,55,0.6)}
+.feedback-banner--success{border-left:4px solid #10b981}
+.feedback-banner--error{border-left:4px solid #ef4444}
+.feedback-banner--warning{border-left:4px solid #f59e0b}
+.feedback-banner--info{border-left:4px solid #3b82f6}
