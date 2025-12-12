@@ -371,7 +371,7 @@ function CatalogPage() {
       <main className="catalog-main">
         <div className="page-header-row">
           <h1 id="title">Catálogo Eletrônico ABR</h1>
-          <a href="https://abr.ind.br/" className="abr-back-link">
+          <a href="https://abr-ind.vercel.app/" className="abr-back-link">
             <span className="abr-back-link-icon" aria-hidden="true">←</span>
             <span>Site ABR</span>
           </a>

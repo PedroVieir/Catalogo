@@ -141,8 +141,8 @@ function ProductDetailsPage() {
                       onError={() => setImageError(true)}
                       loading="lazy"
                       onClick={() => setLightboxOpen(true)}
-                      style={{ cursor: "pointer" }}
-                      title="Clique para ampliar a imagem"
+                      style={{ cursor: 'pointer' }}
+                      title="Clique para ampliar"
                     />
                   ) : (
                     <div className="product-image-placeholder">
@@ -202,16 +202,14 @@ function ProductDetailsPage() {
         )}
       </main>
 
-      {product && (
-        <ImageLightbox
-          isOpen={lightboxOpen}
-          imageSrc={`/vista/${encodeURIComponent(product.codigo)}.jpg`}
-          alt={`${product.codigo} - ${product.descricao}`}
-          onClose={() => setLightboxOpen(false)}
-        />
-      )}
-
       <footer>COPYRIGHT 2014 ABR IND. ALL RIGHTS RESERVED.</footer>
+
+      <ImageLightbox
+        isOpen={lightboxOpen}
+        imageSrc={product ? `/vista/${encodeURIComponent(product.codigo)}.jpg` : ""}
+        alt={product ? `${product.codigo} - ${product.descricao}` : ""}
+        onClose={() => setLightboxOpen(false)}
+      />
     </>
   );
 }
