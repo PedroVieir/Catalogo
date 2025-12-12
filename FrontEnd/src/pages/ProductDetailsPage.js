@@ -94,6 +94,23 @@ function ProductDetailsPage() {
     }
   };
 
+  const handlePieceClick = (codigo) => {
+    if (!codigo) return;
+    try {
+      // close lightbox if open
+      setLightboxOpen(false);
+    } catch (e) {
+      // ignore
+    }
+
+    // navigate to product details route for the clicked piece
+    try {
+      navigate(`/produtos/${encodeURIComponent(String(codigo))}`);
+    } catch (e) {
+      console.error('Erro ao navegar para produto do conjunto:', e);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -188,7 +205,7 @@ function ProductDetailsPage() {
             </section>
 
             {conjuntos && conjuntos.length > 0 && (
-              <ConjuntoGallery conjuntos={conjuntos} />
+              <ConjuntoGallery conjuntos={conjuntos} onPieceClick={handlePieceClick} />
             )}
           </div>
         )}
