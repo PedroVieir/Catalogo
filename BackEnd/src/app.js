@@ -6,6 +6,7 @@ import productRoutes from "./routes/productRoutes.js";
 import { notFound } from "./middlewares/notFound.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { getPoolStatus } from "./config/db.js";
+import { preloadCatalog } from "./services/productService.js";
 
 dotenv.config();
 
@@ -26,9 +27,21 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // Middleware de logging de requisições (em produção, usar Winston ou Morgan)
+// Middleware de request id e logging enriquecido
 app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.path}`);
+  // Simple request id for traceability
+  req.id = `${Date.now().toString(36)}-${Math.floor(Math.random() * 10000)}`;
+  const start = Date.now();
+
+  // Only essential request completion logging (status + duration)
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    const msg = `[REQ ${req.id}] ${req.method} ${req.path} ${res.statusCode} ${duration}ms`;
+    if (res.statusCode >= 500) console.error(msg);
+    else if (res.statusCode >= 400) console.warn(msg);
+    else console.log(msg);
+  });
+
   next();
 });
 
@@ -54,5 +67,10 @@ app.use(notFound);
 
 // Middleware de tratamento de erros (deve ser o último)
 app.use(errorHandler);
+
+// Preload catalog once at startup (best-effort)
+preloadCatalog().catch(err => {
+  console.error('Erro no preload do catálogo:', err?.message || err);
+});
 
 export default app;

@@ -123,16 +123,14 @@
 }
 
 .conjunto-descricao {
-  font-size: 0.8rem;
-  color: #003d99;
-  line-height: 1.3;
+  font-size: 0.95rem;
+  color: #00275a;
+  line-height: 1.35;
   font-weight: 600;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: block;
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .conjunto-quantidade {
@@ -202,10 +200,33 @@
 
   .conjunto-descricao {
     font-size: 0.75rem;
+    /* on small screens keep it short */
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .conjunto-header h2 {
     font-size: 1.1rem;
+  }
+}
+
+/* Desktop: force 3 columns and allow description to display fully */
+@media (min-width: 1000px) {
+  .conjunto-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .conjunto-item {
+    min-height: 220px;
+  }
+
+  .conjunto-descricao {
+    font-size: 0.95rem;
+    -webkit-line-clamp: unset;
+    display: block;
   }
 }
 
@@ -231,13 +252,26 @@
     font-size: 0.8rem;
   }
 
+  /* Switch to single-column list with horizontal items for natural mobile flow */
   .conjunto-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: 1fr;
     gap: 0.75rem;
   }
 
+  .conjunto-item {
+    display:flex;
+    flex-direction:row;
+    gap:0.6rem;
+    align-items:center;
+  }
+
   .conjunto-item-image {
-    height: 80px;
+    width:84px;
+    height:84px;
+    flex:0 0 84px;
+    border-right:1px solid var(--color-border);
+    padding:0.25rem;
+    box-sizing:border-box;
   }
 
   .conjunto-item-info {
@@ -250,9 +284,11 @@
   }
 
   .conjunto-descricao {
-    font-size: 0.7rem;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
+    font-size: 0.8rem;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .qtd-badge {

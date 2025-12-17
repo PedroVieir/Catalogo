@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ProductList.css";
+import DescriptionModal from "./DescriptionModal";
 
 function ProductList({ items = [], loading = false, onConjuntoSelect, isConjuntosView = false }) {
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState({ title: '', description: '' });
 
   if (loading) {
     return (
@@ -49,6 +52,9 @@ function ProductList({ items = [], loading = false, onConjuntoSelect, isConjunto
                 <div className="pl-code" title={p.codigo}>{p.codigo}</div>
                 <div className="pl-desc" title={p.descricao}>{p.descricao}</div>
                 <div className="pl-group">{p.grupo || "-"}</div>
+                <div className="pl-meta-actions">
+                  <button className="pl-small-btn" onClick={() => { setModalData({ title: p.descricao || p.codigo, description: p.descricao || 'Sem descrição' }); setModalOpen(true); }} aria-label={`Ver descrição ${p.codigo}`}>Ver descrição</button>
+                </div>
               </div>
             </header>
 
@@ -108,6 +114,7 @@ function ProductList({ items = [], loading = false, onConjuntoSelect, isConjunto
           </article>
         );
       })}
+        <DescriptionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={modalData.title} description={modalData.description} />
     </div>
   );
 }

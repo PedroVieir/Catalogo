@@ -57,7 +57,18 @@ export async function query(sql, params = [], retryCount = 2) {
       throw new Error("SQL deve ser uma string não-vazia");
     }
 
+    const start = Date.now();
+    if (process.env.SQL_DEBUG === 'true') {
+      console.debug(`SQL START (${new Date().toISOString()}): ${sql.substring(0, 200)} params=${params.length}`);
+    }
+
     const [rows] = await pool.query(sql, params);
+
+    const duration = Date.now() - start;
+    if (process.env.SQL_DEBUG === 'true') {
+      console.debug(`SQL OK (${duration}ms): returned ${Array.isArray(rows) ? rows.length : 'n/a'} rows`);
+    }
+
     return rows;
   } catch (error) {
     // Classificar tipo de erro

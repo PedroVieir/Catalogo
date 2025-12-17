@@ -91,8 +91,11 @@ function ProductTable({ products, onConjuntoSelect, loading = false, initialExpa
           </thead>
           <tbody>
             {products.map((p, index) => {
-              const hasConjuntos =
-                p.conjuntos && Array.isArray(p.conjuntos) && p.conjuntos.length > 0;
+              const validConjuntos = p.conjuntos && Array.isArray(p.conjuntos)
+                ? p.conjuntos.filter((c) => c && c.filho && String(c.filho).trim() !== "")
+                : [];
+
+              const hasConjuntos = validConjuntos.length > 0;
 
               const keyBase = p.codigo || `item-${index}`;
 
@@ -130,12 +133,12 @@ function ProductTable({ products, onConjuntoSelect, loading = false, initialExpa
                         </div>
 
                         {hasConjuntos && (
-                          <span className="conjunto-count-badge" title={`${p.conjuntos.length} peça(s) neste conjunto`}>
+                          <span className="conjunto-count-badge" title={`${validConjuntos.length} peça(s) neste conjunto`}>
                             <svg className="icon-outline badge-svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
                               <rect x="3" y="7" width="18" height="10" rx="2" ry="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
                               <path d="M3 7l9 5 9-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
                             </svg>
-                            <span className="badge-number">{p.conjuntos.length}</span>
+                            <span className="badge-number">{validConjuntos.length}</span>
                           </span>
                         )}
                       </div>
@@ -191,10 +194,10 @@ function ProductTable({ products, onConjuntoSelect, loading = false, initialExpa
                         <div className="conjunto-container">
                           <div className="conjunto-header">
                             <h3>Peças do Conjunto: <strong>{p.codigo}</strong></h3>
-                            <span className="piece-count">({p.conjuntos.length} peça{p.conjuntos.length !== 1 ? 's' : ''})</span>
+                            <span className="piece-count">({validConjuntos.length} peça{validConjuntos.length !== 1 ? 's' : ''})</span>
                           </div>
                           <ConjuntoGallery
-                            conjuntos={p.conjuntos}
+                            conjuntos={validConjuntos}
                             onPieceClick={handlePieceClick}
                           />
                         </div>

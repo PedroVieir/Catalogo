@@ -103,7 +103,7 @@ export function filterAndSortProducts(products, filters) {
 
   // Filtro por tipo (conjunto ou produto simples)
   if (filters.isConjunto !== null) {
-    const hasConjuntos = (p) => p.conjuntos && p.conjuntos.length > 0;
+    const hasConjuntos = (p) => p.conjuntos && Array.isArray(p.conjuntos) && p.conjuntos.some((c) => c && c.filho && String(c.filho).trim() !== "");
     if (filters.isConjunto) {
       filtered = filtered.filter(hasConjuntos);
     } else {

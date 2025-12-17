@@ -27,7 +27,10 @@ export async function listProductsPaginated(req, res, next) {
     const filters = {
       search: req.query.search || "",
       grupo: req.query.grupo || "",
-      subgrupo: req.query.subgrupo || ""
+      subgrupo: req.query.subgrupo || "",
+      fabricante: req.query.fabricante || "",
+      tipoVeiculo: req.query.tipoVeiculo || "",
+      numero_original: req.query.numero_original || ""
     };
 
     const result = await getProductsPaginated(page, limit, filters);
@@ -60,7 +63,9 @@ export async function listConjuntosPaginated(req, res, next) {
     const limit = req.query.limit || 20;
     const filters = {
       search: req.query.search || "",
-      grupo: req.query.grupo || ""
+      grupo: req.query.grupo || "",
+      fabricante: req.query.fabricante || "",
+      tipoVeiculo: req.query.tipoVeiculo || ""
     };
 
     const result = await getConjuntosPaginated(page, limit, filters);
@@ -90,7 +95,8 @@ export async function getConjuntoDetails(req, res, next) {
 export async function listFilters(req, res, next) {
   try {
     const filters = await getAvailableFilters();
-    res.json({ data: filters });
+    // retornar objeto diretamente para compatibilidade com frontend
+    res.json(filters);
   } catch (err) {
     next(err);
   }
@@ -99,6 +105,7 @@ export async function listFilters(req, res, next) {
 export async function getCatalogStatus(req, res, next) {
   try {
     const stats = await getCatalogStats();
+    // retornar estatísticas com chaves esperadas pelo frontend
     res.json(stats);
   } catch (err) {
     next(err);

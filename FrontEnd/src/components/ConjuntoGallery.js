@@ -4,6 +4,14 @@ import "../styles/ConjuntoGallery.css";
 function ConjuntoGallery({ conjuntos = [], onPieceClick }) {
   const [imageErrors, setImageErrors] = useState({});
 
+  // Log incoming data for debugging: show backend payload and what will be rendered
+  if (process.env.NODE_ENV === 'development') {
+    // Use console.group for nicer grouping in browser dev tools
+    console.group && console.group('ConjuntoGallery');
+    console.log('ConjuntoGallery: conjuntos (raw from backend):', conjuntos);
+    console.groupEnd && console.groupEnd('ConjuntoGallery');
+  }
+
   const handleImageError = (codigo) => {
     setImageErrors((prev) => ({
       ...prev,
@@ -15,6 +23,15 @@ function ConjuntoGallery({ conjuntos = [], onPieceClick }) {
     return null;
   }
 
+  const validPieces = conjuntos.filter((p) => p && p.filho && String(p.filho).trim() !== "");
+  if (process.env.NODE_ENV === 'development') {
+    console.log('ConjuntoGallery: validPieces to render (filtered):', validPieces);
+    if (Array.isArray(conjuntos)) {
+      console.log(`ConjuntoGallery: counts -> raw: ${conjuntos.length}, filtered: ${validPieces.length}`);
+    }
+  }
+  if (validPieces.length === 0) return null;
+
   return (
     <section className="conjunto-gallery">
       <div className="conjunto-header">
@@ -23,7 +40,7 @@ function ConjuntoGallery({ conjuntos = [], onPieceClick }) {
       </div>
 
       <div className="conjunto-grid">
-        {conjuntos.map((peca, idx) => {
+        {validPieces.map((peca, idx) => {
           const codigo = peca.filho || "";
           const hasError = imageErrors[codigo];
 

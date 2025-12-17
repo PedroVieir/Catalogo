@@ -1,21 +1,25 @@
 .pl-grid{
   display:grid;
   grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
-  gap:16px;
-  padding:8px 12px;
+  gap:20px;
+  padding:12px;
+  align-items:start;
 }
 
 .pl-card{
-  background:#fff;
-  border:2px solid var(--primary);
-  border-radius:8px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  background: linear-gradient(180deg,#ffffff,#fbfdff);
+  border:0;
+  border-radius:14px;
+  box-shadow: 0 10px 30px rgba(12,20,30,0.06);
   overflow:hidden;
   display:flex;
   flex-direction:column;
-  min-height:120px;
-  color: #000; /* ensure all text inside card is black */
+  min-height:260px; /* fixed card height for consistent layout */
+  transition: transform 200ms cubic-bezier(.16,.84,.44,1), box-shadow 200ms;
+  color: var(--color-text);
 }
+
+.pl-card:hover{transform:translateY(-8px);box-shadow:0 28px 60px rgba(12,20,30,0.12)}
 
 .pl-card.skeleton{
   animation: pulse 1.2s infinite ease-in-out;
@@ -35,10 +39,10 @@
 }
 
 .pl-thumb-wrapper{
-  width:72px;
-  height:72px;
-  background: #f4f4f4;
-  border-radius:6px;
+  width:120px;
+  height:120px;
+  background: linear-gradient(180deg,#f8fafc,#f0f3f6);
+  border-radius:12px;
   overflow:hidden;
   display:flex;
   align-items:center;
@@ -82,15 +86,17 @@
 }
 
 .pl-desc{
-  font-size:14px;
+  font-size:15px;
   font-weight:700;
-  color:#000;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
+  color:var(--color-text);
+  max-height:4.8rem; /* approx 3 lines */
+  overflow:auto;
+  line-height:1.3rem;
+  padding-right:6px;
 }
+
+.pl-desc::-webkit-scrollbar{width:8px;height:8px}
+.pl-desc::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.08);border-radius:6px}
 
 .pl-group{
   font-size:12px;
@@ -104,6 +110,13 @@
   padding:8px 12px 12px 12px;
   align-items:center;
 }
+
+.pl-meta-actions{margin-top:8px}
+.pl-small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 8px;border-radius:6px;font-size:12px;cursor:pointer}
+.pl-small-btn:hover{background:rgba(0,0,0,0.03)}
+
+.pl-meta-actions{display:flex;gap:8px;margin-top:8px}
+.pl-tag{background:var(--primary-light);color:var(--primary);padding:4px 8px;border-radius:999px;font-weight:700;font-size:12px}
 
 .pl-action{
   display:inline-flex;
@@ -155,9 +168,21 @@
 
 /* responsive adjustments */
 @media (max-width:600px){
-  .pl-grid{grid-template-columns: repeat(auto-fill,minmax(160px,1fr));gap:10px}
-  .pl-actions{flex-direction:column;align-items:stretch}
-  .pl-action{width:100%;justify-content:center}
+  .pl-grid{grid-template-columns: 1fr; gap:10px; padding:10px}
+  .pl-card{flex-direction:row;align-items:center;padding:10px;min-height:88px}
+  .pl-card-header{padding:0;gap:12px;align-items:center}
+  .pl-thumb-wrapper{width:84px;height:84px;border-radius:8px}
+  .pl-meta{gap:4px}
+  .pl-desc{max-height:none;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.2rem;font-weight:600}
+  .pl-actions{display:flex;gap:8px;align-items:center}
+  .pl-action{padding:6px 10px;font-size:13px}
+}
+
+/* Keep mobile card minimal: description + primary details button */
+@media (max-width:600px){
+  .pl-code, .pl-group { display: none; }
+  .pl-meta-actions { display:none }
+  .pl-piece-count { display:none }
 }
 
 /* Force card background/text to avoid unexpected overrides from other styles */
@@ -172,4 +197,9 @@
 
 .pl-thumb-wrapper {
   background: #f4f4f4 !important;
+}
+
+/* Desktop: enforce 3 columns for clean professional layout */
+@media (min-width:900px){
+  .pl-grid{grid-template-columns: repeat(3, 1fr);}
 }

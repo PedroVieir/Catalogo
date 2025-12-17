@@ -76,6 +76,46 @@ function FilterModal({ isOpen, onClose, currentFilters, onFilterChange, availabl
           </div>
 
           <div className="filter-group">
+            <label>Fabricante</label>
+            <select
+              value={currentFilters.fabricante || ""}
+              onChange={(e) => onFilterChange("fabricante", e.target.value)}
+              className="filter-select"
+            >
+              <option value="">Todos os fabricantes</option>
+              {availableFilters.fabricantes?.map(f => {
+                const name = (typeof f === 'string') ? f : (f && f.name ? f.name : '');
+                const count = (f && typeof f === 'object' && Number.isFinite(Number(f.count))) ? Number(f.count) : 0;
+                return (
+                  <option key={name} value={name}>{name}{count ? ` (${count})` : ''}</option>
+                );
+              })}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>Tipo de veículo</label>
+            <select
+              value={currentFilters.tipoVeiculo || ""}
+              onChange={(e) => onFilterChange("tipoVeiculo", e.target.value)}
+              className="filter-select"
+            >
+              <option value="">Todos os tipos</option>
+              {availableFilters.vehicleTypes?.map(sigla => {
+                const labelMap = {
+                  VLL: 'Veículo - Linha Leve (VLL)',
+                  VLP: 'Veículo - Linha Pesada (VLP)',
+                  MLL: 'Motor - Linha Leve (MLL)',
+                  MLP: 'Motor - Linha Pesada (MLP)'
+                };
+                const upper = String(sigla).toUpperCase();
+                const label = labelMap[upper] || upper;
+                return <option key={upper} value={upper}>{label}</option>;
+              })}
+            </select>
+          </div>
+
+          <div className="filter-group">
             <label>Ordenar Por</label>
             <select
               value={currentFilters.sortBy}

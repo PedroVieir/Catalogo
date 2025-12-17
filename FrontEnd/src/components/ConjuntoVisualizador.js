@@ -8,6 +8,9 @@ function ConjuntoVisualizador({ conjuntos, parentCode }) {
     return null;
   }
 
+  const validItems = conjuntos.filter((it) => it && it.filho && String(it.filho).trim() !== "");
+  if (validItems.length === 0) return null;
+
   const handleProductClick = (productCode) => {
     navigate(`/produtos/${encodeURIComponent(productCode)}`);
   };
@@ -17,19 +20,19 @@ function ConjuntoVisualizador({ conjuntos, parentCode }) {
       <h3 className="conjunto-titulo">Peças do Conjunto: {parentCode}</h3>
       
       <div className="conjunto-grid">
-        {conjuntos.map((item) => {
+        {validItems.map((item, idx) => {
           const { filho, filho_des, qtd_explosao, childProduct } = item;
           
           return (
             <div
-              key={filho}
+              key={(filho ? `${filho}` : `item-${idx}`)}
               className="conjunto-item"
-              onClick={() => handleProductClick(filho)}
+              onClick={() => filho && handleProductClick(filho)}
               role="button"
               tabIndex="0"
               onKeyPress={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
-                  handleProductClick(filho);
+                    filho && handleProductClick(filho);
                 }
               }}
             >
