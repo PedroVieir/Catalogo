@@ -15,7 +15,7 @@ function ProductDetailsPage() {
   const { code } = useParams();
   const navigate = useNavigate();
   const notify = useNotification();
-  const { catalogState, preloadState } = useCatalogState();
+  const { catalogState, preloadState, getFromProductsCache } = useCatalogState();
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,8 +33,15 @@ function ProductDetailsPage() {
         throw new Error("Código do produto inválido");
       }
 
-      // If we have a preloaded snapshot, use it for instant details
+      // First, try to get from products cache
       let usedSnapshot = false;
+      const cachedProduct = getFromProductsCache(code);
+      if (cachedProduct) {
+        setData({ data: { product: cachedProduct, conjuntos: [], aplicacoes: [], benchmarks: [] } });
+        usedSnapshot = true;
+      }
+
+      // If we have a preloaded snapshot, use it for instant details
 
       if (preloadState && preloadState.loaded && preloadState.snapshot) {
         const snap = preloadState.snapshot;

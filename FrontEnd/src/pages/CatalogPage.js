@@ -13,7 +13,7 @@ import {
 import { useCatalogState } from "../contexts/CatalogContext";
 
 function CatalogPage() {
-  const { catalogState, updateCatalogState, preloadState } = useCatalogState();
+  const { catalogState, updateCatalogState, preloadState, addToProductsCache, filtersLoading } = useCatalogState();
   // notification helper (unused currently)
   // const notify = useNotification();
   const PAGE_LIMIT = 50;
@@ -39,6 +39,7 @@ function CatalogPage() {
   const [error, setError] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [imageErrors, setImageErrors] = useState({});
+  const [filtersLoaded, setFiltersLoaded] = useState(false);
 
   const activeFiltersCount = Object.values(catalogState.currentFilters || {})
     .filter(v => v && v !== "").length;
@@ -361,6 +362,11 @@ function CatalogPage() {
       setProducts(items);
       setPagination(paginationResp);
       setImageErrors({});
+
+      // Add loaded products to cache
+      if (items.length > 0) {
+        addToProductsCache(items);
+      }
     } catch (err) {
       const errorMsg = err?.message || "Unknown error";
       setError(errorMsg);
@@ -378,13 +384,17 @@ function CatalogPage() {
 
   // Load filters on mount
   useEffect(() => {
-    // If a preloaded snapshot exists in context, derive filters from it.
-    if (preloadState && preloadState.loaded && preloadState.availableFilters) {
+    // If preload has loaded filters, use them
+    if (preloadState.loaded && preloadState.availableFilters) {
       setAvailableFilters(preloadState.availableFilters);
+      setFiltersLoaded(true);
       return;
     }
 
-    // Otherwise do a best-effort load (backwards compatibility)
+    // If still loading, wait
+    if (filtersLoading) return;
+
+    // Fallback (should not reach here normally)
     async function loadFiltersFallback() {
       try {
         await seedFabricantes();
@@ -405,14 +415,16 @@ function CatalogPage() {
           fabricantes: Array.isArray(data.fabricantes) ? data.fabricantes : [],
           vehicleTypes: Array.isArray(data.vehicleTypes) ? data.vehicleTypes : ['Leve','Pesado']
         });
+        setFiltersLoaded(true);
       } catch (err) {
         console.warn('Error loading filters (fallback):', err.message);
         setAvailableFilters({ grupos: [], subgrupos: [] });
+        setFiltersLoaded(true);
       }
     }
 
     loadFiltersFallback();
-  }, []);
+  }, [preloadState.loaded, preloadState.availableFilters, filtersLoading]);
 
   // Reload products when filters change
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -663,8 +675,9 @@ function CatalogPage() {
                   value={catalogState.currentFilters.grupo}
                   onChange={(e) => handleFilterChange("grupo", e.target.value)}
                   className="filter-select"
+                  disabled={!filtersLoaded}
                 >
-                  <option value="">Todos os grupos</option>
+                  <option value="">{filtersLoaded ? "Todos os grupos" : "Carregando..."}</option>
                   {availableFilters.grupos?.map(grupo => (
                     <option key={grupo} value={grupo}>{grupo}</option>
                   ))}
@@ -677,8 +690,9 @@ function CatalogPage() {
                   value={catalogState.currentFilters.subgrupo}
                   onChange={(e) => handleFilterChange("subgrupo", e.target.value)}
                   className="filter-select"
+                  disabled={!filtersLoaded}
                 >
-                  <option value="">Todos os subgrupos</option>
+                  <option value="">{filtersLoaded ? "Todos os subgrupos" : "Carregando..."}</option>
                   {availableFilters.subgrupos?.map(subgrupo => (
                     <option key={subgrupo} value={subgrupo}>{subgrupo}</option>
                   ))}
@@ -691,8 +705,9 @@ function CatalogPage() {
                   value={catalogState.currentFilters.fabricante || ""}
                   onChange={(e) => handleFilterChange("fabricante", e.target.value)}
                   className="filter-select"
+                  disabled={!filtersLoaded}
                 >
-                  <option value="">Todos os fabricantes</option>
+                  <option value="">{filtersLoaded ? "Todos os fabricantes" : "Carregando..."}</option>
                   {availableFilters.fabricantes?.map(f => {
                     const name = (typeof f === 'string') ? f : (f && f.name ? f.name : '');
                     const count = (f && typeof f === 'object' && Number.isFinite(Number(f.count))) ? Number(f.count) : 0;
@@ -709,8 +724,9 @@ function CatalogPage() {
                   value={catalogState.currentFilters.tipoVeiculo || ""}
                   onChange={(e) => handleFilterChange("tipoVeiculo", e.target.value)}
                   className="filter-select"
+                  disabled={!filtersLoaded}
                 >
-                  <option value="">Todos os tipos</option>
+                  <option value="">{filtersLoaded ? "Todos os tipos" : "Carregando..."}</option>
                   {availableFilters.vehicleTypes?.map(sigla => {
                     const labelMap = {
                       VLL: 'Veículo - Linha Leve (VLL)',
