@@ -2,6 +2,7 @@ import {
   searchProducts, 
   getProductWithConjuntos, 
   getConjuntoWithProducts, 
+  getCatalogSnapshot,
   getAvailableFilters,
   getProductsPaginated,
   getConjuntosPaginated,
@@ -85,6 +86,15 @@ export async function getConjuntoDetails(req, res, next) {
     }
 
     res.json({ data: result });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getCatalogSnapshotController(req, res, next) {
+  try {
+    const snapshot = await getCatalogSnapshot();
+    res.json({ data: snapshot });
   } catch (err) {
     next(err);
   }

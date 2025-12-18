@@ -13,7 +13,7 @@ import {
 import { useCatalogState } from "../contexts/CatalogContext";
 
 function CatalogPage() {
-  const { catalogState, updateCatalogState } = useCatalogState();
+  const { catalogState, updateCatalogState, preloadState } = useCatalogState();
   // notification helper (unused currently)
   // const notify = useNotification();
   const PAGE_LIMIT = 50;
@@ -33,6 +33,7 @@ function CatalogPage() {
     fabricantes: [],
     vehicleTypes: []
   });
+  
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -46,6 +47,15 @@ function CatalogPage() {
     try {
       setLoading(true);
       setError("");
+
+      // If preload is in progress, wait briefly (up to 3s) for it to finish so we can use snapshot
+      if (preloadState && preloadState.loading && !preloadState.loaded) {
+        const startWait = Date.now();
+        while (preloadState.loading && !preloadState.loaded && Date.now() - startWait < 3000) {
+          // eslint-disable-next-line no-await-in-loop
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      }
 
       const validPage = Math.max(1, Math.floor(page) || 1);
       const filters = {
@@ -65,6 +75,164 @@ function CatalogPage() {
       };
 
       try {
+        // If we have a preloaded snapshot on context and it's fresh, use it to build the initial list
+        if (preloadState && preloadState.loaded && preloadState.snapshot) {
+          const snap = preloadState.snapshot;
+          let itemsFromSnap = Array.isArray(snap.products) ? snap.products.slice() : [];
+
+          // Apply the same filters as the server (search, grupo, numero_original, fabricante/tipoVeiculo)
+          if (filters.search) {
+            const sf = filters.search.toLowerCase();
+            itemsFromSnap = itemsFromSnap.filter(p => (p.codigo || '').toLowerCase().includes(sf) || (p.descricao || '').toLowerCase().includes(sf));
+          }
+          if (filters.grupo) {
+            itemsFromSnap = itemsFromSnap.filter(p => p.grupo === filters.grupo);
+          }
+
+          // For fabricante / tipoVeiculo we need to consult aplicacoes to find matching conjuntos
+          if (filters.fabricante || filters.tipoVeiculo) {
+            const aplic = Array.isArray(snap.aplicacoes) ? snap.aplicacoes : [];
+            const fabricanteFilter = filters.fabricante ? (txt => (txt || '').toLowerCase().includes(filters.fabricante.toLowerCase())) : () => true;
+
+            const matchingConjuntos = new Set();
+            aplic.forEach(a => {
+              const fabricaMatch = fabricanteFilter(a.fabricante || '');
+              const tipoMatch = !filters.tipoVeiculo || (a.tipo || a.tipoVeiculo || '').toString().toUpperCase() === (filters.tipoVeiculo || '').toString().toUpperCase();
+              if (fabricaMatch && tipoMatch) matchingConjuntos.add((a.codigo_conjunto || '').toString().replace(/\s+/g, '').toUpperCase());
+            });
+
+            itemsFromSnap = itemsFromSnap.filter(p => matchingConjuntos.has((p.codigo || '').toString().replace(/\s+/g, '').toUpperCase()));
+          }
+
+          // Transform items to the UI shape (as before)
+          itemsFromSnap = itemsFromSnap.map(it => ({
+            codigo: String(it.codigo || it.code || it.id || '').trim(),
+            descricao: String(it.descricao || it.desc || it.nome || '').trim(),
+            grupo: it.grupo || '',
+            subgrupo: it.subgrupo || '',
+            tipo: 'produto',
+            ...it
+          })).filter(it => it.codigo && it.descricao);
+
+          // Sorting
+          const sortBy = catalogState?.currentFilters?.sortBy || 'codigo';
+          if (sortBy === 'descricao') {
+            itemsFromSnap.sort((a,b) => String(a.descricao||'').localeCompare(String(b.descricao||'')));
+          } else if (sortBy === 'grupo') {
+            itemsFromSnap.sort((a,b) => String(a.grupo||'').localeCompare(String(b.grupo||'')));
+          }
+
+          // Pagination slice
+          const total = itemsFromSnap.length;
+          const totalPages = Math.max(1, Math.ceil(total / PAGE_LIMIT));
+          const offset = (validPage - 1) * PAGE_LIMIT;
+          const pageItems = itemsFromSnap.slice(offset, offset + PAGE_LIMIT);
+
+          items = pageItems;
+          paginationResp = {
+            page: validPage,
+            limit: PAGE_LIMIT,
+            total,
+            totalPages
+          };
+
+          // Populate available filters from preload if available (only if we haven't set them yet locally)
+          if ((!availableFilters || !availableFilters.fabricantes || availableFilters.fabricantes.length === 0) && preloadState.availableFilters) {
+            setAvailableFilters(preloadState.availableFilters);
+          }
+
+        } else {
+          // fallback to API when no snapshot
+          if (catalogState?.currentFilters?.tipo === "conjuntos") {
+            const resp = await fetchConjuntosPaginated(validPage, PAGE_LIMIT, filters);
+            
+            if (!resp) throw new Error("No server response");
+
+            items = Array.isArray(resp.data) ? resp.data : [];
+
+            // Process conjuntos data - handle various possible field names
+            items = items.map(it => {
+              const descricao = it.descricao || it.desc || it.nome || it.description || it.name || "";
+              const codigo = it.codigo || it.id || it.code || "";
+              const grupo = it.grupo || it.category || it.group || "";
+              const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
+              
+              return {
+                codigo: String(codigo).trim(),
+                descricao: String(descricao).trim(),
+                grupo: String(grupo).trim(),
+                subgrupo: String(subgrupo).trim(),
+                tipo: "conjunto",
+                conjuntos: Array.isArray(it.children) ? it.children : [],
+                ...it
+              };
+            }).filter(it => it.codigo && it.descricao);
+
+            if (resp.pagination && typeof resp.pagination === "object") {
+              const total = Math.max(0, parseInt(resp.pagination.total) || 0);
+              const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
+              const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
+              
+              paginationResp = {
+                page: Math.max(1, parseInt(resp.pagination.page) || validPage),
+                limit: limit,
+                total: total,
+                totalPages: Math.max(1, parseInt(resp.pagination.totalPages) || calculatedTotalPages)
+              };
+            }
+          } else {
+            const resp = await fetchProductsPaginated(validPage, PAGE_LIMIT, filters);
+            
+            if (!resp) throw new Error("No server response");
+
+            items = Array.isArray(resp.data) ? resp.data : [];
+            
+            if (catalogState?.currentFilters?.tipo === "produtos") {
+              items = items.filter((p) => !p.conjuntosCount || p.conjuntosCount === 0);
+            }
+
+            // Process products data - handle various possible field names
+            items = items.map(it => {
+              const descricao = it.descricao || it.desc || it.nome || it.description || it.name || "";
+              const codigo = it.codigo || it.id || it.code || "";
+              const grupo = it.grupo || it.category || it.group || "";
+              const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
+              
+              return {
+                codigo: String(codigo).trim(),
+                descricao: String(descricao).trim(),
+                grupo: String(grupo).trim(),
+                subgrupo: String(subgrupo).trim(),
+                tipo: "produto",
+                ...it
+              };
+            }).filter(it => it.codigo && it.descricao);
+
+            const sortBy = catalogState?.currentFilters?.sortBy || "codigo";
+            if (sortBy === "descricao") {
+              items.sort((a, b) => 
+                String(a.descricao || "").localeCompare(String(b.descricao || ""))
+              );
+            } else if (sortBy === "grupo") {
+              items.sort((a, b) => 
+                String(a.grupo || "").localeCompare(String(b.grupo || ""))
+              );
+            }
+
+            if (resp.pagination && typeof resp.pagination === "object") {
+              const total = Math.max(0, parseInt(resp.pagination.total) || 0);
+              const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
+              const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
+              
+              paginationResp = {
+                page: Math.max(1, parseInt(resp.pagination.page) || validPage),
+                limit: limit,
+                total: total,
+                totalPages: Math.max(1, parseInt(resp.pagination.totalPages) || calculatedTotalPages)
+              };
+            }
+          }
+        }
         if (catalogState?.currentFilters?.tipo === "conjuntos") {
           const resp = await fetchConjuntosPaginated(validPage, PAGE_LIMIT, filters);
           
@@ -210,18 +378,23 @@ function CatalogPage() {
 
   // Load filters on mount
   useEffect(() => {
-    async function loadFilters() {
-      // Ensure fabricantes table is seeded in backend so frontend select is consistent
+    // If a preloaded snapshot exists in context, derive filters from it.
+    if (preloadState && preloadState.loaded && preloadState.availableFilters) {
+      setAvailableFilters(preloadState.availableFilters);
+      return;
+    }
+
+    // Otherwise do a best-effort load (backwards compatibility)
+    async function loadFiltersFallback() {
       try {
         await seedFabricantes();
       } catch (err) {
-        // ignore—seed is best-effort and getAvailableFilters also falls back
         console.warn('seedFabricantes failed (ignored):', err.message);
       }
+
       try {
         const data = await fetchFilters();
-        
-        if (!data || typeof data !== "object") {
+        if (!data || typeof data !== 'object') {
           setAvailableFilters({ grupos: [], subgrupos: [], fabricantes: [], vehicleTypes: [] });
           return;
         }
@@ -233,12 +406,12 @@ function CatalogPage() {
           vehicleTypes: Array.isArray(data.vehicleTypes) ? data.vehicleTypes : ['Leve','Pesado']
         });
       } catch (err) {
-        console.warn("Error loading filters:", err.message);
+        console.warn('Error loading filters (fallback):', err.message);
         setAvailableFilters({ grupos: [], subgrupos: [] });
       }
     }
 
-    loadFilters();
+    loadFiltersFallback();
   }, []);
 
   // Reload products when filters change

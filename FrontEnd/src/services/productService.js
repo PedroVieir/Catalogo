@@ -474,6 +474,12 @@ export async function fetchCatalogSnapshot(force = false) {
 
     cache.catalog = body.data;
     cache.catalogTimestamp = Date.now();
+    if (process.env.NODE_ENV === 'development') {
+      console.info('fetchCatalogSnapshot: received snapshot ->', {
+        products: Array.isArray(cache.catalog.products) ? cache.catalog.products.length : 0,
+        conjuntos: Array.isArray(cache.catalog.conjuntos) ? cache.catalog.conjuntos.length : 0
+      });
+    }
     return cache.catalog;
   } catch (err) {
     console.error('Erro ao buscar snapshot do catálogo:', err.message || err);

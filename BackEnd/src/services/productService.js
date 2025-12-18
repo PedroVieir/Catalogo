@@ -254,6 +254,29 @@ export async function preloadCatalog() {
   }
 }
 
+/**
+ * Retorna snapshot atual do catálogo (dados em cache). Garante que o catálogo
+ * foi pré-carregado pelo menos uma vez (best-effort).
+ */
+export async function getCatalogSnapshot() {
+  // Ensure caches populated at least once
+  await preloadCatalog();
+
+  return {
+    products: caches.produtos.data || [],
+    conjuntos: caches.conjuntos.data || [],
+    benchmarks: caches.benchmarks.data || [],
+    aplicacoes: caches.aplicacoes.data || [],
+    fabricantes: await getFabricantes(),
+    _cachedAtMs: Math.min(
+      caches.produtos.timestamp || Date.now(),
+      caches.conjuntos.timestamp || Date.now(),
+      caches.benchmarks.timestamp || Date.now(),
+      caches.aplicacoes.timestamp || Date.now()
+    )
+  };
+}
+
 // Otimização: pré-compilação de regex para filtros
 function createSearchFilter(searchTerm) {
   const searchLower = searchTerm.toLowerCase();

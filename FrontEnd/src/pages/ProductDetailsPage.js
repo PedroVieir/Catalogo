@@ -15,7 +15,7 @@ function ProductDetailsPage() {
   const { code } = useParams();
   const navigate = useNavigate();
   const notify = useNotification();
-  const { catalogState } = useCatalogState();
+  const { catalogState, preloadState } = useCatalogState();
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,13 +33,39 @@ function ProductDetailsPage() {
         throw new Error("Código do produto inválido");
       }
 
-      const result = await fetchProductDetails(code);
-      
-      if (!result || typeof result !== "object") {
-        throw new Error("Resposta do servidor inválida");
+      // If we have a preloaded snapshot, use it for instant details
+      let usedSnapshot = false;
+
+      if (preloadState && preloadState.loaded && preloadState.snapshot) {
+        const snap = preloadState.snapshot;
+        const normalizedCode = String(code || '').toUpperCase().replace(/\s+/g, '').trim();
+        const product = (Array.isArray(snap.products) ? snap.products : []).find(p => String(p.codigo || p.code || p.id || '').toUpperCase().replace(/\s+/g, '').trim() === normalizedCode);
+
+        if (product) {
+          // Assemble conjuntos / aplicacoes / benchmarks from snapshot
+          const conjuntos = (Array.isArray(snap.conjuntos) ? snap.conjuntos.filter(c => (c.pai || c.codigo_conjunto || '').toString().toUpperCase().replace(/\s+/g,'') === normalizedCode) : []).map(c => ({
+            filho: c.filho || c.codigo || c.codigo_componente || c.child || '',
+            filho_des: c.filho_des || c.descricao || c.des || null,
+            qtd_explosao: c.qtd_explosao || c.quantidade || c.qtd || 1
+          }));
+
+          const aplicacoes = (Array.isArray(snap.aplicacoes) ? snap.aplicacoes.filter(a => (a.codigo_conjunto || '').toString().toUpperCase().replace(/\s+/g,'') === normalizedCode) : []);
+          const benchmarks = (Array.isArray(snap.benchmarks) ? snap.benchmarks.filter(b => (b.codigo || '').toString().toUpperCase().replace(/\s+/g,'') === normalizedCode) : []);
+
+          setData({ data: { product, conjuntos, aplicacoes, benchmarks } });
+          usedSnapshot = true;
+        }
       }
 
-      setData(result);
+      // Always try to refresh from server in background if not using snapshot or to update stale info
+      try {
+        const result = await fetchProductDetails(code);
+        if (result && typeof result === 'object') setData(result);
+      } catch (err) {
+        if (!usedSnapshot) throw err; // If snapshot wasn't available, propagate error
+        // else ignore background refresh error
+        console.warn('Background refresh of product details failed (ignored):', err.message || err);
+      }
     } catch (err) {
       const errorMsg = err?.message || "Erro desconhecido ao carregar detalhes do produto";
       console.error("Erro ao carregar detalhes:", errorMsg);

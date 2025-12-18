@@ -6,6 +6,7 @@ import {
   listConjuntosPaginated,
   getConjuntoDetails, 
   listFilters,
+  getCatalogSnapshotController,
   getCatalogStatus
 } from "../controllers/productController.js";
 import { ensureFabricantesPopulated } from "../services/productService.js";
@@ -38,6 +39,18 @@ router.post("/status/refresh", async (req, res, next) => {
 router.get("/products", listProducts);              // Compatibilidade anterior
 router.get("/products/paginated", listProductsPaginated); // Com paginação
 router.get("/products/:code", getProductDetails);   // Detalhes do produto
+
+// Snapshot completo do catálogo (cache em servidor)
+router.get("/catalog", getCatalogSnapshotController);
+// Forçar reload do snapshot
+router.post("/catalog/refresh", async (req, res, next) => {
+  try {
+    await reloadCatalog();
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // ====== CONJUNTOS ======
 router.get("/conjuntos/paginated", listConjuntosPaginated); // Lista com paginação
