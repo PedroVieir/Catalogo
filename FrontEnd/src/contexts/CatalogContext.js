@@ -57,7 +57,7 @@ export function CatalogProvider({ children }) {
           grupos: Array.from(gruposSet).sort(),
           subgrupos: Array.from(subgruposSet).sort(),
           fabricantes: fabricantes,
-          vehicleTypes: vehicleTypesSet.size ? Array.from(vehicleTypesSet) : ['Leve','Pesado']
+          vehicleTypes: vehicleTypesSet.size ? Array.from(vehicleTypesSet) : ['Leve', 'Pesado']
         };
 
         setPreloadState({
@@ -133,15 +133,15 @@ export function CatalogProvider({ children }) {
   };
 
   return (
-    <CatalogContext.Provider value={{ 
-      catalogState, 
-      updateCatalogState, 
-      preloadState, 
-      setPreloadState, 
-      productsCache, 
-      addToProductsCache, 
-      getFromProductsCache, 
-      filtersLoading 
+    <CatalogContext.Provider value={{
+      catalogState,
+      updateCatalogState,
+      preloadState,
+      setPreloadState,
+      productsCache,
+      addToProductsCache,
+      getFromProductsCache,
+      filtersLoading
     }}>
       {children}
     </CatalogContext.Provider>

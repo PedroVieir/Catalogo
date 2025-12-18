@@ -19,7 +19,7 @@ function CatalogPage() {
   const PAGE_LIMIT = 50;
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -33,7 +33,7 @@ function CatalogPage() {
     fabricantes: [],
     vehicleTypes: []
   });
-  
+
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -118,9 +118,9 @@ function CatalogPage() {
           // Sorting
           const sortBy = catalogState?.currentFilters?.sortBy || 'codigo';
           if (sortBy === 'descricao') {
-            itemsFromSnap.sort((a,b) => String(a.descricao||'').localeCompare(String(b.descricao||'')));
+            itemsFromSnap.sort((a, b) => String(a.descricao || '').localeCompare(String(b.descricao || '')));
           } else if (sortBy === 'grupo') {
-            itemsFromSnap.sort((a,b) => String(a.grupo||'').localeCompare(String(b.grupo||'')));
+            itemsFromSnap.sort((a, b) => String(a.grupo || '').localeCompare(String(b.grupo || '')));
           }
 
           // Pagination slice
@@ -146,7 +146,7 @@ function CatalogPage() {
           // fallback to API when no snapshot
           if (catalogState?.currentFilters?.tipo === "conjuntos") {
             const resp = await fetchConjuntosPaginated(validPage, PAGE_LIMIT, filters);
-            
+
             if (!resp) throw new Error("No server response");
 
             items = Array.isArray(resp.data) ? resp.data : [];
@@ -157,7 +157,7 @@ function CatalogPage() {
               const codigo = it.codigo || it.id || it.code || "";
               const grupo = it.grupo || it.category || it.group || "";
               const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
-              
+
               return {
                 codigo: String(codigo).trim(),
                 descricao: String(descricao).trim(),
@@ -173,7 +173,7 @@ function CatalogPage() {
               const total = Math.max(0, parseInt(resp.pagination.total) || 0);
               const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
               const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
-              
+
               paginationResp = {
                 page: Math.max(1, parseInt(resp.pagination.page) || validPage),
                 limit: limit,
@@ -183,11 +183,11 @@ function CatalogPage() {
             }
           } else {
             const resp = await fetchProductsPaginated(validPage, PAGE_LIMIT, filters);
-            
+
             if (!resp) throw new Error("No server response");
 
             items = Array.isArray(resp.data) ? resp.data : [];
-            
+
             if (catalogState?.currentFilters?.tipo === "produtos") {
               items = items.filter((p) => !p.conjuntosCount || p.conjuntosCount === 0);
             }
@@ -198,7 +198,7 @@ function CatalogPage() {
               const codigo = it.codigo || it.id || it.code || "";
               const grupo = it.grupo || it.category || it.group || "";
               const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
-              
+
               return {
                 codigo: String(codigo).trim(),
                 descricao: String(descricao).trim(),
@@ -211,11 +211,11 @@ function CatalogPage() {
 
             const sortBy = catalogState?.currentFilters?.sortBy || "codigo";
             if (sortBy === "descricao") {
-              items.sort((a, b) => 
+              items.sort((a, b) =>
                 String(a.descricao || "").localeCompare(String(b.descricao || ""))
               );
             } else if (sortBy === "grupo") {
-              items.sort((a, b) => 
+              items.sort((a, b) =>
                 String(a.grupo || "").localeCompare(String(b.grupo || ""))
               );
             }
@@ -224,7 +224,7 @@ function CatalogPage() {
               const total = Math.max(0, parseInt(resp.pagination.total) || 0);
               const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
               const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
-              
+
               paginationResp = {
                 page: Math.max(1, parseInt(resp.pagination.page) || validPage),
                 limit: limit,
@@ -236,11 +236,11 @@ function CatalogPage() {
         }
         if (catalogState?.currentFilters?.tipo === "conjuntos") {
           const resp = await fetchConjuntosPaginated(validPage, PAGE_LIMIT, filters);
-          
+
           if (!resp) throw new Error("No server response");
 
           items = Array.isArray(resp.data) ? resp.data : [];
-          
+
           // Process conjuntos data - handle various possible field names
           items = items.map(it => {
             // Try multiple possible field names for description
@@ -248,7 +248,7 @@ function CatalogPage() {
             const codigo = it.codigo || it.id || it.code || "";
             const grupo = it.grupo || it.category || it.group || "";
             const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
-            
+
             return {
               codigo: String(codigo).trim(),
               descricao: String(descricao).trim(),
@@ -265,7 +265,7 @@ function CatalogPage() {
             const total = Math.max(0, parseInt(resp.pagination.total) || 0);
             const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
             const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
-            
+
             paginationResp = {
               page: Math.max(1, parseInt(resp.pagination.page) || validPage),
               limit: limit,
@@ -275,11 +275,11 @@ function CatalogPage() {
           }
         } else {
           const resp = await fetchProductsPaginated(validPage, PAGE_LIMIT, filters);
-          
+
           if (!resp) throw new Error("No server response");
 
           items = Array.isArray(resp.data) ? resp.data : [];
-          
+
           if (catalogState?.currentFilters?.tipo === "produtos") {
             items = items.filter((p) => !p.conjuntosCount || p.conjuntosCount === 0);
           }
@@ -291,7 +291,7 @@ function CatalogPage() {
             const codigo = it.codigo || it.id || it.code || "";
             const grupo = it.grupo || it.category || it.group || "";
             const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
-            
+
             return {
               codigo: String(codigo).trim(),
               descricao: String(descricao).trim(),
@@ -305,11 +305,11 @@ function CatalogPage() {
 
           const sortBy = catalogState?.currentFilters?.sortBy || "codigo";
           if (sortBy === "descricao") {
-            items.sort((a, b) => 
+            items.sort((a, b) =>
               String(a.descricao || "").localeCompare(String(b.descricao || ""))
             );
           } else if (sortBy === "grupo") {
-            items.sort((a, b) => 
+            items.sort((a, b) =>
               String(a.grupo || "").localeCompare(String(b.grupo || ""))
             );
           }
@@ -318,7 +318,7 @@ function CatalogPage() {
             const total = Math.max(0, parseInt(resp.pagination.total) || 0);
             const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
             const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
-            
+
             paginationResp = {
               page: Math.max(1, parseInt(resp.pagination.page) || validPage),
               limit: limit,
@@ -327,7 +327,7 @@ function CatalogPage() {
             };
           }
         }
-        
+
         // Debug log to see data structure
         if (items.length > 0) {
           console.log("First product data:", items[0]);
@@ -352,7 +352,7 @@ function CatalogPage() {
         if (!availableFilters.vehicleTypes || availableFilters.vehicleTypes.length === 0) {
           setAvailableFilters(prev => ({ ...prev, vehicleTypes: ['Leve', 'Pesado'] }));
         }
-        
+
       } catch (apiError) {
         const errorMsg = apiError?.message || "Error loading data";
         setError(errorMsg);
@@ -413,7 +413,7 @@ function CatalogPage() {
           grupos: Array.isArray(data.grupos) ? data.grupos : [],
           subgrupos: Array.isArray(data.subgrupos) ? data.subgrupos : [],
           fabricantes: Array.isArray(data.fabricantes) ? data.fabricantes : [],
-          vehicleTypes: Array.isArray(data.vehicleTypes) ? data.vehicleTypes : ['Leve','Pesado']
+          vehicleTypes: Array.isArray(data.vehicleTypes) ? data.vehicleTypes : ['Leve', 'Pesado']
         });
         setFiltersLoaded(true);
       } catch (err) {
@@ -553,12 +553,12 @@ function CatalogPage() {
   // Helper to get product description
   const getProductDescription = (product) => {
     if (!product) return "Sem descrição disponível";
-    
+
     // Try multiple field names for description
-    const desc = product.descricao || product.desc || product.nome || 
-                 product.description || product.name || product.titulo || 
-                 product.title || "";
-    
+    const desc = product.descricao || product.desc || product.nome ||
+      product.description || product.name || product.titulo ||
+      product.title || "";
+
     return desc || "Sem descrição disponível";
   };
 
@@ -583,7 +583,7 @@ function CatalogPage() {
             <h1 className="header-title">Catálogo ABR</h1>
             <p className="header-subtitle">Peças automotivas</p>
           </div>
-          
+
           <div className="header-actions">
             <div className="stats-badge">
               <span className="stats-number">{totalItems}</span>
@@ -596,8 +596,8 @@ function CatalogPage() {
               aria-label="Abrir filtros"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 21l-4.35-4.35"/>
-                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35" />
+                <circle cx="11" cy="11" r="8" />
               </svg>
               <span>Filtros</span>
               {activeFiltersCount > 0 && (
@@ -611,13 +611,13 @@ function CatalogPage() {
       <main className="catalog-main">
         {/* Mobile Filter Toggle */}
         <div className="mobile-filter-toggle">
-          <button 
+          <button
             className="filter-toggle-btn"
             onClick={() => setFilterModalOpen(true)}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 21l-4.35-4.35"/>
-              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35" />
+              <circle cx="11" cy="11" r="8" />
             </svg>
             <span>Filtros</span>
             {activeFiltersCount > 0 && (
@@ -632,7 +632,7 @@ function CatalogPage() {
             <div className="filters-header">
               <h2 className="filters-title">Filtros</h2>
               {activeFiltersCount > 0 && (
-                <button 
+                <button
                   className="clear-filters-btn"
                   onClick={handleResetFilters}
                 >
@@ -645,7 +645,7 @@ function CatalogPage() {
               <div className="filter-group">
                 <label className="filter-label">Buscar</label>
                 <div className="search-wrapper">
-                  
+
                   <input
                     type="text"
                     placeholder="Código ou descrição..."
@@ -773,12 +773,12 @@ function CatalogPage() {
                       <button onClick={() => handleFilterChange("grupo", "")}>
                         ×
                       </button>
-                  {/* When filtering by fabricante or tipoVeiculo we force conjuntos-only view */}
-                  {(catalogState.currentFilters.fabricante || catalogState.currentFilters.tipoVeiculo) && (
-                    <span className="filter-tag info-tag">
-                      Mostrando apenas <strong>Conjuntos</strong>
-                    </span>
-                  )}
+                      {/* When filtering by fabricante or tipoVeiculo we force conjuntos-only view */}
+                      {(catalogState.currentFilters.fabricante || catalogState.currentFilters.tipoVeiculo) && (
+                        <span className="filter-tag info-tag">
+                          Mostrando apenas <strong>Conjuntos</strong>
+                        </span>
+                      )}
                     </span>
                   )}
                   {catalogState.currentFilters.tipo && (
@@ -817,8 +817,8 @@ function CatalogPage() {
             {/* Error State */}
             {error && !loading && (
               <div className="error-state">
-                <ErrorMessage 
-                  error={error} 
+                <ErrorMessage
+                  error={error}
                   onRetry={() => loadProducts(catalogState.currentPage)}
                 />
               </div>
@@ -826,7 +826,7 @@ function CatalogPage() {
 
             {/* Empty State */}
             {!loading && !error && products.length === 0 && (
-              <EmptyState 
+              <EmptyState
                 message="Nenhum produto encontrado"
                 onAction={handleResetFilters}
                 actionLabel="Limpar filtros"
@@ -841,10 +841,10 @@ function CatalogPage() {
                     const productCode = getProductCode(product);
                     const productDescription = getProductDescription(product);
                     const productGroup = getProductGroup(product);
-                    
+
                     return (
-                      <div 
-                        key={productCode} 
+                      <div
+                        key={productCode}
                         className="product-card"
                         onClick={() => handleProductClick(productCode)}
                       >
@@ -860,23 +860,23 @@ function CatalogPage() {
                           ) : (
                             <div className="image-placeholder">
                               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                <circle cx="8.5" cy="8.5" r="1.5"/>
-                                <polyline points="21 15 16 10 5 21"/>
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
                               </svg>
                             </div>
                           )}
                         </div>
-                        
+
                         <div className="product-info">
                           <div className="product-code-badge">
                             {productCode}
                           </div>
-                          
+
                           <h3 className="product-title" title={productDescription}>
                             {productDescription}
                           </h3>
-                          
+
                           <div className="product-meta">
                             {productGroup && productGroup !== "Sem grupo" && (
                               <span className="product-category" title={productGroup}>
@@ -895,9 +895,9 @@ function CatalogPage() {
                             )}
                           </div>
                         </div>
-                        
+
                         <div className="product-actions">
-                          <button 
+                          <button
                             className="view-details-btn"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -922,7 +922,7 @@ function CatalogPage() {
                     >
                       ← Anterior
                     </button>
-                    
+
                     <div className="pagination-pages">
                       {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
                         let pageNum;
@@ -947,7 +947,7 @@ function CatalogPage() {
                         );
                       })}
                     </div>
-                    
+
                     <button
                       disabled={catalogState.currentPage === pagination.totalPages}
                       onClick={() => handlePageChange(catalogState.currentPage + 1)}
@@ -964,7 +964,7 @@ function CatalogPage() {
       </main>
 
       {/* Filter Modal */}
-      <FilterModal 
+      <FilterModal
         isOpen={filterModalOpen}
         onClose={() => setFilterModalOpen(false)}
         currentFilters={catalogState.currentFilters}
