@@ -153,7 +153,7 @@
 }
 
 .filter-modal-reset:hover {
-  background: #d0d4e8;
+  background: var(--color-bg-light);
 }
 
 .filter-modal-apply {
@@ -162,7 +162,7 @@
 }
 
 .filter-modal-apply:hover {
-  background: #0052a3;
+  background: var(--primary-hover);
 }
 
 /* Desktop: hide modal completely */

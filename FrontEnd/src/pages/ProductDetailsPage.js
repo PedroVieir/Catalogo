@@ -23,7 +23,7 @@ function ProductDetailsPage() {
   const [error, setError] = useState("");
   const [imageError, setImageError] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("details");
+  const [activeTab, setActiveTab] = useState("conjuntos");
 
   async function loadData() {
     try {
@@ -133,35 +133,36 @@ function ProductDetailsPage() {
       }
 
       // Se não há contexto ou não se aplica, usa a lógica padrão
-      if (activeTab === 'details') {
-        const conjuntos = Array.isArray(data?.data?.conjuntos)
-          ? data.data.conjuntos
-          : Array.isArray(data?.conjuntos)
-            ? data.conjuntos
-            : [];
-        const normalizedConjuntos = Array.isArray(conjuntos)
-          ? conjuntos.map((c) => {
-            if (!c || typeof c !== 'object') return null;
-            const filho = (c.filho || c.codigo || c.code || c.child || c.filho_codigo || '').toString();
-            return { ...c, filho };
-          }).filter(Boolean)
+      const conjuntos = Array.isArray(data?.data?.conjuntos)
+        ? data.data.conjuntos
+        : Array.isArray(data?.conjuntos)
+          ? data.conjuntos
           : [];
-        const validConjuntos = normalizedConjuntos.filter((c) => String(c.filho).trim() !== '');
+      const normalizedConjuntos = Array.isArray(conjuntos)
+        ? conjuntos.map((c) => {
+          if (!c || typeof c !== 'object') return null;
+          const filho = (c.filho || c.codigo || c.code || c.child || c.filho_codigo || '').toString();
+          return { ...c, filho };
+        }).filter(Boolean)
+        : [];
+      const validConjuntos = normalizedConjuntos.filter((c) => String(c.filho).trim() !== '');
 
-        const memberships = Array.isArray(data?.data?.memberships)
-          ? data.data.memberships
-          : Array.isArray(data?.memberships)
-            ? data.memberships
-            : [];
+      const memberships = Array.isArray(data?.data?.memberships)
+        ? data.data.memberships
+        : Array.isArray(data?.memberships)
+          ? data.memberships
+          : [];
 
-        if (validConjuntos.length > 0) {
-          setActiveTab('conjuntos');
-        } else if (memberships.length > 0) {
-          setActiveTab('memberships');
-        }
+      if (validConjuntos.length > 0) {
+        setActiveTab('conjuntos');
+      } else if (memberships.length > 0) {
+        setActiveTab('memberships');
+      } else {
+        // Se não há conjuntos nem memberships, abre na primeira aba disponível
+        setActiveTab('conjuntos'); // fallback
       }
     }
-  }, [data, activeTab, searchParams, setSearchParams]);
+  }, [data, searchParams, setSearchParams]);
 
   const product = data?.data?.product || data?.product;
   const conjuntos = Array.isArray(data?.data?.conjuntos)
@@ -425,20 +426,6 @@ function ProductDetailsPage() {
                 </button>
               )}
 
-              <button
-                className={`tab-btn ${activeTab === 'details' ? 'active' : ''}`}
-                onClick={() => setActiveTab('details')}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="16" y1="13" x2="8" y2="13" />
-                  <line x1="16" y1="17" x2="8" y2="17" />
-                  <polyline points="10 9 9 9 8 9" />
-                </svg>
-                Detalhes
-              </button>
-
               {memberships.length > 0 && (
                 <button
                   className={`tab-btn ${activeTab === 'memberships' ? 'active' : ''}`}
@@ -482,75 +469,7 @@ function ProductDetailsPage() {
             </div>
 
             <div className="tab-content">
-              {activeTab === 'details' && (
-                <div className="details-content">
-                  <div className="details-grid">
-                    <div className="detail-card">
-                      <h3 className="detail-title">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M12 16s-3-3.5-3-6 1.5-3 3-3 3 1.5 3 3-3 6-3 6z" />
-                          <circle cx="12" cy="8" r="2" />
-                        </svg>
-                        Informações Básicas
-                      </h3>
-                      <div className="detail-list">
-                        <div className="detail-item">
-                          <span className="detail-label">Código:</span>
-                          <span className="detail-value">{product.codigo}</span>
-                        </div>
-                        <div className="detail-item">
-                          <span className="detail-label">Descrição:</span>
-                          <span className="detail-value">{product.descricao}</span>
-                        </div>
-                        <div className="detail-item">
-                          <span className="detail-label">Grupo:</span>
-                          <span className="detail-value">{product.grupo || 'Não especificado'}</span>
-                        </div>
-                        {product.tipo && (
-                          <div className="detail-item">
-                            <span className="detail-label">Tipo:</span>
-                            <span className="detail-value">{product.tipo}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {benchmarks.length > 0 && (
-                      <div className="detail-card benchmarks-preview">
-                        <h3 className="detail-title">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                          </svg>
-                          Benchmarks
-                          <span className="badge">{benchmarks.length}</span>
-                        </h3>
-                        <div className="preview-list">
-                          {benchmarks.slice(0, 3).map(b => (
-                            <div key={b.id} className="preview-item">
-                              <span className="preview-origin">{b.origem || '—'}</span>
-                              <span className="preview-number">{b.numero_original || '—'}</span>
-                            </div>
-                          ))}
-                          {benchmarks.length > 3 && (
-                            <div className="preview-more">
-                              +{benchmarks.length - 3} mais...
-                            </div>
-                          )}
-                        </div>
-                        <button
-                          className="view-all-btn"
-                          onClick={() => setActiveTab('benchmarks')}
-                        >
-                          Ver todos os benchmarks
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Aba Details removida - foco em Conjuntos e Memberships */}
 
               {activeTab === 'memberships' && memberships.length > 0 && (
                 <div className="conjuntos-content">

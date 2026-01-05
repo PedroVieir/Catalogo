@@ -8,8 +8,7 @@ export function CatalogProvider({ children }) {
     currentPage: 1,
     currentFilters: {
       search: "",
-      grupo: "",
-      tipo: "", // "todos", "produtos", "conjuntos"
+      grupo: "JOGOS DE JUNTAS", // Default to Jogos de Juntas
       fabricante: "",
       tipoVeiculo: "",
       sortBy: "codigo" // "codigo", "descricao", "grupo"

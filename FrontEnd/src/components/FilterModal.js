@@ -35,22 +35,9 @@ function FilterModal({ isOpen, onClose, currentFilters, onFilterChange, availabl
           </div>
 
           <div className="filter-group">
-            <label>Tipo</label>
-            <select
-              value={currentFilters.tipo}
-              onChange={(e) => onFilterChange("tipo", e.target.value)}
-              className="filter-select"
-            >
-              <option value="">Todos</option>
-              <option value="produtos">Apenas Produtos</option>
-              <option value="conjuntos">Apenas Conjuntos</option>
-            </select>
-          </div>
-
-          <div className="filter-group">
             <label>Grupo</label>
             <select
-              value={currentFilters.grupo}
+              value={currentFilters.grupo || "JOGOS DE JUNTAS"}
               onChange={(e) => onFilterChange("grupo", e.target.value)}
               className="filter-select"
             >
