@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useNotification } from "../hooks/useNotification";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
@@ -14,6 +14,7 @@ import "../styles/ProductDetails.css";
 function ProductDetailsPage() {
   const { code } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const notify = useNotification();
   const { catalogState, preloadState, getFromProductsCache } = useCatalogState();
 
@@ -88,6 +89,80 @@ function ProductDetailsPage() {
     loadData();
   }, [code]);
 
+  // Define aba inicial baseada na prioridade: Contexto URL > Conjuntos > Memberships > Detalhes
+  useEffect(() => {
+    if (data) {
+      // Primeiro verifica se há contexto na URL
+      const context = searchParams.get('context');
+      
+      if (context === 'from-conjunto') {
+        // Veio de um conjunto, deve mostrar memberships
+        const memberships = Array.isArray(data?.data?.memberships)
+          ? data.data.memberships
+          : Array.isArray(data?.memberships)
+            ? data.memberships
+            : [];
+        if (memberships.length > 0) {
+          setActiveTab('memberships');
+          // Limpa o parâmetro da URL após usar
+          setSearchParams(new URLSearchParams());
+          return;
+        }
+      } else if (context === 'from-piece') {
+        // Veio de uma peça, deve mostrar conjuntos
+        const conjuntos = Array.isArray(data?.data?.conjuntos)
+          ? data.data.conjuntos
+          : Array.isArray(data?.conjuntos)
+            ? data.conjuntos
+            : [];
+        const normalizedConjuntos = Array.isArray(conjuntos)
+          ? conjuntos.map((c) => {
+            if (!c || typeof c !== 'object') return null;
+            const filho = (c.filho || c.codigo || c.code || c.child || c.filho_codigo || '').toString();
+            return { ...c, filho };
+          }).filter(Boolean)
+          : [];
+        const validConjuntos = normalizedConjuntos.filter((c) => String(c.filho).trim() !== '');
+        
+        if (validConjuntos.length > 0) {
+          setActiveTab('conjuntos');
+          // Limpa o parâmetro da URL após usar
+          setSearchParams(new URLSearchParams());
+          return;
+        }
+      }
+
+      // Se não há contexto ou não se aplica, usa a lógica padrão
+      if (activeTab === 'details') {
+        const conjuntos = Array.isArray(data?.data?.conjuntos)
+          ? data.data.conjuntos
+          : Array.isArray(data?.conjuntos)
+            ? data.conjuntos
+            : [];
+        const normalizedConjuntos = Array.isArray(conjuntos)
+          ? conjuntos.map((c) => {
+            if (!c || typeof c !== 'object') return null;
+            const filho = (c.filho || c.codigo || c.code || c.child || c.filho_codigo || '').toString();
+            return { ...c, filho };
+          }).filter(Boolean)
+          : [];
+        const validConjuntos = normalizedConjuntos.filter((c) => String(c.filho).trim() !== '');
+
+        const memberships = Array.isArray(data?.data?.memberships)
+          ? data.data.memberships
+          : Array.isArray(data?.memberships)
+            ? data.memberships
+            : [];
+
+        if (validConjuntos.length > 0) {
+          setActiveTab('conjuntos');
+        } else if (memberships.length > 0) {
+          setActiveTab('memberships');
+        }
+      }
+    }
+  }, [data, activeTab, searchParams, setSearchParams]);
+
   const product = data?.data?.product || data?.product;
   const conjuntos = Array.isArray(data?.data?.conjuntos)
     ? data.data.conjuntos
@@ -131,6 +206,22 @@ function ProductDetailsPage() {
     : Array.isArray(data?.aplicacoes)
       ? data.aplicacoes
       : [];
+
+  const memberships = Array.isArray(data?.data?.memberships)
+    ? data.data.memberships
+    : Array.isArray(data?.memberships)
+      ? data.memberships
+      : [];
+
+  // Enriquece memberships com nomes dos produtos
+  const enrichedMemberships = memberships.map(membership => {
+    // Tenta buscar o nome do produto no cache
+    const cachedProduct = getFromProductsCache(membership.codigo_conjunto);
+    return {
+      ...membership,
+      nome_conjunto: cachedProduct?.descricao || `Conjunto ${membership.codigo_conjunto}`
+    };
+  });
 
   const formatAplicacao = (a) => {
     if (!a || typeof a !== 'object') return {
@@ -189,7 +280,7 @@ function ProductDetailsPage() {
     }
   };
 
-  const handlePieceClick = (codigo) => {
+  const handlePieceClick = (codigo, context = null) => {
     if (!codigo) return;
     try {
       setLightboxOpen(false);
@@ -198,7 +289,12 @@ function ProductDetailsPage() {
     }
 
     try {
-      navigate(`/produtos/${encodeURIComponent(String(codigo))}`);
+      const url = `/produtos/${encodeURIComponent(String(codigo))}`;
+      if (context) {
+        navigate(`${url}?context=${context}`);
+      } else {
+        navigate(url);
+      }
     } catch (e) {
       console.error('Erro ao navegar para produto do conjunto:', e);
     }
@@ -317,6 +413,18 @@ function ProductDetailsPage() {
             </div>
 
             <div className="product-tabs">
+              {validConjuntos.length > 0 && (
+                <button
+                  className={`tab-btn ${activeTab === 'conjuntos' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('conjuntos')}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                  </svg>
+                  Peças do Conjunto
+                </button>
+              )}
+
               <button
                 className={`tab-btn ${activeTab === 'details' ? 'active' : ''}`}
                 onClick={() => setActiveTab('details')}
@@ -331,6 +439,21 @@ function ProductDetailsPage() {
                 Detalhes
               </button>
 
+              {memberships.length > 0 && (
+                <button
+                  className={`tab-btn ${activeTab === 'memberships' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('memberships')}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                  Usado em Conjuntos {memberships.length > 0 && <span className="badge">{memberships.length}</span>}
+                </button>
+              )}
+
               {benchmarks.length > 0 && (
                 <button
                   className={`tab-btn ${activeTab === 'benchmarks' ? 'active' : ''}`}
@@ -343,18 +466,6 @@ function ProductDetailsPage() {
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
                   Benchmarks
-                </button>
-              )}
-
-              {validConjuntos.length > 0 && (
-                <button
-                  className={`tab-btn ${activeTab === 'conjuntos' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('conjuntos')}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
-                  </svg>
-                  Conjuntos
                 </button>
               )}
 
@@ -441,6 +552,34 @@ function ProductDetailsPage() {
                 </div>
               )}
 
+              {activeTab === 'memberships' && memberships.length > 0 && (
+                <div className="conjuntos-content">
+                  <div className="section-header">
+                    <h2>Usado em Conjuntos</h2>
+                    <p>Clique em um conjunto para ver detalhes</p>
+                  </div>
+
+                  {memberships.length === 0 ? (
+                    <div className="conjuntos-empty">
+                      <EmptyState
+                        message="Este produto não é usado em nenhum conjunto"
+                        onAction={() => { /* no-op */ }}
+                        actionLabel="—"
+                      />
+                    </div>
+                  ) : (
+                    <ConjuntoGallery
+                      conjuntos={enrichedMemberships.map(m => ({
+                        filho: m.codigo_conjunto,
+                        filho_des: m.nome_conjunto,
+                        qtd_explosao: m.quantidade || 1
+                      }))}
+                      onPieceClick={(codigo) => handlePieceClick(codigo, 'from-piece')}
+                    />
+                  )}
+                </div>
+              )}
+
               {activeTab === 'benchmarks' && benchmarks.length > 0 && (
                 <div className="benchmarks-content">
                   <div className="section-header">
@@ -488,7 +627,7 @@ function ProductDetailsPage() {
                   ) : (
                     <ConjuntoGallery
                       conjuntos={validConjuntos}
-                      onPieceClick={handlePieceClick}
+                      onPieceClick={(codigo) => handlePieceClick(codigo, 'from-conjunto')}
                     />
                   )}
                 </div>
