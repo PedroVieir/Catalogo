@@ -9,7 +9,6 @@ export function CatalogProvider({ children }) {
     currentFilters: {
       search: "",
       grupo: "",
-      subgrupo: "",
       tipo: "", // "todos", "produtos", "conjuntos"
       fabricante: "",
       tipoVeiculo: "",
@@ -23,7 +22,7 @@ export function CatalogProvider({ children }) {
     loading: false,
     snapshot: null,
     loadedAt: null,
-    availableFilters: { grupos: [], subgrupos: [], fabricantes: [], vehicleTypes: [] }
+    availableFilters: { grupos: [], fabricantes: [], vehicleTypes: [] }
   });
 
   // Cache for loaded products to avoid redundant API calls
@@ -41,13 +40,11 @@ export function CatalogProvider({ children }) {
 
         if (cancelled) return;
 
-        // Derive grupos/subgrupos from products if not provided by backend
+        // Derive grupos from products if not provided by backend
         const products = Array.isArray(snapshot.products) ? snapshot.products : [];
         const gruposSet = new Set();
-        const subgruposSet = new Set();
         products.forEach(p => {
           if (p.grupo) gruposSet.add(p.grupo);
-          if (p.subgrupo) subgruposSet.add(p.subgrupo);
         });
 
         const fabricantes = Array.isArray(snapshot.fabricantes) ? snapshot.fabricantes : [];
@@ -55,7 +52,6 @@ export function CatalogProvider({ children }) {
 
         const availableFilters = {
           grupos: Array.from(gruposSet).sort(),
-          subgrupos: Array.from(subgruposSet).sort(),
           fabricantes: fabricantes,
           vehicleTypes: vehicleTypesSet.size ? Array.from(vehicleTypesSet) : ['Leve', 'Pesado']
         };
@@ -95,7 +91,7 @@ export function CatalogProvider({ children }) {
         // Fallback: try to load filters separately
         try {
           const filters = await fetchFilters();
-          setPreloadState(s => ({ ...s, availableFilters: filters || { grupos: [], subgrupos: [], fabricantes: [], vehicleTypes: [] } }));
+          setPreloadState(s => ({ ...s, availableFilters: filters || { grupos: [], fabricantes: [], vehicleTypes: [] } }));
         } catch (fallbackErr) {
           console.warn('Filters fallback failed:', fallbackErr.message || fallbackErr);
         }

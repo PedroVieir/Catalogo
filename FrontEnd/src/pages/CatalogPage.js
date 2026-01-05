@@ -12,6 +12,64 @@ import {
 } from "../services/productService";
 import { useCatalogState } from "../contexts/CatalogContext";
 
+// Filtros hardcoded conforme solicitado
+const HARDCODED_FABRICANTES = [
+  "AGRALE",
+  "ASIA",
+  "CASE",
+  "CBT",
+  "CITROEN",
+  "CUMMINS",
+  "DODGE",
+  "ENGESA",
+  "FIAT",
+  "FIAT ALLIS",
+  "FIAT/IVECO",
+  "FORD",
+  "FOTON",
+  "GM CHEVROLET",
+  "HONDA",
+  "HYUNDAI",
+  "IVECO",
+  "JCB",
+  "JEEP",
+  "JOHN DEERE",
+  "KIA",
+  "KOMATSU",
+  "LAND ROVER",
+  "MAN",
+  "MASSEY FERGUSON",
+  "MERCEDES BENZ",
+  "MITSUBISHI",
+  "MWM",
+  "NEW HOLLAND",
+  "NISSAN",
+  "PERKINS / MAXION / INTERNATIONAL",
+  "PEUGEOT",
+  "RENAULT",
+  "SCANIA",
+  "SUZUKI",
+  "TOYOTA",
+  "TROLLER",
+  "VALTRA / VALMET",
+  "VOLARE",
+  "VOLKSWAGEN",
+  "VOLVO"
+];
+
+const HARDCODED_GRUPOS = [
+  "JOGOS DE JUNTAS",
+  "JUNTA DO CARTER",
+  "JUNTA DO COLETOR DE ADMISSÃO",
+  "JUNTA DO COLETOR DE ADMISSÃO E ESCAPAMENTO",
+  "JUNTA DO COLETOR DE ESCAPAMENTO",
+  "JUNTAS DE CABEÇOTE",
+  "JUNTAS DIVERSAS",
+  "RETENTORES",
+  "TAMPA DE VÁLVULA",
+  "TAMPA FRONTAL"
+];
+
 function CatalogPage() {
   const { catalogState, updateCatalogState, preloadState, addToProductsCache, filtersLoading } = useCatalogState();
   // notification helper (unused currently)
@@ -28,9 +86,9 @@ function CatalogPage() {
     totalPages: 0
   });
   const [availableFilters, setAvailableFilters] = useState({
-    grupos: [],
-    subgrupos: [],
-    fabricantes: [],
+    grupos: HARDCODED_GRUPOS,
+    subgrupos: [], // Removido conforme solicitado
+    fabricantes: HARDCODED_FABRICANTES,
     vehicleTypes: []
   });
 
@@ -62,7 +120,6 @@ function CatalogPage() {
       const filters = {
         search: catalogState?.currentFilters?.search || "",
         grupo: catalogState?.currentFilters?.grupo || "",
-        subgrupo: catalogState?.currentFilters?.subgrupo || "",
         fabricante: catalogState?.currentFilters?.fabricante || "",
         tipoVeiculo: catalogState?.currentFilters?.tipoVeiculo || ""
       };
@@ -110,7 +167,6 @@ function CatalogPage() {
             codigo: String(it.codigo || it.code || it.id || '').trim(),
             descricao: String(it.descricao || it.desc || it.nome || '').trim(),
             grupo: it.grupo || '',
-            subgrupo: it.subgrupo || '',
             tipo: 'produto',
             ...it
           })).filter(it => it.codigo && it.descricao);
@@ -156,13 +212,11 @@ function CatalogPage() {
               const descricao = it.descricao || it.desc || it.nome || it.description || it.name || "";
               const codigo = it.codigo || it.id || it.code || "";
               const grupo = it.grupo || it.category || it.group || "";
-              const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
 
               return {
                 codigo: String(codigo).trim(),
                 descricao: String(descricao).trim(),
                 grupo: String(grupo).trim(),
-                subgrupo: String(subgrupo).trim(),
                 tipo: "conjunto",
                 conjuntos: Array.isArray(it.children) ? it.children : [],
                 ...it
@@ -197,13 +251,11 @@ function CatalogPage() {
               const descricao = it.descricao || it.desc || it.nome || it.description || it.name || "";
               const codigo = it.codigo || it.id || it.code || "";
               const grupo = it.grupo || it.category || it.group || "";
-              const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
 
               return {
                 codigo: String(codigo).trim(),
                 descricao: String(descricao).trim(),
                 grupo: String(grupo).trim(),
-                subgrupo: String(subgrupo).trim(),
                 tipo: "produto",
                 ...it
               };
@@ -232,99 +284,6 @@ function CatalogPage() {
                 totalPages: Math.max(1, parseInt(resp.pagination.totalPages) || calculatedTotalPages)
               };
             }
-          }
-        }
-        if (catalogState?.currentFilters?.tipo === "conjuntos") {
-          const resp = await fetchConjuntosPaginated(validPage, PAGE_LIMIT, filters);
-
-          if (!resp) throw new Error("No server response");
-
-          items = Array.isArray(resp.data) ? resp.data : [];
-
-          // Process conjuntos data - handle various possible field names
-          items = items.map(it => {
-            // Try multiple possible field names for description
-            const descricao = it.descricao || it.desc || it.nome || it.description || it.name || "";
-            const codigo = it.codigo || it.id || it.code || "";
-            const grupo = it.grupo || it.category || it.group || "";
-            const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
-
-            return {
-              codigo: String(codigo).trim(),
-              descricao: String(descricao).trim(),
-              grupo: String(grupo).trim(),
-              subgrupo: String(subgrupo).trim(),
-              tipo: "conjunto",
-              conjuntos: Array.isArray(it.children) ? it.children : [],
-              // Add other fields that might be useful
-              ...it
-            };
-          }).filter(it => it.codigo && it.descricao);
-
-          if (resp.pagination && typeof resp.pagination === "object") {
-            const total = Math.max(0, parseInt(resp.pagination.total) || 0);
-            const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
-            const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
-
-            paginationResp = {
-              page: Math.max(1, parseInt(resp.pagination.page) || validPage),
-              limit: limit,
-              total: total,
-              totalPages: Math.max(1, parseInt(resp.pagination.totalPages) || calculatedTotalPages)
-            };
-          }
-        } else {
-          const resp = await fetchProductsPaginated(validPage, PAGE_LIMIT, filters);
-
-          if (!resp) throw new Error("No server response");
-
-          items = Array.isArray(resp.data) ? resp.data : [];
-
-          if (catalogState?.currentFilters?.tipo === "produtos") {
-            items = items.filter((p) => !p.conjuntosCount || p.conjuntosCount === 0);
-          }
-
-          // Process products data - handle various possible field names
-          items = items.map(it => {
-            // Try multiple possible field names for description
-            const descricao = it.descricao || it.desc || it.nome || it.description || it.name || "";
-            const codigo = it.codigo || it.id || it.code || "";
-            const grupo = it.grupo || it.category || it.group || "";
-            const subgrupo = it.subgrupo || it.subcategory || it.subgroup || "";
-
-            return {
-              codigo: String(codigo).trim(),
-              descricao: String(descricao).trim(),
-              grupo: String(grupo).trim(),
-              subgrupo: String(subgrupo).trim(),
-              tipo: "produto",
-              // Add other fields that might be useful
-              ...it
-            };
-          }).filter(it => it.codigo && it.descricao);
-
-          const sortBy = catalogState?.currentFilters?.sortBy || "codigo";
-          if (sortBy === "descricao") {
-            items.sort((a, b) =>
-              String(a.descricao || "").localeCompare(String(b.descricao || ""))
-            );
-          } else if (sortBy === "grupo") {
-            items.sort((a, b) =>
-              String(a.grupo || "").localeCompare(String(b.grupo || ""))
-            );
-          }
-
-          if (resp.pagination && typeof resp.pagination === "object") {
-            const total = Math.max(0, parseInt(resp.pagination.total) || 0);
-            const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
-            const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
-
-            paginationResp = {
-              page: Math.max(1, parseInt(resp.pagination.page) || validPage),
-              limit: limit,
-              total: total,
-              totalPages: Math.max(1, parseInt(resp.pagination.totalPages) || calculatedTotalPages)
-            };
           }
         }
 
@@ -382,49 +341,10 @@ function CatalogPage() {
     }
   }
 
-  // Load filters on mount
+  // Load filters on mount - now hardcoded, no need to fetch
   useEffect(() => {
-    // If preload has loaded filters, use them
-    if (preloadState.loaded && preloadState.availableFilters) {
-      setAvailableFilters(preloadState.availableFilters);
-      setFiltersLoaded(true);
-      return;
-    }
-
-    // If still loading, wait
-    if (filtersLoading) return;
-
-    // Fallback (should not reach here normally)
-    async function loadFiltersFallback() {
-      try {
-        await seedFabricantes();
-      } catch (err) {
-        console.warn('seedFabricantes failed (ignored):', err.message);
-      }
-
-      try {
-        const data = await fetchFilters();
-        if (!data || typeof data !== 'object') {
-          setAvailableFilters({ grupos: [], subgrupos: [], fabricantes: [], vehicleTypes: [] });
-          return;
-        }
-
-        setAvailableFilters({
-          grupos: Array.isArray(data.grupos) ? data.grupos : [],
-          subgrupos: Array.isArray(data.subgrupos) ? data.subgrupos : [],
-          fabricantes: Array.isArray(data.fabricantes) ? data.fabricantes : [],
-          vehicleTypes: Array.isArray(data.vehicleTypes) ? data.vehicleTypes : ['Leve', 'Pesado']
-        });
-        setFiltersLoaded(true);
-      } catch (err) {
-        console.warn('Error loading filters (fallback):', err.message);
-        setAvailableFilters({ grupos: [], subgrupos: [] });
-        setFiltersLoaded(true);
-      }
-    }
-
-    loadFiltersFallback();
-  }, [preloadState.loaded, preloadState.availableFilters, filtersLoading]);
+    setFiltersLoaded(true);
+  }, []);
 
   // Reload products when filters change
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -459,18 +379,17 @@ function CatalogPage() {
     const page = parseInt(qs.get("page")) || catalogState.currentPage || 1;
     const search = qs.get("search") || catalogState.currentFilters.search || "";
     const grupo = qs.get("grupo") || catalogState.currentFilters.grupo || "";
-    const subgrupo = qs.get("subgrupo") || catalogState.currentFilters.subgrupo || "";
     const tipo = qs.get("tipo") || catalogState.currentFilters.tipo || "";
     const fabricante = qs.get("fabricante") || catalogState.currentFilters.fabricante || "";
     const tipoVeiculo = qs.get("tipoVeiculo") || catalogState.currentFilters.tipoVeiculo || "";
     const sortBy = qs.get("sortBy") || catalogState.currentFilters.sortBy || "codigo";
 
-    // If fabricante or tipoVeiculo present and type is not explicitly set, show conjuntos
-    const finalTipo = (!tipo && (fabricante || tipoVeiculo)) ? 'conjuntos' : tipo;
+    // Tipo definido pelo usuário ou padrão
+    const finalTipo = tipo || "";
 
     updateCatalogState({
       currentPage: page,
-      currentFilters: { search, grupo, subgrupo, tipo: finalTipo, fabricante, tipoVeiculo, sortBy }
+      currentFilters: { search, grupo, tipo: finalTipo, fabricante, tipoVeiculo, sortBy }
     });
   }, []);
 
@@ -482,7 +401,6 @@ function CatalogPage() {
     const f = catalogState.currentFilters || {};
     if (f.search) params.set("search", f.search);
     if (f.grupo) params.set("grupo", f.grupo);
-    if (f.subgrupo) params.set("subgrupo", f.subgrupo);
     if (f.tipo) params.set("tipo", f.tipo);
     if (f.fabricante) params.set("fabricante", f.fabricante);
     if (f.tipoVeiculo) params.set("tipoVeiculo", f.tipoVeiculo);
@@ -499,11 +417,6 @@ function CatalogPage() {
       [key]: value
     };
 
-    // If user is filtering by fabricante or tipoVeiculo, show conjuntos only
-    if ((key === 'fabricante' || key === 'tipoVeiculo') && value) {
-      nextFilters.tipo = 'conjuntos';
-    }
-
     updateCatalogState({
       currentFilters: nextFilters,
       currentPage: 1
@@ -515,7 +428,6 @@ function CatalogPage() {
       currentFilters: {
         search: "",
         grupo: "",
-        subgrupo: "",
         tipo: "",
         fabricante: "",
         tipoVeiculo: "",
@@ -685,21 +597,6 @@ function CatalogPage() {
               </div>
 
               <div className="filter-group">
-                <label className="filter-label">Subgrupo</label>
-                <select
-                  value={catalogState.currentFilters.subgrupo}
-                  onChange={(e) => handleFilterChange("subgrupo", e.target.value)}
-                  className="filter-select"
-                  disabled={!filtersLoaded}
-                >
-                  <option value="">{filtersLoaded ? "Todos os subgrupos" : "Carregando..."}</option>
-                  {availableFilters.subgrupos?.map(subgrupo => (
-                    <option key={subgrupo} value={subgrupo}>{subgrupo}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="filter-group">
                 <label className="filter-label">Fabricante</label>
                 <select
                   value={catalogState.currentFilters.fabricante || ""}
@@ -773,12 +670,6 @@ function CatalogPage() {
                       <button onClick={() => handleFilterChange("grupo", "")}>
                         ×
                       </button>
-                      {/* When filtering by fabricante or tipoVeiculo we force conjuntos-only view */}
-                      {(catalogState.currentFilters.fabricante || catalogState.currentFilters.tipoVeiculo) && (
-                        <span className="filter-tag info-tag">
-                          Mostrando apenas <strong>Conjuntos</strong>
-                        </span>
-                      )}
                     </span>
                   )}
                   {catalogState.currentFilters.tipo && (
@@ -881,11 +772,6 @@ function CatalogPage() {
                             {productGroup && productGroup !== "Sem grupo" && (
                               <span className="product-category" title={productGroup}>
                                 {productGroup}
-                              </span>
-                            )}
-                            {product.subgrupo && (
-                              <span className="product-subgroup" title={product.subgrupo}>
-                                {product.subgrupo}
                               </span>
                             )}
                             {product.conjuntos && product.conjuntos.length > 0 && (

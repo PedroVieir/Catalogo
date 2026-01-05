@@ -13,8 +13,8 @@ function FilterModal({ isOpen, onClose, currentFilters, onFilterChange, availabl
       <div className="filter-modal">
         <div className="filter-modal-header">
           <h2>Filtros</h2>
-          <button 
-            className="filter-modal-close" 
+          <button
+            className="filter-modal-close"
             onClick={onClose}
             aria-label="Fechar filtros"
           >
@@ -57,20 +57,6 @@ function FilterModal({ isOpen, onClose, currentFilters, onFilterChange, availabl
               <option value="">Todos os grupos</option>
               {availableFilters.grupos?.map(grupo => (
                 <option key={grupo} value={grupo}>{grupo}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="filter-group">
-            <label>Subgrupo</label>
-            <select
-              value={currentFilters.subgrupo}
-              onChange={(e) => onFilterChange("subgrupo", e.target.value)}
-              className="filter-select"
-            >
-              <option value="">Todos os subgrupos</option>
-              {availableFilters.subgrupos?.map(subgrupo => (
-                <option key={subgrupo} value={subgrupo}>{subgrupo}</option>
               ))}
             </select>
           </div>

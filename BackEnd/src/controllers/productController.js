@@ -1,7 +1,7 @@
-import { 
-  searchProducts, 
-  getProductWithConjuntos, 
-  getConjuntoWithProducts, 
+import {
+  searchProducts,
+  getProductWithConjuntos,
+  getConjuntoWithProducts,
   getCatalogSnapshot,
   getAvailableFilters,
   getProductsPaginated,
@@ -28,7 +28,6 @@ export async function listProductsPaginated(req, res, next) {
     const filters = {
       search: req.query.search || "",
       grupo: req.query.grupo || "",
-      subgrupo: req.query.subgrupo || "",
       fabricante: req.query.fabricante || "",
       tipoVeiculo: req.query.tipoVeiculo || "",
       numero_original: req.query.numero_original || ""

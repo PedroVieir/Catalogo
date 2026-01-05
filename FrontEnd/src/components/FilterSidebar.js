@@ -29,14 +29,12 @@ function FilterSidebar({
     setLocalSearch("");
     onFilterChange("search", "");
     onFilterChange("grupo", "");
-    onFilterChange("subgrupo", "");
     onFilterChange("isConjunto", null);
   };
 
   const hasActiveFilters =
     filters.search ||
     filters.grupo ||
-    filters.subgrupo ||
     filters.isConjunto !== null;
 
   return (
@@ -100,26 +98,6 @@ function FilterSidebar({
           {availableFilters.grupos.map((grupo) => (
             <option key={grupo} value={grupo}>
               {grupo}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="filter-section">
-        <label htmlFor="subgrupo-filter" className="filter-label">
-          <span className="filter-label-text">Subcategoria</span>
-        </label>
-        <select
-          id="subgrupo-filter"
-          className="filter-select"
-          value={filters.subgrupo}
-          onChange={(e) => handleFilterChange("subgrupo", e.target.value)}
-          disabled={loading || availableFilters.subgrupos.length === 0}
-        >
-          <option value="">Todas as subcategorias</option>
-          {availableFilters.subgrupos.map((subgrupo) => (
-            <option key={subgrupo} value={subgrupo}>
-              {subgrupo}
             </option>
           ))}
         </select>

@@ -280,9 +280,6 @@ export async function fetchProductsPaginated(page = 1, limit = 20, filters = {})
     if (filters.grupo && typeof filters.grupo === "string") {
       url.searchParams.set("grupo", filters.grupo.trim().substring(0, 50));
     }
-    if (filters.subgrupo && typeof filters.subgrupo === "string") {
-      url.searchParams.set("subgrupo", filters.subgrupo.trim().substring(0, 50));
-    }
     if (filters.fabricante && typeof filters.fabricante === "string") {
       url.searchParams.set("fabricante", filters.fabricante.trim().substring(0, 50));
     }
@@ -533,7 +530,7 @@ export async function fetchFilters() {
 
     // Validar estrutura
     if (!data || typeof data !== "object") {
-      return { grupos: [], subgrupos: [], tipos: [] };
+      return { grupos: [], tipos: [] };
     }
 
     // Normalize fabricantes: backend may return array of strings or objects {name,count}
@@ -552,7 +549,6 @@ export async function fetchFilters() {
 
     return {
       grupos: Array.isArray(data.grupos) ? data.grupos : [],
-      subgrupos: Array.isArray(data.subgrupos) ? data.subgrupos : [],
       tipos: Array.isArray(data.tipos) ? data.tipos : [],
       fabricantes,
       vehicleTypes: vtNormalized.length ? vtNormalized : Array.from(canonical)
@@ -560,7 +556,7 @@ export async function fetchFilters() {
   } catch (error) {
     console.error("Erro ao buscar filtros:", error.message);
     // Retornar estrutura vazia em caso de erro
-    return { grupos: [], subgrupos: [], tipos: [], fabricantes: [], vehicleTypes: ['Leve', 'Pesado'] };
+    return { grupos: [], tipos: [], fabricantes: [], vehicleTypes: ['Leve', 'Pesado'] };
   }
 }
 

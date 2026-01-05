@@ -7,14 +7,12 @@ export function useAdvancedFilters(storageKey = "catalogFilters") {
   const [filters, setFilters] = useState({
     search: "",
     grupo: "",
-    subgrupo: "",
     isConjunto: null, // null = todos, true = apenas conjuntos, false = apenas produtos simples
     sortBy: "codigo" // "codigo", "descricao", "grupo"
   });
 
   const [availableFilters, setAvailableFilters] = useState({
-    grupos: [],
-    subgrupos: []
+    grupos: []
   });
 
   // Carrega filtros do sessionStorage
@@ -52,7 +50,6 @@ export function useAdvancedFilters(storageKey = "catalogFilters") {
     setFilters({
       search: "",
       grupo: "",
-      subgrupo: "",
       isConjunto: null,
       sortBy: "codigo"
     });
@@ -96,11 +93,6 @@ export function filterAndSortProducts(products, filters) {
     filtered = filtered.filter((p) => p.grupo === filters.grupo);
   }
 
-  // Filtro por subgrupo
-  if (filters.subgrupo) {
-    filtered = filtered.filter((p) => p.subgrupo === filters.subgrupo);
-  }
-
   // Filtro por tipo (conjunto ou produto simples)
   if (filters.isConjunto !== null) {
     const hasConjuntos = (p) => p.conjuntos && Array.isArray(p.conjuntos) && p.conjuntos.some((c) => c && c.filho && String(c.filho).trim() !== "");
@@ -134,15 +126,11 @@ export function filterAndSortProducts(products, filters) {
  */
 export function extractFilterOptions(products) {
   const grupos = new Set();
-  const subgrupos = new Set();
-
   products.forEach((p) => {
     if (p.grupo) grupos.add(p.grupo);
-    if (p.subgrupo) subgrupos.add(p.subgrupo);
   });
 
   return {
-    grupos: Array.from(grupos).sort(),
-    subgrupos: Array.from(subgrupos).sort()
+    grupos: Array.from(grupos).sort()
   };
 }

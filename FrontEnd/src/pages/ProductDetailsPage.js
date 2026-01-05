@@ -179,7 +179,6 @@ function ProductDetailsPage() {
       const f = catalogState?.currentFilters || {};
       if (f?.search) params.set("search", String(f.search));
       if (f?.grupo) params.set("grupo", String(f.grupo));
-      if (f?.subgrupo) params.set("subgrupo", String(f.subgrupo));
       if (f?.tipo) params.set("tipo", String(f.tipo));
       if (f?.sortBy) params.set("sortBy", String(f.sortBy));
 
@@ -396,12 +395,6 @@ function ProductDetailsPage() {
                           <span className="detail-label">Grupo:</span>
                           <span className="detail-value">{product.grupo || 'Não especificado'}</span>
                         </div>
-                        {product.subgrupo && (
-                          <div className="detail-item">
-                            <span className="detail-label">Subgrupo:</span>
-                            <span className="detail-value">{product.subgrupo}</span>
-                          </div>
-                        )}
                         {product.tipo && (
                           <div className="detail-item">
                             <span className="detail-label">Tipo:</span>
