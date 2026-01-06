@@ -12,18 +12,18 @@ console.log(`DB_USER=${process.env.DB_USER}`);
 console.log(`DB_NAME=${process.env.DB_NAME}`);
 
 try {
-  const server = app.listen(PORT, () => {
-    console.log(`✅ Servidor iniciado com sucesso na porta ${PORT}`);
-    console.log(`🌐 Acesse: http://localhost:${PORT}`);
-    console.log(`🏥 Health check: http://localhost:${PORT}/health`);
-  });
+    const server = app.listen(PORT, () => {
+        console.log(`✅ Servidor iniciado com sucesso na porta ${PORT}`);
+        console.log(`🌐 Acesse: http://localhost:${PORT}`);
+        console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+    });
 
-  server.on('error', (error) => {
-    console.error('❌ Erro ao iniciar servidor:', error);
-    process.exit(1);
-  });
+    server.on('error', (error) => {
+        console.error('❌ Erro ao iniciar servidor:', error);
+        process.exit(1);
+    });
 
 } catch (error) {
-  console.error('❌ Erro crítico ao iniciar aplicação:', error);
-  process.exit(1);
+    console.error('❌ Erro crítico ao iniciar aplicação:', error);
+    process.exit(1);
 }
