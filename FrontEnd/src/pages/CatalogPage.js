@@ -210,7 +210,8 @@ function CatalogPage() {
         search: catalogState?.currentFilters?.search || "",
         grupo: catalogState?.currentFilters?.grupo || "",
         fabricante: catalogState?.currentFilters?.fabricante || "",
-        tipoVeiculo: catalogState?.currentFilters?.tipoVeiculo || ""
+        tipoVeiculo: catalogState?.currentFilters?.tipoVeiculo || "",
+        isConjunto: catalogState?.currentFilters?.isConjunto
       };
 
       let items = [];
@@ -222,45 +223,82 @@ function CatalogPage() {
       };
 
       try {
-        // Always load conjuntos since tipo filter was removed
-        const resp = await fetchConjuntosPaginated(validPage, PAGE_LIMIT, filters);
-
-        if (!resp) throw new Error("No server response");
-
-        items = Array.isArray(resp.data) ? resp.data : [];
-
-        // Process conjuntos data - handle various possible field names
-        items = items.map(it => {
-          const descricao = it.descricao || it.desc || it.nome || it.description || it.name || "";
-          const codigo = it.codigo || it.id || it.code || "";
-          const grupo = it.grupo || it.category || it.group || "";
-
-          return {
-            codigo: String(codigo).trim(),
-            descricao: String(descricao).trim(),
-            grupo: String(grupo).trim(),
+        let resp;
+        if (filters.isConjunto === true) {
+          // Load only conjuntos
+          resp = await fetchConjuntosPaginated(validPage, PAGE_LIMIT, filters);
+          items = Array.isArray(resp.data) ? resp.data : [];
+          items = items.map(it => ({
+            codigo: String(it.pai || it.codigo || "").trim(),
+            descricao: String(it.descricao || "").trim(),
+            grupo: String(it.grupo || "").trim(),
             tipo: "conjunto",
-            conjuntos: Array.isArray(it.children) ? it.children : [],
             ...it
-          };
-        }).filter(it => it.codigo && it.descricao);
+          })).filter(it => it.codigo && it.descricao);
+        } else if (filters.isConjunto === false) {
+          // Load only products
+          resp = await fetchProductsPaginated(validPage, PAGE_LIMIT, filters);
+          items = Array.isArray(resp.data) ? resp.data : [];
+          items = items.map(it => ({
+            codigo: String(it.codigo_abr || it.codigo || "").trim(),
+            descricao: String(it.descricao || "").trim(),
+            grupo: String(it.grupo || "").trim(),
+            tipo: "produto",
+            ...it
+          })).filter(it => it.codigo && it.descricao);
+        } else {
+          // Load both: conjuntos first, then products
+          const [conjResp, prodResp] = await Promise.all([
+            fetchConjuntosPaginated(1, Math.ceil(PAGE_LIMIT / 2), filters),
+            fetchProductsPaginated(1, Math.floor(PAGE_LIMIT / 2), filters)
+          ]);
 
-        if (resp.pagination && typeof resp.pagination === "object") {
-          const total = Math.max(0, parseInt(resp.pagination.total) || 0);
-          const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
-          const calculatedTotalPages = Math.max(1, Math.ceil(total / limit));
+          const conjItems = Array.isArray(conjResp.data) ? conjResp.data.map(it => ({
+            codigo: String(it.pai || it.codigo || "").trim(),
+            descricao: String(it.descricao || "").trim(),
+            grupo: String(it.grupo || "").trim(),
+            tipo: "conjunto",
+            ...it
+          })).filter(it => it.codigo && it.descricao) : [];
 
-          paginationResp = {
-            page: Math.max(1, parseInt(resp.pagination.page) || validPage),
-            limit: limit,
-            total: total,
-            totalPages: Math.max(1, parseInt(resp.pagination.totalPages) || calculatedTotalPages)
-          };
+          const prodItems = Array.isArray(prodResp.data) ? prodResp.data.map(it => ({
+            codigo: String(it.codigo_abr || it.codigo || "").trim(),
+            descricao: String(it.descricao || "").trim(),
+            grupo: String(it.grupo || "").trim(),
+            tipo: "produto",
+            ...it
+          })).filter(it => it.codigo && it.descricao) : [];
+
+          items = [...conjItems, ...prodItems];
+
+          // For pagination, combine totals
+          const totalConj = conjResp.pagination?.total || 0;
+          const totalProd = prodResp.pagination?.total || 0;
+          paginationResp.total = totalConj + totalProd;
+          paginationResp.totalPages = Math.ceil(paginationResp.total / PAGE_LIMIT);
+          paginationResp.page = validPage;
+          paginationResp.limit = PAGE_LIMIT;
+        }
+
+        if (filters.isConjunto !== null && resp) {
+          // For single type, use normal pagination
+          if (resp.pagination && typeof resp.pagination === "object") {
+            const total = Math.max(0, parseInt(resp.pagination.total) || 0);
+            const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
+            const totalPages = Math.ceil(total / limit);
+
+            paginationResp = {
+              page: Math.min(validPage, totalPages) || 1,
+              limit,
+              total,
+              totalPages
+            };
+          }
         }
 
         // Debug log to see data structure
         if (items.length > 0) {
-          console.log("First product data:", items[0]);
+          console.log("First item data:", items[0]);
         }
 
         // If backend didn't provide fabricantes, derive them from returned items
@@ -357,7 +395,7 @@ function CatalogPage() {
     const qs = new URLSearchParams(location.search);
     const page = parseInt(qs.get("page")) || catalogState.currentPage || 1;
     const search = qs.get("search") || catalogState.currentFilters.search || "";
-    const grupo = qs.get("grupo") || catalogState.currentFilters.grupo || "JOGOS DE JUNTAS";
+    const grupo = qs.get("grupo") || catalogState.currentFilters.grupo || "";
     const fabricante = qs.get("fabricante") || catalogState.currentFilters.fabricante || "";
     const tipoVeiculo = qs.get("tipoVeiculo") || catalogState.currentFilters.tipoVeiculo || "";
     const sortBy = qs.get("sortBy") || catalogState.currentFilters.sortBy || "codigo";
@@ -366,7 +404,7 @@ function CatalogPage() {
     const currentFilters = catalogState.currentFilters || {};
     const hasChanges = page !== catalogState.currentPage ||
       search !== (currentFilters.search || "") ||
-      grupo !== (currentFilters.grupo || "JOGOS DE JUNTAS") ||
+      grupo !== (currentFilters.grupo || "") ||
       fabricante !== (currentFilters.fabricante || "") ||
       tipoVeiculo !== (currentFilters.tipoVeiculo || "") ||
       sortBy !== (currentFilters.sortBy || "codigo");
@@ -553,7 +591,7 @@ function CatalogPage() {
               <div className="filter-group">
                 <label className="filter-label">Grupo</label>
                 <select
-                  value={catalogState.currentFilters.grupo || "JOGOS DE JUNTAS"}
+                  value={catalogState.currentFilters.grupo || ""}
                   onChange={(e) => handleFilterChange("grupo", e.target.value)}
                   className="filter-select"
                   disabled={!filtersLoaded}

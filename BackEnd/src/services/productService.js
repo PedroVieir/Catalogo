@@ -1,6 +1,18 @@
+// src/services/productService.js
 import { query } from "../config/db.js";
 
-// Cache independente para cada entidade com timestamps próprios
+/**
+ * productService.js
+ * Versão refatorada e defensiva:
+ * - Remove duplicidade de declarações
+ * - Trata erros de DB
+ * - Usa caches por entidade com timestamps
+ * - Normaliza consistentemente códigos/textos
+ * - Evita retornar referências diretas aos caches (retorna cópias)
+ * - Valida parâmetros de entrada
+ */
+
+// ---------------------- Caches ----------------------
 const caches = {
   produtos: { data: null, timestamp: 0 },
   conjuntos: { data: null, timestamp: 0 },
@@ -8,97 +20,121 @@ const caches = {
   aplicacoes: { data: null, timestamp: 0 }
 };
 
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos (ms)
 
+// invalidar caches (útil para reload manual)
 function invalidateCache() {
-  Object.keys(caches).forEach(key => {
-    caches[key].data = null;
-    caches[key].timestamp = 0;
+  Object.keys(caches).forEach((k) => {
+    caches[k].data = null;
+    caches[k].timestamp = 0;
   });
 }
 
-// Força recarga do catálogo (invalida cache e recarrega)
+// Força recarga do catálogo (exportado)
 export async function reloadCatalog() {
   invalidateCache();
   await preloadCatalog();
 }
 
+// ---------------------- Normalização / Helpers ----------------------
 function normalizeCodigo(codigo) {
-  if (!codigo) return '';
-  // Converter para string, maiúsculas e remover espaços
-  return String(codigo).toUpperCase().replace(/\s+/g, '').trim();
+  if (codigo === null || codigo === undefined) return "";
+  return String(codigo).toUpperCase().replace(/\s+/g, "").trim();
 }
 
-
-// Função auxiliar para normalizar texto
 function normalizeTexto(texto) {
-  return String(texto || '').trim();
+  if (texto === null || texto === undefined) return "";
+  return String(texto).trim();
 }
 
-async function getAllProducts() {
-  const cache = caches.produtos;
-  const now = Date.now();
-  
-  if (cache.data && now - cache.timestamp < CACHE_DURATION) {
-    return cache.data;
+function safeArray(x) {
+  return Array.isArray(x) ? x : [];
+}
+
+// precompiled helper para buscas (case-insensitive contains)
+function createSearchFilter(searchTerm) {
+  const s = String(searchTerm || "").trim().toLowerCase();
+  return (text) => !!text && String(text).toLowerCase().includes(s);
+}
+
+// matchesTipoFilter - implementação defensiva conforme seu código anterior
+export function matchesTipoFilter(aplicacao = {}, tipoFilter = "") {
+  if (!tipoFilter) return true;
+
+  const tfRaw = String(tipoFilter || "").trim().toLowerCase();
+  const tipo = (aplicacao.tipo || "").toString().toLowerCase();
+  const sigla = (aplicacao.sigla_tipo || "").toString().toLowerCase();
+
+  const canonical = ["vll", "vlp", "mll", "mlp"];
+
+  if (canonical.includes(tfRaw)) {
+    return sigla === tfRaw;
   }
 
-  const rows = await query(`
+  if (tfRaw === "leve") {
+    if (tipo.includes("lev")) return true;
+    if (tipo.includes("linha")) return true;
+    if (sigla.includes("l") && !sigla.includes("p")) return true;
+    return false;
+  }
+
+  if (tfRaw === "pesado") {
+    if (tipo.includes("pesad")) return true;
+    if (sigla.includes("p")) return true;
+    return false;
+  }
+
+  return tipo.includes(tfRaw) || sigla.includes(tfRaw);
+}
+
+// ---------------------- Acesso às entidades (com cache) ----------------------
+async function runQuerySafe(sql, params = []) {
+  try {
+    const rows = await query(sql, params);
+    return Array.isArray(rows) ? rows : [];
+  } catch (err) {
+    console.error("DB query failed:", err && err.message ? err.message : err);
+    return [];
+  }
+}
+
+export async function getAllProducts() {
+  const cache = caches.produtos;
+  const now = Date.now();
+  if (cache.data && now - cache.timestamp < CACHE_DURATION) {
+    return cache.data.slice(); // retorna cópia
+  }
+
+  const rows = await runQuerySafe(`
     SELECT 
       TRIM(codigo_abr) as codigo_abr,
       TRIM(descricao) as descricao,
       TRIM(grupo) as grupo
     FROM produtoss 
-    WHERE codigo_abr IS NOT NULL 
-      AND TRIM(codigo_abr) != ''
+    WHERE codigo_abr IS NOT NULL AND TRIM(codigo_abr) != ''
     ORDER BY codigo_abr
   `);
 
-  // fetched rows from DB
-  const normalized = rows.map(r => ({
+  const normalized = rows.map((r) => ({
     codigo: normalizeCodigo(r.codigo_abr),
+    codigo_abr: String(r.codigo_abr || "").trim(),
     descricao: normalizeTexto(r.descricao) || null,
     grupo: r.grupo || null
   }));
 
   cache.data = normalized;
   cache.timestamp = now;
-  return normalized;
+  return normalized.slice();
 }
 
-export async function debugProductSearch(code) {
-  const upCode = normalizeCodigo(code);
-  console.log('Código buscado:', code, 'Normalizado:', upCode);
-  
-  const products = await getAllProducts();
-  const matches = products.filter(p => 
-    normalizeCodigo(p.codigo) === upCode
-  );
-  
-  console.log('Produtos encontrados:', matches.length);
-  console.log('Primeiros 10 produtos no sistema:');
-  products.slice(0, 10).forEach(p => {
-    console.log(`  ${p.codigo} (normalizado: ${normalizeCodigo(p.codigo)})`);
-  });
-  
-  return {
-    buscado: code,
-    normalizadoBuscado: upCode,
-    encontrados: matches,
-    totalProdutos: products.length
-  };
-}
-
-async function getAllConjuntos() {
+export async function getAllConjuntos() {
   const cache = caches.conjuntos;
   const now = Date.now();
-  
   if (cache.data && now - cache.timestamp < CACHE_DURATION) {
-    return cache.data;
+    return cache.data.slice();
   }
 
-  // Adicione TRIM para remover espaços e garantir correspondência
-  const rows = await query(`
+  const rows = await runQuerySafe(`
     SELECT 
       TRIM(ec.codigo_conjunto) as pai,
       TRIM(ec.codigo_componente) as filho,
@@ -113,8 +149,7 @@ async function getAllConjuntos() {
     ORDER BY ec.codigo_conjunto, ec.codigo_componente
   `);
 
-  // fetched rows from DB
-  const normalized = rows.map(r => ({
+  const normalized = rows.map((r) => ({
     pai: normalizeCodigo(r.pai),
     filho: normalizeCodigo(r.filho),
     filho_des: normalizeTexto(r.filho_des) || null,
@@ -123,58 +158,52 @@ async function getAllConjuntos() {
 
   cache.data = normalized;
   cache.timestamp = now;
-  return normalized;
+  return normalized.slice();
 }
 
-async function getAllBenchmarks() {
+export async function getAllBenchmarks() {
   const cache = caches.benchmarks;
   const now = Date.now();
-  
   if (cache.data && now - cache.timestamp < CACHE_DURATION) {
-    return cache.data;
+    return cache.data.slice();
   }
 
-  // Índice recomendado: codigo_produto
-  const rows = await query(`
+  const rows = await runQuerySafe(`
     SELECT id, codigo_produto, origem, numero_original
     FROM benchmarks
-    WHERE codigo_produto IS NOT NULL 
-      AND codigo_produto != ''
+    WHERE codigo_produto IS NOT NULL AND codigo_produto != ''
   `);
 
-  // fetched rows from DB
-  const normalized = rows.map(r => ({
+  const normalized = rows.map((r) => ({
     id: r.id,
     codigo: normalizeCodigo(r.codigo_produto),
+    codigo_produto: String(r.codigo_produto || "").trim(),
     origem: normalizeTexto(r.origem) || null,
     numero_original: normalizeTexto(r.numero_original) || null
   }));
 
   cache.data = normalized;
   cache.timestamp = now;
-  return normalized;
+  return normalized.slice();
 }
 
-async function getAllAplicacoes() {
+export async function getAllAplicacoes() {
   const cache = caches.aplicacoes;
   const now = Date.now();
-  
   if (cache.data && now - cache.timestamp < CACHE_DURATION) {
-    return cache.data;
+    return cache.data.slice();
   }
 
-  // Índice recomendado: codigo_conjunto
-  const rows = await query(`
+  const rows = await runQuerySafe(`
     SELECT id, codigo_conjunto, veiculo, fabricante, tipo, sigla_tipo
     FROM aplicacoes
-    WHERE codigo_conjunto IS NOT NULL 
-      AND codigo_conjunto != ''
+    WHERE codigo_conjunto IS NOT NULL AND codigo_conjunto != ''
   `);
 
-  // fetched rows from DB
-  const normalized = rows.map(r => ({
+  const normalized = rows.map((r) => ({
     id: r.id,
     codigo_conjunto: normalizeCodigo(r.codigo_conjunto),
+    codigo_conjunto_raw: String(r.codigo_conjunto || "").trim(),
     veiculo: normalizeTexto(r.veiculo) || null,
     fabricante: normalizeTexto(r.fabricante) || null,
     tipo: normalizeTexto(r.tipo) || null,
@@ -183,63 +212,53 @@ async function getAllAplicacoes() {
 
   cache.data = normalized;
   cache.timestamp = now;
-  return normalized;
+  return normalized.slice();
 }
 
-// Cache para fabricantes
+// ---------------------- Fabricantes (cache próprio) ----------------------
 let fabricantesCache = null;
 let fabricantesCacheTimestamp = 0;
 
-async function getFabricantes() {
+export async function getFabricantes() {
   const now = Date.now();
   if (fabricantesCache && now - fabricantesCacheTimestamp < CACHE_DURATION) {
-    return fabricantesCache;
+    return fabricantesCache.slice();
   }
 
-  // Buscar fabricantes da tabela ou das aplicações
   try {
-    const rows = await query(`
+    const rows = await runQuerySafe(`
       SELECT f.nome as name, COUNT(a.id) as count
       FROM fabricantes f
       LEFT JOIN aplicacoes a ON TRIM(a.fabricante) = f.nome
       GROUP BY f.nome
       ORDER BY f.nome
     `);
-    // fetched rows from DB
-    fabricantesCache = rows.map(r => ({ 
-      name: r.name, 
-      count: Number(r.count) 
+
+    fabricantesCache = rows.map((r) => ({
+      name: normalizeTexto(r.name),
+      count: Number(r.count) || 0
     }));
-  } catch (error) {
-    // Fallback para aplicações se tabela fabricantes não existir
+  } catch (err) {
+    // fallback: construir fabricantes a partir de aplicacoes
     const aplicacoes = await getAllAplicacoes();
-    const fabricantesMap = new Map();
-    
-    aplicacoes.forEach(a => {
+    const map = new Map();
+    aplicacoes.forEach((a) => {
       if (a.fabricante) {
         const key = a.fabricante;
-        fabricantesMap.set(key, (fabricantesMap.get(key) || 0) + 1);
+        map.set(key, (map.get(key) || 0) + 1);
       }
     });
-    
-    fabricantesCache = Array.from(fabricantesMap.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => a.name.localeCompare(b.name));
+    fabricantesCache = Array.from(map.entries()).map(([name, count]) => ({ name, count }));
+    fabricantesCache.sort((a, b) => a.name.localeCompare(b.name));
   }
-  
+
   fabricantesCacheTimestamp = now;
-  return fabricantesCache;
+  return fabricantesCache.slice();
 }
 
-/**
- * Carrega o catálogo completo em cache (uma única operação lógica).
- * Essa função popula os caches de produtos, conjuntos, benchmarks e aplicações
- * e garante que, após chamada, todas as informações necessárias estejam em memória
- * por CACHE_DURATION (5 minutos) para evitar múltiplas consultas repetidas.
- */
+// ---------------------- Preload & Snapshot ----------------------
 export async function preloadCatalog() {
   try {
-    // Executa as cargas necessárias em paralelo
     await Promise.all([
       getAllProducts(),
       getAllConjuntos(),
@@ -247,26 +266,20 @@ export async function preloadCatalog() {
       getAllAplicacoes(),
       getFabricantes()
     ]);
-    // apenas log essencial
-    console.info('Catalog preloaded');
+    console.info("Catalog preloaded");
   } catch (err) {
-    console.error('Falha ao pré-carregar catálogo:', err.message || err);
+    console.error("Falha ao pré-carregar catálogo:", err && err.message ? err.message : err);
   }
 }
 
-/**
- * Retorna snapshot atual do catálogo (dados em cache). Garante que o catálogo
- * foi pré-carregado pelo menos uma vez (best-effort).
- */
 export async function getCatalogSnapshot() {
-  // Ensure caches populated at least once
   await preloadCatalog();
 
   return {
-    products: caches.produtos.data || [],
-    conjuntos: caches.conjuntos.data || [],
-    benchmarks: caches.benchmarks.data || [],
-    aplicacoes: caches.aplicacoes.data || [],
+    products: (caches.produtos.data || []).slice(),
+    conjuntos: (caches.conjuntos.data || []).slice(),
+    benchmarks: (caches.benchmarks.data || []).slice(),
+    aplicacoes: (caches.aplicacoes.data || []).slice(),
     fabricantes: await getFabricantes(),
     _cachedAtMs: Math.min(
       caches.produtos.timestamp || Date.now(),
@@ -277,85 +290,90 @@ export async function getCatalogSnapshot() {
   };
 }
 
-// Otimização: pré-compilação de regex para filtros
-function createSearchFilter(searchTerm) {
-  const searchLower = searchTerm.toLowerCase();
-  return (text) => text && text.toLowerCase().includes(searchLower);
+// ---------------------- Paginação / Filtros ----------------------
+function clampNumber(v, min, max, fallback) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.min(max, Math.max(min, Math.floor(n)));
 }
 
-// ====== PRODUTOS - PAGINAÇÃO ======
 export async function getProductsPaginated(page = 1, limit = 20, filters = {}) {
   const start = Date.now();
 
-  // Carregar apenas os dados necessários
-  const [products, conjuntos, aplicacoes] = await Promise.all([
+  page = clampNumber(page, 1, 99999, 1);
+  limit = clampNumber(limit, 1, 100, 20);
+
+  const [products, conjuntos, aplicacoes, benchmarks] = await Promise.all([
     getAllProducts(),
-    filters.fabricante || filters.tipoVeiculo ? getAllConjuntos() : Promise.resolve([]),
-    filters.fabricante || filters.tipoVeiculo ? getAllAplicacoes() : Promise.resolve([])
+    getAllConjuntos(),
+    getAllAplicacoes(),
+    getAllBenchmarks()
   ]);
 
-  let filtered = [...products]; // Cópia superficial para evitar mutação
+  let filtered = products.slice();
 
-  // Filtro de busca
-  if (filters.search) {
-    const searchFilter = createSearchFilter(filters.search);
-    filtered = filtered.filter(p => 
-      searchFilter(p.codigo) || searchFilter(p.descricao)
+  // search
+  if (filters.search && typeof filters.search === "string") {
+    const sf = createSearchFilter(filters.search);
+    filtered = filtered.filter((p) => {
+      return sf(p.codigo) || sf(p.descricao) || (p.grupo && sf(p.grupo));
+    });
+  }
+
+  // grupo
+  if (filters.grupo && typeof filters.grupo === "string") {
+    const g = filters.grupo.trim().toLowerCase();
+    filtered = filtered.filter((p) => p.grupo && p.grupo.toLowerCase() === g);
+  }
+
+  // numero_original (benchmarks)
+  if (filters.numero_original && typeof filters.numero_original === "string") {
+    const nf = createSearchFilter(filters.numero_original);
+    const matchedCodes = new Set(
+      benchmarks.filter((b) => b.numero_original && nf(b.numero_original)).map((b) => b.codigo)
     );
+    filtered = filtered.filter((p) => matchedCodes.has(p.codigo));
   }
 
-  // Filtro de grupo
-  if (filters.grupo) {
-    filtered = filtered.filter(p => p.grupo === filters.grupo);
-  }
+  // fabricante / tipoVeiculo via aplicacoes + conjuntos
+  if ((filters.fabricante && typeof filters.fabricante === "string") || (filters.tipoVeiculo && typeof filters.tipoVeiculo === "string")) {
+    const fabricanteTerm = filters.fabricante ? filters.fabricante.trim().toLowerCase() : null;
+    const tipoTerm = filters.tipoVeiculo ? filters.tipoVeiculo : null;
 
-  // Filtro por número original (carregar benchmarks apenas se necessário)
-  if (filters.numero_original) {
-    const benchmarks = await getAllBenchmarks();
-    const numeroFilter = createSearchFilter(filters.numero_original);
-    const matched = new Set(
-      benchmarks
-        .filter(b => b.numero_original && numeroFilter(b.numero_original))
-        .map(b => b.codigo)
-    );
-    filtered = filtered.filter(p => matched.has(p.codigo));
-  }
-
-  // Filtro por fabricante/tipo de veículo (somente se necessário)
-  if (filters.fabricante || filters.tipoVeiculo) {
-    const fabricanteFilter = filters.fabricante ? 
-      createSearchFilter(filters.fabricante) : () => true;
-    
-    // Identificar conjuntos que atendem aos filtros
+    // identificar conjuntos válidos
     const matchingConjuntos = new Set();
-    
-    aplicacoes.forEach(a => {
-      const fabricaMatch = fabricanteFilter(a.fabricante || '');
-      const tipoMatch = !filters.tipoVeiculo || matchesTipoFilter(a, filters.tipoVeiculo);
-      
-      if (fabricaMatch && tipoMatch) {
-        matchingConjuntos.add(a.codigo_conjunto);
-      }
+    aplicacoes.forEach((a) => {
+      const fabricaMatch = fabricanteTerm ? (a.fabricante && a.fabricante.toLowerCase().includes(fabricanteTerm)) : true;
+      const tipoMatch = tipoTerm ? matchesTipoFilter(a, tipoTerm) : true;
+      if (fabricaMatch && tipoMatch) matchingConjuntos.add(a.codigo_conjunto);
     });
 
-    // Filtrar produtos que são conjuntos válidos
-    filtered = filtered.filter(p => matchingConjuntos.has(p.codigo));
+    // incluir filhos dos conjuntos
+    const produtosSet = new Set();
+    matchingConjuntos.forEach((c) => produtosSet.add(c));
+    conjuntos.forEach((c) => {
+      if (matchingConjuntos.has(c.pai)) produtosSet.add(c.filho);
+    });
+
+    filtered = filtered.filter((p) => produtosSet.has(p.codigo));
   }
 
-  // Paginação
-  page = Math.max(1, parseInt(page) || 1);
-  limit = Math.min(100, Math.max(1, parseInt(limit) || 20));
-  
+  // Ordenação
+  const sortBy = (filters.sortBy || "codigo").toString();
+  filtered.sort((a, b) => {
+    if (sortBy === "descricao") return (a.descricao || "").localeCompare(b.descricao || "");
+    return (a.codigo || "").localeCompare(b.codigo || "");
+  });
+
   const total = filtered.length;
-  const totalPages = Math.ceil(total / limit) || 1;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
   const offset = (page - 1) * limit;
+  const data = filtered.slice(offset, offset + limit);
 
-  const paginated = filtered.slice(offset, offset + limit);
-
-  const duration = Date.now() - start;
+  const durationMs = Date.now() - start;
 
   return {
-    data: paginated,
+    data,
     pagination: {
       page,
       limit,
@@ -363,29 +381,28 @@ export async function getProductsPaginated(page = 1, limit = 20, filters = {}) {
       totalPages,
       hasNext: page < totalPages,
       hasPrev: page > 1
+    },
+    meta: {
+      durationMs
     }
   };
 }
 
 export async function getConjuntosPaginated(page = 1, limit = 20, filters = {}) {
-  const start = Date.now();
+  page = clampNumber(page, 1, 99999, 1);
+  limit = clampNumber(limit, 1, 100, 20);
 
-  // Carregar dados em paralelo
   const [conjuntos, products, aplicacoes] = await Promise.all([
     getAllConjuntos(),
     getAllProducts(),
     (filters.fabricante || filters.tipoVeiculo) ? getAllAplicacoes() : Promise.resolve([])
   ]);
 
-  // Criar mapa de produtos para acesso rápido
-  const productMap = new Map(products.map(p => [p.codigo, p]));
+  const productMap = new Map(products.map((p) => [p.codigo, p]));
 
-  // Agrupar conjuntos por pai
   const parentsMap = new Map();
-  
   for (const row of conjuntos) {
     const pai = row.pai;
-    
     if (!parentsMap.has(pai)) {
       const prod = productMap.get(pai) || {};
       parentsMap.set(pai, {
@@ -395,9 +412,7 @@ export async function getConjuntosPaginated(page = 1, limit = 20, filters = {}) 
         children: []
       });
     }
-
     const parent = parentsMap.get(pai);
-    // Incluir todas as peças do conjunto (sem excluir por quantidade)
     parent.children.push({
       filho: row.filho,
       filho_des: row.filho_des || null,
@@ -407,55 +422,45 @@ export async function getConjuntosPaginated(page = 1, limit = 20, filters = {}) 
 
   let parents = Array.from(parentsMap.values());
 
-  // Aplicar filtros
+  // aplicar filtros de fabricante/tipo
   if (filters.fabricante || filters.tipoVeiculo) {
-    const fabricanteFilter = filters.fabricante ? 
-      createSearchFilter(filters.fabricante) : () => true;
-    
+    const fabricanteFilter = filters.fabricante ? (s => (s || "").toLowerCase().includes(filters.fabricante.trim().toLowerCase())) : () => true;
     const matchingConjuntos = new Set();
-    
     aplicacoes.forEach(a => {
-      const fabricaMatch = fabricanteFilter(a.fabricante || '');
+      const fabricaMatch = fabricanteFilter(a.fabricante || "");
       const tipoMatch = !filters.tipoVeiculo || matchesTipoFilter(a, filters.tipoVeiculo);
-      
-      if (fabricaMatch && tipoMatch) {
-        matchingConjuntos.add(a.codigo_conjunto);
-      }
+      if (fabricaMatch && tipoMatch) matchingConjuntos.add(a.codigo_conjunto);
     });
-
     parents = parents.filter(p => matchingConjuntos.has(p.codigo));
   }
 
-  if (filters.search) {
-    const searchFilter = createSearchFilter(filters.search);
+  if (filters.search && typeof filters.search === "string") {
+    const sf = createSearchFilter(filters.search);
     parents = parents.filter(parent => {
-      if (searchFilter(parent.codigo) || searchFilter(parent.descricao)) {
-        return true;
-      }
-      return parent.children.some(ch =>
-        searchFilter(ch.filho) || searchFilter(ch.filho_des)
-      );
+      if (sf(parent.codigo) || sf(parent.descricao)) return true;
+      return parent.children.some(ch => sf(ch.filho) || sf(ch.filho_des));
     });
   }
 
-  if (filters.grupo) {
-    parents = parents.filter(p => p.grupo === filters.grupo);
+  if (filters.grupo && typeof filters.grupo === "string") {
+    const g = filters.grupo.trim().toLowerCase();
+    parents = parents.filter(p => p.grupo && p.grupo.toLowerCase() === g);
   }
 
-  // Paginação
-  page = Math.max(1, parseInt(page) || 1);
-  limit = Math.min(100, Math.max(1, parseInt(limit) || 20));
-  
+  // ordenação
+  const sortBy = filters.sortBy || "codigo";
+  parents.sort((a, b) => {
+    if (sortBy === "descricao") return (a.descricao || "").localeCompare(b.descricao || "");
+    return (a.codigo || "").localeCompare(b.codigo || "");
+  });
+
   const total = parents.length;
-  const totalPages = Math.ceil(total / limit) || 1;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
   const offset = (page - 1) * limit;
-
-  const paginatedParents = parents.slice(offset, offset + limit);
-
-  const duration = Date.now() - start;
+  const data = parents.slice(offset, offset + limit);
 
   return {
-    data: paginatedParents,
+    data,
     pagination: {
       page,
       limit,
@@ -467,25 +472,11 @@ export async function getConjuntosPaginated(page = 1, limit = 20, filters = {}) 
   };
 }
 
-// ====== BUSCA SIMPLES ======
-export async function searchProducts(search) {
-  const products = await getAllProducts();
-  
-  if (!search) return products;
-  
-  const searchFilter = createSearchFilter(search);
-  return products.filter(p =>
-    searchFilter(p.codigo) || searchFilter(p.descricao)
-  );
-}
-
+// ---------------------- Busca de produto detalhado ----------------------
 export async function getProductWithConjuntos(code) {
   if (!code) return null;
-  
-  // Use a mesma normalização em todos os lugares
   const upCode = normalizeCodigo(code);
-  // lookup conjunto
-  
+
   const [products, conjuntos, benchmarks, aplicacoes] = await Promise.all([
     getAllProducts(),
     getAllConjuntos(),
@@ -493,30 +484,25 @@ export async function getProductWithConjuntos(code) {
     getAllAplicacoes()
   ]);
 
-  // Busque o produto com a mesma normalização
   const product = products.find(p => normalizeCodigo(p.codigo) === upCode);
-  // basic counts available in caches
   if (!product) return null;
 
-  // Corrija as comparações nos filtros também:
-  const productConjuntos = conjuntos.filter(c => 
-    normalizeCodigo(c.pai) === normalizeCodigo(product.codigo)
-  );
-  
-  const productAplicacoes = aplicacoes.filter(a => 
-    normalizeCodigo(a.codigo_conjunto) === normalizeCodigo(product.codigo)
-  );
-  
-  const productBenchmarks = benchmarks.filter(b => 
-    normalizeCodigo(b.codigo) === normalizeCodigo(product.codigo)
-  );
-  
+  const productConjuntos = conjuntos.filter(c => normalizeCodigo(c.pai) === normalizeCodigo(product.codigo));
   const memberships = conjuntos
     .filter(c => normalizeCodigo(c.filho) === normalizeCodigo(product.codigo))
-    .map(c => ({ 
-      codigo_conjunto: c.pai, 
-      quantidade: c.qtd_explosao 
-    }));
+    .map(c => ({ codigo_conjunto: c.pai, quantidade: c.qtd_explosao }));
+
+  // benchmarks do produto
+  const productBenchmarks = benchmarks.filter(b => normalizeCodigo(b.codigo) === normalizeCodigo(product.codigo));
+
+  // aplicações: se produto é conjunto -> aplicações diretas; senão -> aplicações dos conjuntos onde ele participa
+  let productAplicacoes = [];
+  if (productConjuntos.length > 0) {
+    productAplicacoes = aplicacoes.filter(a => normalizeCodigo(a.codigo_conjunto) === normalizeCodigo(product.codigo));
+  } else {
+    const conjuntoCodes = memberships.map(m => m.codigo_conjunto);
+    productAplicacoes = aplicacoes.filter(a => conjuntoCodes.some(cc => normalizeCodigo(a.codigo_conjunto) === normalizeCodigo(cc)));
+  }
 
   return {
     product,
@@ -530,9 +516,8 @@ export async function getProductWithConjuntos(code) {
 
 export async function getConjuntoWithProducts(code) {
   if (!code) return null;
-  
   const upCode = normalizeCodigo(code);
-  
+
   const [products, conjuntos, aplicacoes] = await Promise.all([
     getAllProducts(),
     getAllConjuntos(),
@@ -553,39 +538,25 @@ export async function getConjuntoWithProducts(code) {
   };
 }
 
-// ====== FILTROS E METADADOS ======
+// ---------------------- Metadados / filtros disponíveis ----------------------
 export async function getAvailableFilters() {
-  const [products, benchmarks, aplicacoes] = await Promise.all([
+  const [products, benchmarks, aplicacoes, fabricantes] = await Promise.all([
     getAllProducts(),
     getAllBenchmarks(),
-    getAllAplicacoes()
+    getAllAplicacoes(),
+    getFabricantes()
   ]);
 
-  // Grupos
   const grupos = new Set();
-  products.forEach(p => {
-    if (p.grupo) grupos.add(p.grupo);
-  });
+  products.forEach(p => { if (p.grupo) grupos.add(p.grupo); });
 
-  // Números originais (top 50)
-  const numeros = [...new Set(
-    benchmarks
-      .map(b => b.numero_original)
-      .filter(Boolean)
-  )].slice(0, 50);
+  const numeros = [...new Set(benchmarks.map(b => b.numero_original).filter(Boolean))].slice(0, 50);
 
-  // Tipos de veículo (siglas canônicas)
-  const canonicalSet = new Set(['VLL', 'VLP', 'MLL', 'MLP']);
+  const canonicalSet = new Set(["VLL", "VLP", "MLL", "MLP"]);
   const foundSiglas = new Set();
-  
   aplicacoes.forEach(a => {
-    if (a.sigla_tipo && canonicalSet.has(a.sigla_tipo)) {
-      foundSiglas.add(a.sigla_tipo);
-    }
+    if (a.sigla_tipo && canonicalSet.has(a.sigla_tipo)) foundSiglas.add(a.sigla_tipo);
   });
-
-  // Fabricantes (com cache)
-  const fabricantes = await getFabricantes();
 
   return {
     grupos: Array.from(grupos).sort(),
@@ -601,72 +572,44 @@ export async function getAvailableFilters() {
 }
 
 export async function getCatalogStats() {
-  const [products, conjuntos] = await Promise.all([
-    getAllProducts(),
-    getAllConjuntos()
-  ]);
-
+  const [products, conjuntos] = await Promise.all([getAllProducts(), getAllConjuntos()]);
   const paiUnicos = new Set(conjuntos.map(c => c.pai));
-
   return {
     totalProducts: products.length,
     totalConjuntos: paiUnicos.size,
     lastUpdate: new Date().toISOString(),
     cacheStatus: {
-      produtos: {
-        isCached: caches.produtos.data !== null,
-        ageSeconds: caches.produtos.timestamp ? 
-          Math.floor((Date.now() - caches.produtos.timestamp) / 1000) : null
-      },
-      conjuntos: {
-        isCached: caches.conjuntos.data !== null,
-        ageSeconds: caches.conjuntos.timestamp ? 
-          Math.floor((Date.now() - caches.conjuntos.timestamp) / 1000) : null
-      }
+      produtos: { isCached: caches.produtos.data !== null, ageSeconds: caches.produtos.timestamp ? Math.floor((Date.now() - caches.produtos.timestamp) / 1000) : null },
+      conjuntos: { isCached: caches.conjuntos.data !== null, ageSeconds: caches.conjuntos.timestamp ? Math.floor((Date.now() - caches.conjuntos.timestamp) / 1000) : null }
     }
   };
 }
 
-// Função auxiliar para mapear/match de tipoVeiculo
-function matchesTipoFilter(aplicacao, tipoFilter) {
-  if (!tipoFilter) return true;
-  
-  const tfRaw = String(tipoFilter || '').trim();
-  const tf = tfRaw.toLowerCase();
-  const tipo = (aplicacao.tipo || '').toString().toLowerCase();
-  const sigla = (aplicacao.sigla_tipo || '').toString().toLowerCase();
+// ---------------------- Auxiliares SQL ----------------------
+export async function getProdutosFromConjuntos(conjuntoCodes) {
+  // conjuntoCodes: Set or Array
+  const codesArray = Array.isArray(conjuntoCodes) ? conjuntoCodes : Array.from(conjuntoCodes || []);
+  if (codesArray.length === 0) return [];
 
-  // Canonical siglas: VLL, VLP, MLL, MLP
-  const canonical = ['vll', 'vlp', 'mll', 'mlp'];
-
-  // Se o usuário passou uma sigla canônica, fazer match exato
-  if (canonical.includes(tf)) {
-    return sigla === tf;
-  }
-
-  // Leve
-  if (tf === 'leve') {
-    if (tipo.includes('lev')) return true;
-    if (tipo.includes('linha')) return true;
-    if (sigla.includes('l') && !sigla.includes('p')) return true;
-    return false;
-  }
-
-  // Pesado
-  if (tf === 'pesado') {
-    if (tipo.includes('pesad')) return true;
-    if (sigla.includes('p')) return true;
-    return false;
-  }
-
-  // Caso específico
-  return tipo.includes(tf) || sigla.includes(tf);
+  // construir placeholders seguros
+  const placeholders = codesArray.map(() => "?").join(",");
+  const sql = `
+    SELECT DISTINCT p.codigo_abr, p.descricao, p.grupo
+    FROM produtoss p
+    INNER JOIN conjunto_produtos cp ON p.codigo_abr = cp.codigo_produto
+    WHERE cp.codigo_conjunto IN (${placeholders})
+  `;
+  const rows = await runQuerySafe(sql, codesArray);
+  return rows.map(r => ({
+    codigo_abr: String(r.codigo_abr || "").trim(),
+    descricao: normalizeTexto(r.descricao) || null,
+    grupo: r.grupo || null
+  }));
 }
 
-// Garantir existência/população da tabela fabricantes
-async function ensureFabricantesPopulated() {
-  // ensure fabricantes
-  await query(`
+// ---------------------- Ensure fabricantes table populated ----------------------
+export async function ensureFabricantesPopulated() {
+  await runQuerySafe(`
     CREATE TABLE IF NOT EXISTS fabricantes (
       id INT AUTO_INCREMENT PRIMARY KEY,
       nome VARCHAR(255) NOT NULL,
@@ -674,15 +617,39 @@ async function ensureFabricantesPopulated() {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
-  await query(`
+  await runQuerySafe(`
     INSERT IGNORE INTO fabricantes (nome)
     SELECT DISTINCT TRIM(fabricante) as nome
     FROM aplicacoes
-    WHERE fabricante IS NOT NULL 
-      AND TRIM(fabricante) != ''
+    WHERE fabricante IS NOT NULL AND TRIM(fabricante) != ''
   `);
-  // ensure fabricantes complete
 }
 
-// Export helper to allow triggering seed via route
-export { ensureFabricantesPopulated, matchesTipoFilter };
+// ---------------------- Busca livre / utilitários ----------------------
+export async function searchProducts(searchTerm = "") {
+  const [products, benchmarks] = await Promise.all([getAllProducts(), getAllBenchmarks()]);
+
+  if (!searchTerm || typeof searchTerm !== "string") return products.slice(0, 50);
+
+  const term = searchTerm.trim().toLowerCase();
+
+  const productMatches = products.filter(p =>
+    (p.descricao || "").toLowerCase().includes(term) ||
+    (p.codigo || "").toLowerCase().includes(term) ||
+    ((p.grupo || "").toLowerCase().includes(term))
+  );
+
+  const benchmarkProductCodes = new Set(
+    benchmarks
+      .filter(b => b.numero_original && b.numero_original.toLowerCase().includes(term))
+      .map(b => b.codigo)
+  );
+
+  const benchmarkMatches = products.filter(p => benchmarkProductCodes.has(p.codigo));
+
+  const combined = [...productMatches, ...benchmarkMatches];
+  const unique = combined.filter((p, idx, self) => self.findIndex(p2 => p2.codigo === p.codigo) === idx);
+
+  return unique.slice(0, 100);
+}
+

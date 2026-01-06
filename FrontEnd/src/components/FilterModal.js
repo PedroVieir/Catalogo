@@ -37,7 +37,7 @@ function FilterModal({ isOpen, onClose, currentFilters, onFilterChange, availabl
           <div className="filter-group">
             <label>Grupo</label>
             <select
-              value={currentFilters.grupo || "JOGOS DE JUNTAS"}
+              value={currentFilters.grupo || ""}
               onChange={(e) => onFilterChange("grupo", e.target.value)}
               className="filter-select"
             >

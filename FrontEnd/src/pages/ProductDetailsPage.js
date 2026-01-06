@@ -97,9 +97,7 @@ function ProductDetailsPage() {
             qtd_explosao: c.qtd_explosao || c.quantidade || c.qtd || 1
           }));
 
-          const aplicacoes = (Array.isArray(snap.aplicacoes) ? snap.aplicacoes.filter(a =>
-            (a.codigo_conjunto || '').toString().toUpperCase().replace(/\s+/g, '') === normalizedCode
-          ) : []);
+          const aplicacoes = []; // Will be loaded from server
 
           const benchmarks = (Array.isArray(snap.benchmarks) ? snap.benchmarks.filter(b =>
             (b.codigo || '').toString().toUpperCase().replace(/\s+/g, '') === normalizedCode
