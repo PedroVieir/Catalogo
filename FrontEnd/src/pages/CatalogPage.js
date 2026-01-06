@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FilterModal from "../components/FilterModal";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -148,16 +148,16 @@ function CatalogPage() {
   const [error, setError] = useState("");
   const { visibleItems: visibleImages, observeElement } = useLazyLoad({
     onVisible: (productCode) => {
-      // Preload próximas 3 imagens quando uma fica visível
+      // Preload next 2 images only (reduced from 3)
       const currentIndex = products.findIndex(p => getProductCode(p) === productCode);
       if (currentIndex !== -1) {
-        const preloadCount = 3;
+        const preloadCount = 2;
         for (let i = 1; i <= preloadCount; i++) {
           const nextIndex = currentIndex + i;
           if (nextIndex < products.length) {
             const nextProduct = products[nextIndex];
             const nextCode = getProductCode(nextProduct);
-            if (nextCode) {
+            if (nextCode && !visibleImages.has(nextCode)) {
               // Preload image into browser cache
               try {
                 const img = new Image();
@@ -165,9 +165,6 @@ function CatalogPage() {
               } catch (e) {
                 // ignore preload errors
               }
-              // Also start observing the element so it will be loaded when visible
-              const el = document.querySelector(`[data-lazy-id="${nextCode}"]`);
-              if (el) observeElement(el);
             }
           }
         }
@@ -175,12 +172,29 @@ function CatalogPage() {
     }
   });
 
-  // Observar imagens quando products muda
+  // Observar imagens quando products muda - OPTIMIZED
   useEffect(() => {
+    if (products.length === 0) return;
+
     const timeoutId = setTimeout(() => {
       const imageElements = document.querySelectorAll('[data-lazy-id]');
-      imageElements.forEach((img) => observeElement(img));
-    }, 100);
+      // Process in batches to avoid blocking
+      const batchSize = 10;
+      let processed = 0;
+
+      const processBatch = () => {
+        const batch = Array.from(imageElements).slice(processed, processed + batchSize);
+        batch.forEach((img) => observeElement(img));
+        processed += batchSize;
+
+        if (processed < imageElements.length) {
+          // Schedule next batch
+          setTimeout(processBatch, 0);
+        }
+      };
+
+      processBatch();
+    }, 50); // Reduced delay
 
     return () => clearTimeout(timeoutId);
   }, [products, observeElement]);
@@ -247,31 +261,41 @@ function CatalogPage() {
             ...it
           })).filter(it => it.codigo && it.descricao);
         } else {
-          // Load both: conjuntos first, then products
+          // Load both: conjuntos first, then products - OPTIMIZED VERSION
           const [conjResp, prodResp] = await Promise.all([
             fetchConjuntosPaginated(1, Math.ceil(PAGE_LIMIT / 2), filters),
             fetchProductsPaginated(1, Math.floor(PAGE_LIMIT / 2), filters)
           ]);
 
-          const conjItems = Array.isArray(conjResp.data) ? conjResp.data.map(it => ({
-            codigo: String(it.pai || it.codigo || "").trim(),
-            descricao: String(it.descricao || "").trim(),
-            grupo: String(it.grupo || "").trim(),
-            tipo: "conjunto",
-            ...it
-          })).filter(it => it.codigo && it.descricao) : [];
+          // Process conjuntos more efficiently
+          const conjItems = Array.isArray(conjResp.data) ? conjResp.data
+            .filter(it => it && (it.pai || it.codigo || it.id))
+            .map(it => ({
+              codigo: String(it.pai || it.codigo || it.id || '').trim(),
+              descricao: String(it.descricao || it.desc || it.nome || '').trim(),
+              grupo: String(it.grupo || '').trim(),
+              tipo: "conjunto",
+              fabricante: it.fabricante || it.marca || '',
+              tipoVeiculo: it.tipoVeiculo || ''
+            }))
+            .filter(it => it.codigo && it.descricao) : [];
 
-          const prodItems = Array.isArray(prodResp.data) ? prodResp.data.map(it => ({
-            codigo: String(it.codigo_abr || it.codigo || "").trim(),
-            descricao: String(it.descricao || "").trim(),
-            grupo: String(it.grupo || "").trim(),
-            tipo: "produto",
-            ...it
-          })).filter(it => it.codigo && it.descricao) : [];
+          // Process products more efficiently
+          const prodItems = Array.isArray(prodResp.data) ? prodResp.data
+            .filter(it => it && (it.codigo_abr || it.codigo || it.id))
+            .map(it => ({
+              codigo: String(it.codigo_abr || it.codigo || it.id || '').trim(),
+              descricao: String(it.descricao || it.desc || it.nome || '').trim(),
+              grupo: String(it.grupo || '').trim(),
+              tipo: "produto",
+              fabricante: it.fabricante || it.marca || '',
+              tipoVeiculo: it.tipoVeiculo || ''
+            }))
+            .filter(it => it.codigo && it.descricao) : [];
 
           items = [...conjItems, ...prodItems];
 
-          // For pagination, combine totals
+          // Calculate pagination more efficiently
           const totalConj = conjResp.pagination?.total || 0;
           const totalProd = prodResp.pagination?.total || 0;
           paginationResp.total = totalConj + totalProd;
@@ -301,13 +325,24 @@ function CatalogPage() {
           console.log("First item data:", items[0]);
         }
 
-        // If backend didn't provide fabricantes, derive them from returned items
+        // If backend didn't provide fabricantes, derive them from returned items - OPTIMIZED
         if ((!availableFilters.fabricantes || availableFilters.fabricantes.length === 0) && items.length > 0) {
           const fabricantesSet = new Set();
-          items.forEach(it => {
-            const f = (it.fabricante || it.marca || it.manufacturer || it.origem || it.fornecedor || "").toString().trim();
-            if (f) fabricantesSet.add(f);
-          });
+
+          // Process in batches to avoid blocking the main thread
+          const batchSize = 100;
+          for (let i = 0; i < items.length; i += batchSize) {
+            const batch = items.slice(i, i + batchSize);
+            batch.forEach(it => {
+              const f = (it.fabricante || it.marca || it.manufacturer || it.origem || it.fornecedor || "").toString().trim();
+              if (f) fabricantesSet.add(f);
+            });
+
+            // Allow other tasks to run between batches
+            if (i + batchSize < items.length) {
+              await new Promise(resolve => setTimeout(resolve, 0));
+            }
+          }
 
           const fabricantesArr = Array.from(fabricantesSet).sort((a, b) => String(a).localeCompare(String(b)));
           if (fabricantesArr.length > 0) {
@@ -365,8 +400,15 @@ function CatalogPage() {
 
   // Load products when filters change - optimized to avoid unnecessary reloads
   useEffect(() => {
-    // Always load since we removed tipo filter and always show conjuntos
-    loadProducts(catalogState.currentPage || 1);
+    // Skip loading if we already have products and filters haven't meaningfully changed
+    const shouldLoad = !preloadState.loaded ||
+      catalogState.currentPage !== 1 ||
+      !products.length ||
+      loading === false;
+
+    if (shouldLoad) {
+      loadProducts(catalogState.currentPage || 1);
+    }
   }, [catalogState.currentFilters, catalogState.currentPage]);
 
   // When tipoVeiculo is set to a canonical sigla, show an info tag in the results header
@@ -490,9 +532,10 @@ function CatalogPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const totalItems = pagination.total.toLocaleString();
+  // Memoize expensive computations
+  const totalItems = useMemo(() => pagination.total.toLocaleString(), [pagination.total]);
 
-  // Helper to get product description
+  // Helper to get product description - memoized
   const getProductDescription = useCallback((product) => {
     if (!product) return "Sem descrição disponível";
 
@@ -504,13 +547,13 @@ function CatalogPage() {
     return desc || "Sem descrição disponível";
   }, []);
 
-  // Helper to get product code
+  // Helper to get product code - memoized
   const getProductCode = useCallback((product) => {
     if (!product) return "";
     return product.codigo || product.code || product.id || "";
   }, []);
 
-  // Helper to get product group
+  // Helper to get product group - memoized
   const getProductGroup = useCallback((product) => {
     if (!product) return "";
     return product.grupo || product.category || product.group || "Sem grupo";
@@ -731,7 +774,7 @@ function CatalogPage() {
               />
             )}
 
-            {/* Products Grid */}
+            {/* Products Grid - OPTIMIZED */}
             {!loading && !error && products.length > 0 && (
               <>
                 <div className="products-grid">
@@ -741,67 +784,19 @@ function CatalogPage() {
                     const productGroup = getProductGroup(product);
 
                     return (
-                      <div
+                      <ProductCard
                         key={productCode}
-                        className="product-card"
-                        onClick={() => handleProductClick(productCode)}
-                      >
-                        <div className="product-image-container">
-                          {!imageErrors[productCode] ? (
-                            <img
-                              src={visibleImages.has(productCode) ? getImageUrl(productCode) : ""}
-                              alt={productDescription}
-                              className="product-image"
-                              onError={() => handleImageError(productCode)}
-                              loading="lazy"
-                              data-lazy-id={productCode}
-                            />
-                          ) : (
-                            <div className="image-placeholder">
-                              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                <circle cx="8.5" cy="8.5" r="1.5" />
-                                <polyline points="21 15 16 10 5 21" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="product-info">
-                          <div className="product-code-badge">
-                            {productCode}
-                          </div>
-
-                          <h3 className="product-title" title={productDescription}>
-                            {productDescription}
-                          </h3>
-
-                          <div className="product-meta">
-                            {productGroup && productGroup !== "Sem grupo" && (
-                              <span className="product-category" title={productGroup}>
-                                {productGroup}
-                              </span>
-                            )}
-                            {product.conjuntos && product.conjuntos.length > 0 && (
-                              <span className="product-conjuntos">
-                                {product.conjuntos.length} peças
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="product-actions">
-                          <button
-                            className="view-details-btn"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleProductClick(productCode);
-                            }}
-                          >
-                            Ver detalhes
-                          </button>
-                        </div>
-                      </div>
+                        product={product}
+                        productCode={productCode}
+                        productDescription={productDescription}
+                        productGroup={productGroup}
+                        visibleImages={visibleImages}
+                        imageErrors={imageErrors}
+                        getImageUrl={getImageUrl}
+                        onImageError={handleImageError}
+                        onProductClick={handleProductClick}
+                        observeElement={observeElement}
+                      />
                     );
                   })}
                 </div>
@@ -882,3 +877,88 @@ function CatalogPage() {
 }
 
 export default CatalogPage;
+
+// Memoized Product Card Component for better performance
+const ProductCard = React.memo(({
+  product,
+  productCode,
+  productDescription,
+  productGroup,
+  visibleImages,
+  imageErrors,
+  getImageUrl,
+  onImageError,
+  onProductClick,
+  observeElement
+}) => {
+  // Use useEffect to observe the image element when component mounts
+  useEffect(() => {
+    const imgElement = document.querySelector(`[data-lazy-id="${productCode}"]`);
+    if (imgElement) {
+      observeElement(imgElement);
+    }
+  }, [productCode, observeElement]);
+
+  return (
+    <div
+      className="product-card"
+      onClick={() => onProductClick(productCode)}
+    >
+      <div className="product-image-container">
+        {!imageErrors[productCode] ? (
+          <img
+            src={visibleImages.has(productCode) ? getImageUrl(productCode) : ""}
+            alt={productDescription}
+            className="product-image"
+            onError={() => onImageError(productCode)}
+            loading="lazy"
+            data-lazy-id={productCode}
+          />
+        ) : (
+          <div className="image-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
+        )}
+      </div>
+
+      <div className="product-info">
+        <div className="product-code-badge">
+          {productCode}
+        </div>
+
+        <h3 className="product-title" title={productDescription}>
+          {productDescription}
+        </h3>
+
+        <div className="product-meta">
+          {productGroup && productGroup !== "Sem grupo" && (
+            <span className="product-category" title={productGroup}>
+              {productGroup}
+            </span>
+          )}
+          {product.conjuntos && product.conjuntos.length > 0 && (
+            <span className="product-conjuntos">
+              {product.conjuntos.length} peças
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="product-actions">
+        <button
+          className="view-details-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onProductClick(productCode);
+          }}
+        >
+          Ver detalhes
+        </button>
+      </div>
+    </div>
+  );
+});

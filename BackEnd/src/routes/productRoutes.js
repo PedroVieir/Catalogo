@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { 
-  listProducts, 
+import {
+  listProducts,
   listProductsPaginated,
-  getProductDetails, 
+  listProductsPaginatedOptimized,
+  getProductDetails,
   listConjuntosPaginated,
-  getConjuntoDetails, 
+  getConjuntoDetails,
   listFilters,
   getCatalogSnapshotController,
   getCatalogStatus
@@ -37,6 +38,7 @@ router.post("/status/refresh", async (req, res, next) => {
 
 // ====== PRODUTOS ======
 router.get("/products", listProducts);              // Compatibilidade anterior
+router.get("/products/paginated-optimized", listProductsPaginatedOptimized); // Com paginação otimizada
 router.get("/products/paginated", listProductsPaginated); // Com paginação
 router.get("/products/:code", getProductDetails);   // Detalhes do produto
 

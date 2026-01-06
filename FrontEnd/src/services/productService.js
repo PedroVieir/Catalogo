@@ -268,7 +268,7 @@ export async function fetchProductsPaginated(page = 1, limit = 20, filters = {})
     // Validar parâmetros
     const { page: validPage, limit: validLimit } = validateParams({ page, limit });
 
-    const url = new URL(`${API_BASE_URL}/products/paginated`);
+    const url = new URL(`${API_BASE_URL}/products/paginated-optimized`);
     url.searchParams.set("page", validPage);
     url.searchParams.set("limit", validLimit);
 

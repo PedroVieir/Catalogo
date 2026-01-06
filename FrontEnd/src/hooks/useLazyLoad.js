@@ -12,7 +12,7 @@ export function useLazyLoad(options = {}) {
     const [visibleItems, setVisibleItems] = useState(new Set());
     const observerRef = useRef(null);
 
-    const { rootMargin = '50px', threshold = 0.1, onVisible } = options;
+    const { rootMargin = '100px', threshold = 0.01, onVisible } = options;
 
     useEffect(() => {
         observerRef.current = new IntersectionObserver(

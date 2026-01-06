@@ -5,6 +5,7 @@ import {
   getCatalogSnapshot,
   getAvailableFilters,
   getProductsPaginated,
+  getProductsPaginatedOptimized,
   getConjuntosPaginated,
   getCatalogStats
 } from "../services/productService.js";
@@ -34,6 +35,25 @@ export async function listProductsPaginated(req, res, next) {
     };
 
     const result = await getProductsPaginated(page, limit, filters);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function listProductsPaginatedOptimized(req, res, next) {
+  try {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 20;
+    const filters = {
+      search: req.query.search || "",
+      grupo: req.query.grupo || "",
+      fabricante: req.query.fabricante || "",
+      tipoVeiculo: req.query.tipoVeiculo || "",
+      sortBy: req.query.sortBy || "codigo"
+    };
+
+    const result = await getProductsPaginatedOptimized(page, limit, filters);
     res.json(result);
   } catch (err) {
     next(err);

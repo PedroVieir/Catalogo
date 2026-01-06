@@ -297,6 +297,232 @@ function clampNumber(v, min, max, fallback) {
   return Math.min(max, Math.max(min, Math.floor(n)));
 }
 
+// ====== PRODUTOS - PAGINAÇÃO OTIMIZADA ======
+export async function getProductsPaginatedOptimized(page = 1, limit = 20, filters = {}) {
+  const start = Date.now();
+
+  page = Math.max(1, parseInt(page) || 1);
+  limit = Math.min(100, Math.max(1, parseInt(limit) || 20));
+  const offset = (page - 1) * limit;
+
+  // Preparar parâmetros para a query
+  const params = [];
+  const whereConditions = [];
+
+  // Filtro de grupo
+  if (filters.grupo && typeof filters.grupo === "string" && filters.grupo.trim()) {
+    whereConditions.push("TRIM(p.grupo) = ?");
+    params.push(filters.grupo.trim());
+  }
+
+  // Filtro de busca (código ou descrição)
+  if (filters.search && typeof filters.search === "string" && filters.search.trim()) {
+    const searchTerm = `%${filters.search.trim()}%`;
+    whereConditions.push("(p.codigo_abr LIKE ? OR p.descricao LIKE ?)");
+    params.push(searchTerm, searchTerm);
+  }
+
+  // Filtro de fabricante/tipo veículo (usando subquery otimizada)
+  let fabricanteCondition = "";
+  if ((filters.fabricante && typeof filters.fabricante === "string" && filters.fabricante.trim()) ||
+    (filters.tipoVeiculo && typeof filters.tipoVeiculo === "string" && filters.tipoVeiculo.trim())) {
+
+    const fabConditions = [];
+    const fabParams = [];
+
+    if (filters.fabricante && filters.fabricante.trim()) {
+      fabConditions.push("TRIM(a.fabricante) LIKE ?");
+      fabParams.push(`%${filters.fabricante.trim()}%`);
+    }
+
+    if (filters.tipoVeiculo && filters.tipoVeiculo.trim()) {
+      fabConditions.push("a.sigla_tipo = ?");
+      fabParams.push(filters.tipoVeiculo.trim());
+    }
+
+    if (fabConditions.length > 0) {
+      fabricanteCondition = `
+        AND (
+          p.codigo_abr IN (
+            SELECT DISTINCT a.codigo_conjunto
+            FROM aplicacoes a
+            WHERE a.codigo_conjunto IS NOT NULL
+            AND ${fabConditions.join(" AND ")}
+          )
+          OR p.codigo_abr IN (
+            SELECT DISTINCT ec.codigo_componente
+            FROM estrutura_conjunto ec
+            INNER JOIN aplicacoes a ON ec.codigo_conjunto = a.codigo_conjunto
+            WHERE ${fabConditions.join(" AND ")}
+          )
+        )`;
+      params.push(...fabParams, ...fabParams); // Duplicado para as duas subqueries
+    }
+  }
+
+  // Montar query principal
+  const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")}` : "";
+
+  // Ordenação
+  const sortBy = (filters.sortBy === "descricao") ? "p.descricao" : "p.codigo_abr";
+  const orderClause = `ORDER BY ${sortBy} ASC`;
+
+  // Query para contar total
+  const countQuery = `
+    SELECT COUNT(*) as total
+    FROM produtoss p
+    ${whereClause}
+    ${fabricanteCondition}
+  `;
+
+  // Query para buscar dados paginados
+  const dataQuery = `
+    SELECT
+      TRIM(p.codigo_abr) as codigo_abr,
+      TRIM(p.descricao) as descricao,
+      TRIM(p.grupo) as grupo
+    FROM produtoss p
+    ${whereClause}
+    ${fabricanteCondition}
+    ${orderClause}
+    LIMIT ? OFFSET ?
+  `;
+
+  params.push(limit, offset);
+
+  try {
+    // Executar queries em paralelo
+    const [countResult, dataResult] = await Promise.all([
+      query(countQuery, params.slice(0, -2)), // Remover limit/offset para count
+      query(dataQuery, params)
+    ]);
+
+    const total = parseInt(countResult[0]?.total) || 0;
+    const totalPages = Math.ceil(total / limit);
+
+    // Normalizar dados
+    const data = dataResult.map(r => ({
+      codigo: normalizeCodigo(r.codigo_abr),
+      descricao: normalizeTexto(r.descricao) || null,
+      grupo: r.grupo || null
+    }));
+
+    const duration = Date.now() - start;
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      },
+      meta: {
+        durationMs: duration,
+        queryOptimized: true
+      }
+    };
+  } catch (error) {
+    console.error("Erro na query otimizada:", error);
+    // Fallback para implementação anterior
+    return getProductsPaginatedFallback(page, limit, filters);
+  }
+}
+
+// Fallback para implementação anterior (mantido para compatibilidade)
+function getProductsPaginatedFallback(page = 1, limit = 20, filters = {}) {
+  const start = Date.now();
+
+  page = clampNumber(page, 1, 99999, 1);
+  limit = clampNumber(limit, 1, 100, 20);
+
+  const [products, conjuntos, aplicacoes, benchmarks] = Promise.all([
+    getAllProducts(),
+    getAllConjuntos(),
+    getAllAplicacoes(),
+    getAllBenchmarks()
+  ]);
+
+  let filtered = products.slice();
+
+  // search
+  if (filters.search && typeof filters.search === "string") {
+    const sf = createSearchFilter(filters.search);
+    filtered = filtered.filter((p) => {
+      return sf(p.codigo) || sf(p.descricao) || (p.grupo && sf(p.grupo));
+    });
+  }
+
+  // grupo
+  if (filters.grupo && typeof filters.grupo === "string") {
+    const g = filters.grupo.trim().toLowerCase();
+    filtered = filtered.filter((p) => p.grupo && p.grupo.toLowerCase() === g);
+  }
+
+  // numero_original (benchmarks)
+  if (filters.numero_original && typeof filters.numero_original === "string") {
+    const nf = createSearchFilter(filters.numero_original);
+    const matchedCodes = new Set(
+      benchmarks.filter((b) => b.numero_original && nf(b.numero_original)).map((b) => b.codigo)
+    );
+    filtered = filtered.filter((p) => matchedCodes.has(p.codigo));
+  }
+
+  // fabricante / tipoVeiculo via aplicacoes + conjuntos
+  if ((filters.fabricante && typeof filters.fabricante === "string") || (filters.tipoVeiculo && typeof filters.tipoVeiculo === "string")) {
+    const fabricanteTerm = filters.fabricante ? filters.fabricante.trim().toLowerCase() : null;
+    const tipoTerm = filters.tipoVeiculo ? filters.tipoVeiculo : null;
+
+    // identificar conjuntos válidos
+    const matchingConjuntos = new Set();
+    aplicacoes.forEach((a) => {
+      const fabricaMatch = fabricanteTerm ? (a.fabricante && a.fabricante.toLowerCase().includes(fabricanteTerm)) : true;
+      const tipoMatch = tipoTerm ? matchesTipoFilter(a, tipoTerm) : true;
+      if (fabricaMatch && tipoMatch) matchingConjuntos.add(a.codigo_conjunto);
+    });
+
+    // incluir filhos dos conjuntos
+    const produtosSet = new Set();
+    matchingConjuntos.forEach((c) => produtosSet.add(c));
+    conjuntos.forEach((c) => {
+      if (matchingConjuntos.has(c.pai)) produtosSet.add(c.filho);
+    });
+
+    filtered = filtered.filter((p) => produtosSet.has(p.codigo));
+  }
+
+  // Ordenação
+  const sortBy = (filters.sortBy || "codigo").toString();
+  filtered.sort((a, b) => {
+    if (sortBy === "descricao") return (a.descricao || "").localeCompare(b.descricao || "");
+    return (a.codigo || "").localeCompare(b.codigo || "");
+  });
+
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const offset = (page - 1) * limit;
+  const data = filtered.slice(offset, offset + limit);
+
+  const durationMs = Date.now() - start;
+
+  return {
+    data,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1
+    },
+    meta: {
+      durationMs
+    }
+  };
+}
+
 export async function getProductsPaginated(page = 1, limit = 20, filters = {}) {
   const start = Date.now();
 

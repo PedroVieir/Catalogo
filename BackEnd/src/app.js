@@ -6,7 +6,6 @@ import productRoutes from "./routes/productRoutes.js";
 import { notFound } from "./middlewares/notFound.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { getPoolStatus } from "./config/db.js";
-import { preloadCatalog } from "./services/productService.js";
 
 dotenv.config();
 
@@ -68,9 +67,9 @@ app.use(notFound);
 // Middleware de tratamento de erros (deve ser o último)
 app.use(errorHandler);
 
-// Preload catalog once at startup (best-effort)
-preloadCatalog().catch(err => {
-  console.error('Erro no preload do catálogo:', err?.message || err);
-});
+// Preload catalog once at startup (best-effort - não bloquear inicialização)
+// preloadCatalog().catch(err => {
+//   console.error('Erro no preload do catálogo:', err?.message || err);
+// });
 
 export default app;
