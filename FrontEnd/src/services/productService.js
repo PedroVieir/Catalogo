@@ -13,7 +13,6 @@ const cache = {
   timestamp: 0
 };
 
-// snapshot cache for full catalog
 cache.catalog = null;
 cache.catalogTimestamp = 0;
 

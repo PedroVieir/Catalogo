@@ -6,12 +6,17 @@ function Header({
   title = "Catálogo ABR",
   subtitle = "Peças automotivas",
   showBackButton = false,
-  onBackClick = null
+  onBackClick = null,
+  onLogoClick = null
 }) {
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
-    navigate("/");
+    if (onLogoClick) {
+      onLogoClick();
+    } else {
+      navigate("/");
+    }
   };
 
   const handleBackClick = () => {

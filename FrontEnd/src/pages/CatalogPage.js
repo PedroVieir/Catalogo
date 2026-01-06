@@ -75,12 +75,10 @@ const HARDCODED_GRUPOS = [
 
 function CatalogPage() {
   const { catalogState, updateCatalogState, preloadState, addToProductsCache, filtersLoading } = useCatalogState();
-  // notification helper (unused currently)
-  // const notify = useNotification();
+  const { clearHistory: clearHistoryOnLogout, pushState: navigateTo } = useNavigationHistory();
   const PAGE_LIMIT = 50;
   const navigate = useNavigate();
   const location = useLocation();
-  const { pushState } = useNavigationHistory();
 
   const [products, setProducts] = useState(() => {
     // Initialize with preload data if available for instant loading
@@ -432,7 +430,7 @@ function CatalogPage() {
 
   const handleProductClick = (codigo) => {
     const productUrl = `/produtos/${encodeURIComponent(String(codigo))}`;
-    pushState(productUrl, {
+    navigateTo(productUrl, {
       fromCatalog: true,
       catalogState: {
         page: catalogState.currentPage,
@@ -482,7 +480,7 @@ function CatalogPage() {
 
   return (
     <div className="catalog-wrapper">
-      <Header>
+      <Header onLogoClick={clearHistoryOnLogout}>
         <div className="stats-badge">
           <span className="stats-number">{totalItems}</span>
           <span className="stats-label">itens</span>

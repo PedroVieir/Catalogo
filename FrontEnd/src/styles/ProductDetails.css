@@ -937,3 +937,72 @@
     display: block !important;
   }
 }
+
+/* ProductDetails.css - Adicione */
+.product-transition {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.product-transition.exiting {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.product-transition.entering {
+  opacity: 0;
+  transform: translateX(10px);
+  animation: slideIn 0.25s ease forwards;
+}
+
+.product-transition.navigating {
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.navigation-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.navigation-progress .progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff, #00d4ff, #007bff);
+  background-size: 200% 100%;
+  animation: progressAnimation 1.5s ease infinite;
+}
+
+@keyframes progressAnimation {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Estados desabilitados */
+button:disabled,
+.action-btn:disabled,
+.tab-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Feedback visual para navegação */
+.conjunto-item.navigating {
+  opacity: 0.7;
+  transform: scale(0.98);
+}
