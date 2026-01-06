@@ -8,42 +8,13 @@
 /* Navigation */
 .product-navigation {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 2rem;
   padding: 1rem 1.5rem;
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
-}
-
-.navigation-back-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.navigation-back-btn:hover {
-  background: var(--color-bg-light);
-  border-color: var(--border-color-hover);
-  transform: translateX(-2px);
-}
-
-.navigation-back-btn svg {
-  transition: transform 0.2s ease;
-}
-
-.navigation-back-btn:hover svg {
-  transform: translateX(-2px);
 }
 
 .navigation-actions {
@@ -58,29 +29,31 @@
   gap: 8px;
   padding: 10px 16px;
   background: white;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .action-btn:hover {
-  background: var(--color-bg-secondary);
-  border-color: var(--border-color-hover);
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
   transform: translateY(-1px);
 }
 
 .copy-btn {
-  background: var(--info-bg);
-  border-color: var(--info-border);
-  color: var(--info-color);
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .copy-btn:hover {
-  background: var(--info-bg-hover);
+  background: var(--primary);
+  color: white;
 }
 
 .abr-link {
@@ -88,12 +61,12 @@
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  background: var(--success-bg);
-  border: 1px solid var(--success-border);
+  background: var(--color-success);
+  border: 1px solid var(--color-success);
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--success-color);
+  color: white;
   text-decoration: none;
   transition: all 0.2s ease;
 }

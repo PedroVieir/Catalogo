@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FilterModal from "../components/FilterModal";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import EmptyState from "../components/EmptyState";
+import Header from "../components/Header";
+import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import useLazyLoad from '../hooks/useLazyLoad';
 import {
   fetchProductsPaginated,
   fetchConjuntosPaginated,
@@ -77,6 +80,7 @@ function CatalogPage() {
   const PAGE_LIMIT = 50;
   const navigate = useNavigate();
   const location = useLocation();
+  const { pushState } = useNavigationHistory();
 
   const [products, setProducts] = useState(() => {
     // Initialize with preload data if available for instant loading
@@ -144,8 +148,46 @@ function CatalogPage() {
     return !(preloadState && preloadState.loaded && preloadState.snapshot);
   });
   const [error, setError] = useState("");
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const { visibleItems: visibleImages, observeElement } = useLazyLoad({
+    onVisible: (productCode) => {
+      // Preload próximas 3 imagens quando uma fica visível
+      const currentIndex = products.findIndex(p => getProductCode(p) === productCode);
+      if (currentIndex !== -1) {
+        const preloadCount = 3;
+        for (let i = 1; i <= preloadCount; i++) {
+          const nextIndex = currentIndex + i;
+          if (nextIndex < products.length) {
+            const nextProduct = products[nextIndex];
+            const nextCode = getProductCode(nextProduct);
+            if (nextCode) {
+              // Preload image into browser cache
+              try {
+                const img = new Image();
+                img.src = getImageUrl(nextCode);
+              } catch (e) {
+                // ignore preload errors
+              }
+              // Also start observing the element so it will be loaded when visible
+              const el = document.querySelector(`[data-lazy-id="${nextCode}"]`);
+              if (el) observeElement(el);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Observar imagens quando products muda
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      const imageElements = document.querySelectorAll('[data-lazy-id]');
+      imageElements.forEach((img) => observeElement(img));
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [products, observeElement]);
   const [imageErrors, setImageErrors] = useState({});
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const [filtersLoaded, setFiltersLoaded] = useState(true); // Always true since we use hardcoded filters
 
   const activeFiltersCount = Object.values(catalogState.currentFilters || {})
@@ -325,11 +367,11 @@ function CatalogPage() {
     // Check if anything actually changed
     const currentFilters = catalogState.currentFilters || {};
     const hasChanges = page !== catalogState.currentPage ||
-                      search !== (currentFilters.search || "") ||
-                      grupo !== (currentFilters.grupo || "JOGOS DE JUNTAS") ||
-                      fabricante !== (currentFilters.fabricante || "") ||
-                      tipoVeiculo !== (currentFilters.tipoVeiculo || "") ||
-                      sortBy !== (currentFilters.sortBy || "codigo");
+      search !== (currentFilters.search || "") ||
+      grupo !== (currentFilters.grupo || "JOGOS DE JUNTAS") ||
+      fabricante !== (currentFilters.fabricante || "") ||
+      tipoVeiculo !== (currentFilters.tipoVeiculo || "") ||
+      sortBy !== (currentFilters.sortBy || "codigo");
 
     if (hasChanges) {
       updateCatalogState({
@@ -389,26 +431,33 @@ function CatalogPage() {
   };
 
   const handleProductClick = (codigo) => {
-    navigate(`/produtos/${encodeURIComponent(String(codigo))}`);
+    const productUrl = `/produtos/${encodeURIComponent(String(codigo))}`;
+    pushState(productUrl, {
+      fromCatalog: true,
+      catalogState: {
+        page: catalogState.currentPage,
+        filters: catalogState.currentFilters
+      }
+    });
   };
 
-  const handleImageError = (codigo) => {
+  const handleImageError = useCallback((codigo) => {
     setImageErrors(prev => ({ ...prev, [codigo]: true }));
-  };
+  }, []);
 
-  const getImageUrl = (codigo) => {
+  const getImageUrl = useCallback((codigo) => {
     if (!codigo) return "";
     return `/vista/${encodeURIComponent(codigo)}.jpg`;
-  };
+  }, []);
 
-  const handleScrollToTop = () => {
+  const handleScrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
   const totalItems = pagination.total.toLocaleString();
 
   // Helper to get product description
-  const getProductDescription = (product) => {
+  const getProductDescription = useCallback((product) => {
     if (!product) return "Sem descrição disponível";
 
     // Try multiple field names for description
@@ -417,53 +466,43 @@ function CatalogPage() {
       product.title || "";
 
     return desc || "Sem descrição disponível";
-  };
+  }, []);
 
   // Helper to get product code
-  const getProductCode = (product) => {
+  const getProductCode = useCallback((product) => {
     if (!product) return "";
     return product.codigo || product.code || product.id || "";
-  };
+  }, []);
 
   // Helper to get product group
-  const getProductGroup = (product) => {
+  const getProductGroup = useCallback((product) => {
     if (!product) return "";
     return product.grupo || product.category || product.group || "Sem grupo";
-  };
+  }, []);
 
   return (
     <div className="catalog-wrapper">
-      {/* Header */}
-      <header className="catalog-header">
-        <div className="header-container">
-          <div className="header-brand">
-            <h1 className="header-title">Catálogo ABR</h1>
-            <p className="header-subtitle">Peças automotivas</p>
-          </div>
-
-          <div className="header-actions">
-            <div className="stats-badge">
-              <span className="stats-number">{totalItems}</span>
-              <span className="stats-label">itens</span>
-            </div>
-            {/* Mobile-only fixed filter button (visible only on small screens) */}
-            <button
-              className="header-filter-btn"
-              onClick={() => setFilterModalOpen(true)}
-              aria-label="Abrir filtros"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 21l-4.35-4.35" />
-                <circle cx="11" cy="11" r="8" />
-              </svg>
-              <span>Filtros</span>
-              {activeFiltersCount > 0 && (
-                <span className="filter-count small">{activeFiltersCount}</span>
-              )}
-            </button>
-          </div>
+      <Header>
+        <div className="stats-badge">
+          <span className="stats-number">{totalItems}</span>
+          <span className="stats-label">itens</span>
         </div>
-      </header>
+        {/* Mobile-only fixed filter button (visible only on small screens) */}
+        <button
+          className="header-filter-btn"
+          onClick={() => setFilterModalOpen(true)}
+          aria-label="Abrir filtros"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 21l-4.35-4.35" />
+            <circle cx="11" cy="11" r="8" />
+          </svg>
+          <span>Filtros</span>
+          {activeFiltersCount > 0 && (
+            <span className="filter-count small">{activeFiltersCount}</span>
+          )}
+        </button>
+      </Header>
 
       <main className="catalog-main">
         {/* Mobile Filter Toggle */}
@@ -674,11 +713,12 @@ function CatalogPage() {
                         <div className="product-image-container">
                           {!imageErrors[productCode] ? (
                             <img
-                              src={getImageUrl(productCode)}
+                              src={visibleImages.has(productCode) ? getImageUrl(productCode) : ""}
                               alt={productDescription}
                               className="product-image"
                               onError={() => handleImageError(productCode)}
                               loading="lazy"
+                              data-lazy-id={productCode}
                             />
                           ) : (
                             <div className="image-placeholder">

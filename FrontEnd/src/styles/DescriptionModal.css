@@ -1,43 +1,69 @@
-:root{
-  --dm-overlay-bg: rgba(10,15,25,0.6);
+:root {
+  --dm-overlay-bg: rgba(10, 15, 25, 0.6);
 }
 
-.dm-overlay{
-  position:fixed;
-  inset:0;
-  background:var(--dm-overlay-bg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:1200;
+.dm-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--dm-overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
 }
 
-.dm-panel{
-  width:min(780px, 96%);
-  background:#fff;
-  border-radius:10px;
-  box-shadow:0 20px 60px rgba(8,12,20,0.35);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
+.dm-panel {
+  width: min(780px, 96%);
+  background: var(--color-bg);
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(8, 12, 20, 0.35);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.dm-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:16px 20px;
-  border-bottom:1px solid rgba(0,0,0,0.06);
+.dm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.dm-header h3{margin:0;font-size:1.125rem;color:#0b2a66}
-
-.dm-close{
-  background:transparent;border:0;font-size:20px;line-height:1;cursor:pointer;padding:4px 8px;color:#334;
+.dm-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  color: var(--color-text)
 }
 
-.dm-body{padding:18px 20px;color:#223;line-height:1.6}
+.dm-close {
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: var(--color-text);
+}
 
-.dm-footer{display:flex;justify-content:flex-end;padding:12px 20px;border-top:1px solid rgba(0,0,0,0.04)}
+.dm-body {
+  padding: 18px 20px;
+  color: var(--color-text);
+  line-height: 1.6
+}
 
-.dm-btn{background:var(--primary);color:#fff;border:0;padding:8px 14px;border-radius:8px;cursor:pointer}
+.dm-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.04)
+}
+
+.dm-btn {
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer
+}

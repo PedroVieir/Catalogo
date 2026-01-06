@@ -1,12 +1,12 @@
 /* Custom Toast Styles - Padrão moderno consistente */
 
 :root {
-  --toast-success-color: #10b981;
-  --toast-error-color: #ef4444;
-  --toast-warning-color: #f59e0b;
-  --toast-info-color: #3b82f6;
-  --toast-bg-color: #ffffff;
-  --toast-text-color: #1f2937;
+  --toast-success-color: var(--color-success);
+  --toast-error-color: var(--color-error);
+  --toast-warning-color: var(--color-warning);
+  --toast-info-color: var(--primary);
+  --toast-bg-color: var(--color-bg);
+  --toast-text-color: var(--color-text);
   --toast-border-radius: 8px;
   --toast-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
@@ -28,7 +28,7 @@
   line-height: 1.5;
   background: var(--toast-bg-color);
   color: var(--toast-text-color);
-  border-left: 4px solid #e5e7eb;
+  border-left: 4px solid var(--color-border);
   animation: slideIn 0.3s ease-out;
   pointer-events: auto;
 }
@@ -38,6 +38,7 @@
     transform: translateX(400px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -141,7 +142,7 @@
     margin-bottom: 0;
     border-radius: 0;
     border-left: none;
-    border-top: 4px solid #e5e7eb;
+    border-top: 4px solid var(--color-border);
   }
 
   .Toastify__toast--success {

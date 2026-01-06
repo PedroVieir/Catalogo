@@ -18,7 +18,7 @@
 }
 
 .responsive-table thead {
-  background: linear-gradient(135deg, var(--primary) 0%, #0052a3 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   font-weight: 600;
   position: sticky;
@@ -30,18 +30,18 @@
   padding: 1rem;
   text-align: left;
   font-size: 0.95rem;
-  border-bottom: 2px solid #0052a3;
+  border-bottom: 2px solid var(--primary-dark);
   letter-spacing: 0.5px;
 }
 
 .responsive-table tbody tr.product-row {
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--color-border);
   transition: all 250ms ease;
 }
 
 .responsive-table tbody tr.product-row:hover {
-  background-color: #f5f8fc;
-  box-shadow: inset 0 0 0 1px #dde6f0;
+  background-color: var(--color-bg);
+  box-shadow: inset 0 0 0 1px var(--color-border);
 }
 
 .responsive-table tbody tr.row-conjunto {
@@ -49,7 +49,7 @@
 }
 
 .responsive-table tbody tr.row-conjunto:hover {
-  background: linear-gradient(90deg, #cce5ff 0%, #f5fbff 100%);
+  background: linear-gradient(90deg, var(--primary-light) 0%, var(--color-bg) 100%);
 }
 
 .responsive-table tbody tr.row-expanded {
@@ -60,11 +60,11 @@
 .responsive-table td {
   padding: 1rem;
   font-size: 0.95rem;
-  color: #333;
+  color: var(--color-text);
   vertical-align: middle;
 }
 
-.td-code { 
+.td-code {
   width: 35%;
   padding: 0.75rem 1rem;
 }
@@ -97,7 +97,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   transition: transform 200ms ease, box-shadow 200ms ease;
-  border: 2px solid #f0f0f0;
+  border: 2px solid var(--color-border);
 }
 
 .code-cell:hover .thumb {
@@ -123,15 +123,15 @@
 
 .small-desc {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--color-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 @media (max-width: 768px) {
-  .small-desc { 
-    white-space: normal; 
+  .small-desc {
+    white-space: normal;
     overflow-wrap: anywhere;
     display: none;
   }
@@ -144,7 +144,7 @@
 }
 
 .description-text {
-  color: #555;
+  color: var(--color-text);
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -169,22 +169,35 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: linear-gradient(135deg, #fffaf0 0%, #fffdf6 100%);
-  color: #d97706;
+  background: var(--color-warning);
+  color: var(--color-text);
   padding: 0.28rem 0.6rem;
   border-radius: 14px;
   font-weight: 700;
   font-size: 0.85rem;
-  border: 1px solid #ffd89a;
+  border: 1px solid var(--color-warning);
   flex-shrink: 0;
 }
 
-.badge-svg { color: #d97706; }
-.badge-number { font-weight: 700; color: #b45309; }
+.badge-svg {
+  color: var(--color-text);
+}
+
+.badge-number {
+  font-weight: 700;
+  color: var(--color-text);
+}
 
 @keyframes pulse-gentle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .expand-btn {
@@ -222,19 +235,19 @@
   transition: transform 200ms ease;
 }
 
-.expand-btn.expanded .chev { 
+.expand-btn.expanded .chev {
   transform: rotate(45deg);
 }
 
-.expand-placeholder { 
-  width: 32px; 
-  height: 32px; 
+.expand-placeholder {
+  width: 32px;
+  height: 32px;
   display: inline-block;
 }
 
 .conjunto-badge {
   display: inline-block;
-  background: #ff8c00;
+  background: var(--accent);
   color: white;
   padding: 0.35rem 0.7rem;
   border-radius: 12px;
@@ -242,11 +255,14 @@
   font-weight: 700;
   animation: pulse 2s infinite;
 }
- 
+
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.8;
   }
@@ -274,7 +290,7 @@
   gap: 0.4rem;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #333;
+  color: var(--color-text);
   min-height: 36px;
 }
 
@@ -298,24 +314,30 @@
 }
 
 .table-action-button.btn-details:hover {
-  background: linear-gradient(135deg, #e7f3ff 0%, #f0f8ff 100%);
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--color-bg) 100%);
   box-shadow: 0 3px 10px rgba(11, 94, 215, 0.2);
 }
 
 .table-action-button.btn-conjunto {
-  background: linear-gradient(135deg, #fff4e6 0%, #fffbf0 100%);
-  border-color: #ff8c00;
-  color: #ff8c00;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
 }
 
 .table-action-button.btn-conjunto:hover {
-  background: linear-gradient(135deg, #ffe6cc 0%, #ffd580 100%);
+  background: var(--accent);
   box-shadow: 0 3px 10px rgba(255, 140, 0, 0.2);
 }
 
-.action-svg { stroke: currentColor; color: inherit; }
+.action-svg {
+  stroke: currentColor;
+  color: inherit;
+}
 
-.action-label { display: inline-block; margin-left: 0.35rem; }
+.action-label {
+  display: inline-block;
+  margin-left: 0.35rem;
+}
 
 
 .table-action-button:hover {
@@ -362,18 +384,41 @@
   animation: shimmer 1.2s linear infinite;
 }
 
-.skeleton-code { width: 90px; height: 16px; }
-.skeleton-desc { width: 60%; height: 14px; }
-.skeleton-cat { width: 120px; height: 14px; }
-.skeleton-action { width: 48px; height: 24px; margin: 0 auto; border-radius: 6px; }
+.skeleton-code {
+  width: 90px;
+  height: 16px;
+}
+
+.skeleton-desc {
+  width: 60%;
+  height: 14px;
+}
+
+.skeleton-cat {
+  width: 120px;
+  height: 14px;
+}
+
+.skeleton-action {
+  width: 48px;
+  height: 24px;
+  margin: 0 auto;
+  border-radius: 6px;
+}
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Responsividade para tablets */
 @media (max-width: 1024px) {
+
   .responsive-table th,
   .responsive-table td {
     padding: 0.75rem;
@@ -439,8 +484,13 @@
     box-sizing: border-box;
   }
 
-  .action-svg { margin-right: 0.5rem; }
-  .action-label { display: inline-block; }
+  .action-svg {
+    margin-right: 0.5rem;
+  }
+
+  .action-label {
+    display: inline-block;
+  }
 }
 
 /* Responsividade para smartphones */
@@ -509,6 +559,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -545,5 +596,3 @@
   font-size: 0.85rem;
   font-weight: 500;
 }
-
-

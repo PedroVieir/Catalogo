@@ -31,6 +31,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -40,6 +41,7 @@
   from {
     transform: translateY(100%);
   }
+
   to {
     transform: translateY(0);
   }
@@ -167,6 +169,7 @@
 
 /* Desktop: hide modal completely */
 @media (min-width: 769px) {
+
   .filter-modal-overlay,
   .filter-modal {
     display: none !important;

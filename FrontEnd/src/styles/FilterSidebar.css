@@ -166,12 +166,10 @@
 /* Divisor */
 .filter-divider {
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--border-color) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--border-color) 50%,
+      transparent 100%);
   margin: 1.5rem 0;
 }
 
@@ -184,22 +182,22 @@
   gap: 1rem;
   padding: 2rem 1rem;
   text-align: center;
-  background: #f5f7fb;
+  background: var(--color-bg-light);
   border-radius: 6px;
   margin-top: 1rem;
 }
 
 .filter-loading p {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
 .spinner {
   width: 30px;
   height: 30px;
-  border: 3px solid #dde1eb;
-  border-top-color: #ec7c34;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -220,12 +218,12 @@
 }
 
 .filter-sidebar::-webkit-scrollbar-thumb {
-  background: #dde1eb;
+  background: var(--border-color);
   border-radius: 3px;
 }
 
 .filter-sidebar::-webkit-scrollbar-thumb:hover {
-  background: #c0c5d5;
+  background: var(--border-color-hover);
 }
 
 /* Responsividade para tablets */

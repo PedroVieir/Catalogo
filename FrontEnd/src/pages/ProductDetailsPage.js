@@ -1,22 +1,26 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { useNotification } from "../hooks/useNotification";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import EmptyState from "../components/EmptyState";
 import ConjuntoGallery from "../components/ConjuntoGallery";
 import ImageLightbox from "../components/ImageLightbox";
+import Header from "../components/Header";
 import { useCatalogState } from "../contexts/CatalogContext";
 import { fetchProductDetails } from "../services/productService";
+import { useNavigationHistory } from "../hooks/useNavigationHistory";
 import "../styles/CatalogPage.css";
 import "../styles/ProductDetails.css";
 
 function ProductDetailsPage() {
   const { code } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const notify = useNotification();
   const { catalogState, preloadState, getFromProductsCache } = useCatalogState();
+  const { canGoBack, goBack, pushState, clearHistory } = useNavigationHistory();
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -89,12 +93,25 @@ function ProductDetailsPage() {
     loadData();
   }, [code]);
 
+  // Detecta navegação direta para esta página
+  useEffect(() => {
+    // eslint-disable-next-line no-restricted-globals
+    const navState = location.state;
+    const hasNavigationState = navState && (navState.fromCatalog || navState.fromProduct);
+
+    // Se não há estado de navegação, significa que o usuário acessou diretamente
+    // Nesse caso, o botão voltar deve ir para o catálogo
+    if (!hasNavigationState && !canGoBack) {
+      // Não faz nada, o handleBackClick já tem lógica para isso
+    }
+  }, [location.state, canGoBack]);
+
   // Define aba inicial baseada na prioridade: Contexto URL > Conjuntos > Memberships > Detalhes
   useEffect(() => {
     if (data) {
       // Primeiro verifica se há contexto na URL
       const context = searchParams.get('context');
-      
+
       if (context === 'from-conjunto') {
         // Veio de um conjunto, deve mostrar memberships
         const memberships = Array.isArray(data?.data?.memberships)
@@ -123,7 +140,7 @@ function ProductDetailsPage() {
           }).filter(Boolean)
           : [];
         const validConjuntos = normalizedConjuntos.filter((c) => String(c.filho).trim() !== '');
-        
+
         if (validConjuntos.length > 0) {
           setActiveTab('conjuntos');
           // Limpa o parâmetro da URL após usar
@@ -253,17 +270,43 @@ function ProductDetailsPage() {
     }
   };
 
-  const handleBackClick = () => {
-    try {
-      if (window.history && window.history.length > 1) {
-        navigate(-1);
-        return;
-      }
-    } catch (e) {
-      console.warn("Erro ao acessar history:", e);
+  const handleBackClick = useCallback(() => {
+    // Primeiro tenta usar o histórico de navegação inteligente
+    if (canGoBack) {
+      const success = goBack();
+      if (success) return;
     }
 
+    // Fallback: tenta reconstruir baseado no contexto
     try {
+      // Verifica se há estado de navegação
+      // eslint-disable-next-line no-restricted-globals
+      const navState = location.state;
+
+      if (navState?.fromCatalog) {
+        // Veio do catálogo, volta para o catálogo com o estado salvo
+        const catalogStateData = navState.catalogState;
+        if (catalogStateData) {
+          const params = new URLSearchParams();
+          if (catalogStateData.page) params.set("page", String(catalogStateData.page));
+
+          const filters = catalogStateData.filters || {};
+          if (filters.search) params.set("search", String(filters.search));
+          if (filters.grupo) params.set("grupo", String(filters.grupo));
+          if (filters.fabricante) params.set("fabricante", String(filters.fabricante));
+          if (filters.tipoVeiculo) params.set("tipoVeiculo", String(filters.tipoVeiculo));
+          if (filters.sortBy) params.set("sortBy", String(filters.sortBy));
+
+          navigate(`/?${params.toString()}`);
+          return;
+        }
+      } else if (navState?.fromProduct) {
+        // Veio de outro produto, volta para aquele produto
+        navigate(`/produtos/${encodeURIComponent(String(navState.fromProduct))}`);
+        return;
+      }
+
+      // Último recurso: volta para o catálogo com filtros atuais
       const params = new URLSearchParams();
       const page = catalogState?.currentPage || 1;
       if (page) params.set("page", String(page));
@@ -271,7 +314,8 @@ function ProductDetailsPage() {
       const f = catalogState?.currentFilters || {};
       if (f?.search) params.set("search", String(f.search));
       if (f?.grupo) params.set("grupo", String(f.grupo));
-      if (f?.tipo) params.set("tipo", String(f.tipo));
+      if (f?.fabricante) params.set("fabricante", String(f.fabricante));
+      if (f?.tipoVeiculo) params.set("tipoVeiculo", String(f.tipoVeiculo));
       if (f?.sortBy) params.set("sortBy", String(f.sortBy));
 
       navigate(`/?${params.toString()}`);
@@ -279,9 +323,9 @@ function ProductDetailsPage() {
       console.error("Erro ao navegar:", e);
       navigate("/");
     }
-  };
+  }, [canGoBack, goBack, location.state, catalogState, navigate]);
 
-  const handlePieceClick = (codigo, context = null) => {
+  const handlePieceClick = useCallback((codigo, context = null) => {
     if (!codigo) return;
     try {
       setLightboxOpen(false);
@@ -291,39 +335,40 @@ function ProductDetailsPage() {
 
     try {
       const url = `/produtos/${encodeURIComponent(String(codigo))}`;
-      if (context) {
-        navigate(`${url}?context=${context}`);
-      } else {
-        navigate(url);
-      }
+      const fullUrl = context ? `${url}?context=${context}` : url;
+
+      pushState(fullUrl, {
+        fromProduct: code,
+        context: context
+      });
     } catch (e) {
       console.error('Erro ao navegar para produto do conjunto:', e);
     }
-  };
+  }, [pushState]);
 
-  const getImageUrl = () => {
+  const getImageUrl = useCallback(() => {
     if (!product?.codigo) return "";
     return `/vista/${encodeURIComponent(product.codigo)}.jpg`;
-  };
+  }, [product?.codigo]);
 
-  const handleCopyCode = () => {
+  const handleCopyCode = useCallback(() => {
     if (product?.codigo) {
       navigator.clipboard.writeText(product.codigo);
       notify.success("Código copiado para a área de transferência!");
     }
-  };
+  }, [product?.codigo, notify]);
 
   return (
     <>
+      <Header
+        title="Detalhes do Produto"
+        subtitle={product ? product.descricao : "Carregando..."}
+        showBackButton={true}
+        onBackClick={handleBackClick}
+      />
+
       <main className="product-details-main">
         <div className="product-navigation">
-          <button className="navigation-back-btn" onClick={handleBackClick}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            <span>Voltar ao Catálogo</span>
-          </button>
-
           <div className="navigation-actions">
             <button
               className="action-btn copy-btn"
