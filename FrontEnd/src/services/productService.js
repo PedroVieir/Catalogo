@@ -16,7 +16,7 @@ const cache = {
 cache.catalog = null;
 cache.catalogTimestamp = 0;
 
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+const CACHE_DURATION = 60 * 60 * 1000; // 1 hora
 
 function isCacheValid() {
   return Date.now() - cache.timestamp < CACHE_DURATION;
