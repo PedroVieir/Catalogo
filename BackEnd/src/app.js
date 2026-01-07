@@ -79,19 +79,22 @@ app.use(helmet({
 app.use(limiter);
 
 // Middleware de segurança: CORS restritivo
+// Lista padrão de origens permitidas. Inclui a URL da aplicação Vercel.
+const defaultAllowedOrigins = ['http://localhost:3000', 'https://abr-catalogo.vercel.app'];
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:3000'];
+  : defaultAllowedOrigins;
 const corsOptions = {
   origin: (origin, callback) => {
-    // Permitir requests sem origin (como mobile apps ou curl)
+    // Permitir requisições sem origin (como mobile apps ou curl)
     if (!origin) return callback(null, true);
+    // Se a origem estiver na lista de permitidas, autoriza
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    // Loga a origem bloqueada; não usa 'req' aqui, pois não está disponível nesse contexto
+    // Caso contrário, registra o bloqueio e responde com false (não lança erro para evitar status 500)
     logger.warn('CORS blocked request', { origin });
-    return callback(new Error('Not allowed by CORS'));
+    return callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
