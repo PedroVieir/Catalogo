@@ -64,6 +64,8 @@ function CatalogPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const mountedRef = useRef(true);
+  const sidebarRef = useRef(null);
+  const touchStartX = useRef(0);
 
   // snapshot + UI state
   const [catalogSnapshot, setCatalogSnapshot] = useState(() =>
@@ -129,6 +131,7 @@ function CatalogPage() {
   });
 
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(
     () => !(preloadState && preloadState.loaded && preloadState.snapshot)
   );
@@ -746,6 +749,19 @@ function CatalogPage() {
     []
   );
 
+  // Touch handlers for sidebar swipe to close
+  const handleTouchStart = useCallback((e) => {
+    touchStartX.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback((e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX.current - touchEndX;
+    if (diff > 50) { // Swiped left more than 50px
+      setSidebarOpen(false);
+    }
+  }, []);
+
   // render
   return (
     <div className="catalog-wrapper">
@@ -757,7 +773,13 @@ function CatalogPage() {
 
         <button
           className="header-filter-btn"
-          onClick={() => setFilterModalOpen(true)}
+          onClick={() => {
+            if (window.innerWidth <= 768) {
+              setSidebarOpen(true);
+            } else {
+              setFilterModalOpen(true);
+            }
+          }}
           aria-label="Abrir filtros"
         >
           <svg
@@ -782,17 +804,31 @@ function CatalogPage() {
 
       <main className="catalog-main">
         <div className="catalog-layout">
-          <aside className="catalog-filters">
+          <aside
+            ref={sidebarRef}
+            className={`catalog-filters ${sidebarOpen ? 'open' : ''}`}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <div className="filters-header">
               <h2 className="filters-title">Filtros</h2>
-              {activeFiltersCount > 0 ? (
+              <div className="filters-header-actions">
                 <button
-                  className="clear-filters-btn"
-                  onClick={handleResetFilters}
+                  className="close-sidebar-btn"
+                  onClick={() => setSidebarOpen(false)}
+                  aria-label="Fechar filtros"
                 >
-                  Limpar
+                  ×
                 </button>
-              ) : null}
+                {activeFiltersCount > 0 ? (
+                  <button
+                    className="clear-filters-btn"
+                    onClick={handleResetFilters}
+                  >
+                    Limpar
+                  </button>
+                ) : null}
+              </div>
             </div>
 
             <div className="filters-section">
@@ -1085,6 +1121,11 @@ function CatalogPage() {
           </div>
         </div>
       </main>
+
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? 'show' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+      ></div>
 
       <FilterModal
         isOpen={filterModalOpen}

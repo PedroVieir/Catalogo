@@ -860,3 +860,127 @@ select:focus {
   margin: 0;
   font-weight: 500;
 }
+
+/* Mobile Sidebar */
+@media (max-width: 768px) {
+  .catalog-layout {
+    display: block;
+  }
+
+  .catalog-filters {
+    position: fixed;
+    top: 0;
+    left: -50%;
+    width: 50%;
+    height: 100vh;
+    background: var(--color-bg);
+    z-index: 1000;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    display: block;
+    /* Ensure it's visible */
+  }
+
+  .catalog-filters.open {
+    left: 0;
+  }
+
+  .catalog-content {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+
+  .sidebar-overlay.show {
+    display: block;
+  }
+
+  .filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .filters-header-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .close-sidebar-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+
+  .close-sidebar-btn:hover {
+    background: var(--color-border);
+  }
+
+  .clear-filters-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .clear-filters-btn:hover {
+    background: var(--primary-dark);
+  }
+}
+
+/* Desktop Layout */
+@media (min-width: 769px) {
+  .catalog-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+  }
+
+  .catalog-filters {
+    position: static;
+    width: auto;
+    height: auto;
+    background: transparent;
+    box-shadow: none;
+    overflow-y: visible;
+  }
+
+  .filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .filters-header-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .close-sidebar-btn {
+    display: none;
+  }
+}
