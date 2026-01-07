@@ -58,6 +58,13 @@ const limiter = rateLimit({
 
 const app = express();
 
+// Ao executar atrás de um proxy (Render, Heroku etc.), configure Express para
+// confiar nos cabeçalhos X-Forwarded-* inseridos pelo proxy. Sem este ajuste,
+// req.ip sempre refletirá o IP do proxy (por exemplo, ::1) em vez do IP do
+// cliente real. Veja documentação Express sobre trust proxy【727153055551987†L61-L84】.
+// Isso torna o campo req.ip mais fiel, usando o primeiro endereço em X-Forwarded-For.
+app.set('trust proxy', true);
+
 // Aplicar Helmet para headers de segurança
 app.use(helmet({
   contentSecurityPolicy: {
