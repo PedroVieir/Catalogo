@@ -8,7 +8,7 @@ import {
   getProductsPaginatedOptimized,
   getConjuntosPaginated,
   getCatalogStats
-} from "../services/productService.js";
+} from "../services/products/productService.js";
 
 // ====== PRODUTOS ======
 

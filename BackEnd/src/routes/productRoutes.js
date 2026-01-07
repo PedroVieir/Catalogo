@@ -10,8 +10,8 @@ import {
   getCatalogSnapshotController,
   getCatalogStatus
 } from "../controllers/productController.js";
-import { ensureFabricantesPopulated } from "../services/productService.js";
-import { reloadCatalog } from "../services/productService.js";
+import { ensureFabricantesPopulated } from "../services/products/productService.js";
+import { reloadCatalog } from "../services/products/productService.js";
 
 const router = Router();
 // ====== FILTROS E METADADOS ======
