@@ -31,7 +31,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div style={styles.container}>
           <div style={styles.content}>
-            <h1 style={styles.title}>⚠️ Algo deu errado</h1>
+            <h1 style={styles.title}> Algo deu errado</h1>
             <p style={styles.message}>
               Desculpe, ocorreu um erro inesperado na aplicação.
             </p>

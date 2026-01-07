@@ -137,6 +137,10 @@ function CatalogPage() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [filtersLoaded, setFiltersLoaded] = useState(true);
 
+  // Progress bar state
+  const [progress, setProgress] = useState(0);
+  const progressIntervalRef = useRef(null);
+
   // Capture unhandled promise rejections to prevent noisy "Uncaught (in promise)" from bubbling to console
   useEffect(() => {
     const handler = (ev) => {
@@ -600,6 +604,30 @@ function CatalogPage() {
     location.pathname,
   ]);
 
+  // Progress bar effect - real progress based on time
+  useEffect(() => {
+    if (loading) {
+      const startTime = Date.now();
+      progressIntervalRef.current = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        // Exponential progress: starts slow, accelerates to ~95% while loading
+        const progressValue = Math.min(100 * (1 - Math.exp(-elapsed / 2000)), 95);
+        setProgress(progressValue);
+      }, 100);
+    } else {
+      setProgress(100); // Set to 100% when loading completes
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null;
+      }
+    }
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    };
+  }, [loading]);
+
   // active filters computation (count + list)
   const activeFilters = useMemo(() => {
     const f = catalogState.currentFilters || {};
@@ -920,15 +948,13 @@ function CatalogPage() {
               </div>
             </div>
 
-            {/* Estado de carregamento – exibe esqueletos de cards para melhorar a experiência */}
+            {/* Estado de carregamento – exibe barra de progresso */}
             {loading && (
-              <div className="products-grid">
-                {Array.from({ length: 8 }).map((_, idx) => (
-                  <LoadingSpinner key={idx} variant="card" />
-                ))}
-                <div style={{ gridColumn: '1 / -1', textAlign: 'center', marginTop: '1rem' }}>
-                  <LoadingSpinner message="Carregando produtos..." />
+              <div className="loading-progress-container">
+                <div className="progress-bar-wrapper">
+                  <div className="progress-bar-fill" style={{ width: `${progress}%` }}></div>
                 </div>
+                <p className="progress-text">Carregando produtos... {progress.toFixed(2)}%</p>
               </div>
             )}
 
