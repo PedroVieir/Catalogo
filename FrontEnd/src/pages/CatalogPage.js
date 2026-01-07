@@ -543,7 +543,6 @@ function CatalogPage() {
       qs.get("grupo") || catalogState.currentFilters?.grupo || "";
     const fabricante =
       qs.get("fabricante") ||
-      catalogState.currentFilters?.fabricante ||
       "";
     const tipoVeiculoQs =
       qs.get("tipoVeiculo") ||
@@ -553,7 +552,7 @@ function CatalogPage() {
     const sortBy =
       qs.get("sortBy") ||
       catalogState.currentFilters?.sortBy ||
-      "codigo";
+      "grupo";
 
     const currentFilters = catalogState.currentFilters || {};
     const hasChanges =
@@ -562,7 +561,7 @@ function CatalogPage() {
       grupo !== (currentFilters.grupo || "") ||
       fabricante !== (currentFilters.fabricante || "") ||
       tipoVeiculo !== (currentFilters.tipoVeiculo || "") ||
-      sortBy !== (currentFilters.sortBy || "codigo");
+      sortBy !== (currentFilters.sortBy || "grupo");
 
     if (hasChanges) {
       updateCatalogState({
@@ -570,7 +569,7 @@ function CatalogPage() {
         currentFilters: {
           search,
           grupo,
-          fabricante,
+          fabricante: fabricante || "", // Garantir que seja sempre string vazia se não houver fabricante
           tipoVeiculo,
           sortBy,
         },
@@ -658,7 +657,7 @@ function CatalogPage() {
         grupo: "",
         fabricante: "",
         tipoVeiculo: "",
-        sortBy: "codigo",
+        sortBy: "grupo",
       },
       currentPage: 1,
     });

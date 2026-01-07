@@ -8,10 +8,10 @@ export function CatalogProvider({ children }) {
     currentPage: 1,
     currentFilters: {
       search: "",
-      grupo: "", // Default to all groups
-      fabricante: "",
+      grupo: "",
+      fabricante: "", // Forçado como string vazia
       tipoVeiculo: "",
-      sortBy: "codigo" // "codigo", "descricao", "grupo"
+      sortBy: "grupo"
     }
   });
 
@@ -82,8 +82,7 @@ export function CatalogProvider({ children }) {
           ...prev,
           currentFilters: {
             ...prev.currentFilters,
-            // keep existing values if any, else try to set sensible defaults
-            fabricante: prev.currentFilters.fabricante || (availableFilters.fabricantes[0] ? availableFilters.fabricantes[0].name || availableFilters.fabricantes[0] : ''),
+            fabricante: "", // Forçar fabricante sempre vazio
             tipoVeiculo: prev.currentFilters.tipoVeiculo || ''
           }
         }));
