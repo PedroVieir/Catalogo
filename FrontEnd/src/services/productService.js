@@ -1,4 +1,10 @@
-// src/services/productService.js
+// Import utilities from the shared vehicle utils module. This allows us to
+// canonicalize vehicle type values (siglas) and match aliases consistently.
+import {
+  valueToSigla,
+  matchesVehicleAlias,
+  normalizeString,
+} from "../utils/vehicleUtils";
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
 
 // Timeout padrão para requisições (ms)
@@ -13,10 +19,12 @@ const cache = {
   timestamp: 0,
   // snapshot-specific
   catalog: null,
-  catalogTimestamp: 0
+  catalogTimestamp: 0,
 };
 
-const CACHE_DURATION = Number(process.env.REACT_APP_CATALOG_TTL_MS || 60 * 60 * 1000); // 1 hora por padrão
+const CACHE_DURATION = Number(
+  process.env.REACT_APP_CATALOG_TTL_MS || 60 * 60 * 1000
+); // 1 hora por padrão
 
 function isCacheValid() {
   return Date.now() - cache.timestamp < CACHE_DURATION;
@@ -68,7 +76,10 @@ async function fetchWithRetry(url, options = {}, maxRetries = 2) {
     try {
       const response = await fetchWithTimeout(url, options);
 
-      if ((response.status === 503 || response.status === 504) && attempt < maxRetries) {
+      if (
+        (response.status === 503 || response.status === 504) &&
+        attempt < maxRetries
+      ) {
         const delay = Math.pow(2, attempt) * 500;
         await new Promise((r) => setTimeout(r, delay));
         continue;
@@ -117,8 +128,10 @@ async function handleResponse(response) {
 
 function validateParams(params) {
   const { page = 1, limit = 20 } = params;
-  if (!Number.isInteger(page) || page < 1) throw new Error("Página deve ser um número inteiro maior que 0");
-  if (!Number.isInteger(limit) || limit < 1 || limit > 100) throw new Error("Limite deve ser um número entre 1 e 100");
+  if (!Number.isInteger(page) || page < 1)
+    throw new Error("Página deve ser um número inteiro maior que 0");
+  if (!Number.isInteger(limit) || limit < 1 || limit > 100)
+    throw new Error("Limite deve ser um número entre 1 e 100");
   return { page, limit };
 }
 
@@ -148,18 +161,30 @@ export function getCachedCatalog() {
 }
 
 // Filtragem/ordenacao/paginacao eficiente em memória baseada no snapshot.
-// Mantém a semântica dos filtros que você já usa no frontend.
-export function filterCatalogSnapshot(snapshot, filters = {}, page = 1, limit = 20) {
+// Mantém a semântica dos filtros que você já usa no frontend. Vehicle type
+// handling has been unified with alias support.
+export function filterCatalogSnapshot(
+  snapshot,
+  filters = {},
+  page = 1,
+  limit = 20
+) {
   if (!snapshot || typeof snapshot !== "object") {
-    return { data: [], pagination: { page: 1, limit, total: 0, totalPages: 0 } };
+    return {
+      data: [],
+      pagination: { page: 1, limit, total: 0, totalPages: 0 },
+    };
   }
 
-  const productsArr = Array.isArray(snapshot.products) ? snapshot.products : [];
-  const conjuntosArr = Array.isArray(snapshot.conjuntos) ? snapshot.conjuntos : [];
-  const aplicacoesArr = Array.isArray(snapshot.aplicacoes) ? snapshot.aplicacoes : [];
-
-  // Normalize helper
-  const normalize = (v) => (v || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const productsArr = Array.isArray(snapshot.products)
+    ? snapshot.products
+    : [];
+  const conjuntosArr = Array.isArray(snapshot.conjuntos)
+    ? snapshot.conjuntos
+    : [];
+  const aplicacoesArr = Array.isArray(snapshot.aplicacoes)
+    ? snapshot.aplicacoes
+    : [];
 
   // Build maps to accelerate fabricante/tipoVeiculo lookups
   const conjuntoChildrenMap = new Map();
@@ -183,10 +208,18 @@ export function filterCatalogSnapshot(snapshot, filters = {}, page = 1, limit = 
   const items = [];
   // Add conjuntos (pai)
   for (const [pai, filhos] of conjuntoChildrenMap.entries()) {
-    const prod = (productsArr.find(p => (p.codigo_abr || p.codigo || "").toString().trim() === pai) || {});
+    const prod =
+      productsArr.find(
+        (p) =>
+          (p.codigo_abr || p.codigo || "").toString().trim() === pai
+      ) || {};
     const apps = appByConjunto.get(pai) || [];
-    const fabricante = apps.length ? (apps[0].fabricante || "") : (prod.fabricante || "");
-    const tipoVeiculo = apps.length ? (apps[0].sigla_tipo || apps[0].tipo || "") : (prod.tipo || "");
+    const fabricante = apps.length
+      ? apps[0].fabricante || ""
+      : prod.fabricante || "";
+    const tipoVeiculo = apps.length
+      ? apps[0].sigla_tipo || apps[0].tipo || ""
+      : prod.tipo || "";
     items.push({
       codigo: pai,
       descricao: prod.descricao || prod.nome || pai,
@@ -194,14 +227,16 @@ export function filterCatalogSnapshot(snapshot, filters = {}, page = 1, limit = 
       tipo: "conjunto",
       fabricante,
       tipoVeiculo,
-      conjuntosChildren: filhos
+      conjuntosChildren: filhos,
     });
   }
   // Add products not already represented as conjuntos
   for (const p of productsArr) {
     const codigo = (p.codigo_abr || p.codigo || "").toString().trim();
     if (!codigo) continue;
-    const existsConjunto = items.some(i => i.codigo === codigo && i.tipo === "conjunto");
+    const existsConjunto = items.some(
+      (i) => i.codigo === codigo && i.tipo === "conjunto"
+    );
     if (existsConjunto) continue;
     items.push({
       codigo,
@@ -209,45 +244,90 @@ export function filterCatalogSnapshot(snapshot, filters = {}, page = 1, limit = 
       grupo: p.grupo || null,
       tipo: "produto",
       fabricante: p.fabricante || p.origem || "",
-      tipoVeiculo: p.sigla_tipo || p.tipo || ""
+      tipoVeiculo: p.sigla_tipo || p.tipo || "",
     });
   }
 
   // Apply filters
-  const search = normalize(filters.search || "");
+  const search = normalizeString(filters.search || "");
   const grupoFilter = (filters.grupo || "").toString().trim().toLowerCase();
-  const fabricanteFilter = (filters.fabricante || "").toString().trim().toLowerCase();
-  const tipoVeiculoFilter = (filters.tipoVeiculo || "").toString().trim().toUpperCase();
+  const fabricanteFilter = (filters.fabricante || "")
+    .toString()
+    .trim()
+    .toLowerCase();
+  const tipoVeiculoFilter = valueToSigla(filters.tipoVeiculo || "")
+    .trim()
+    .toUpperCase();
   const sortBy = filters.sortBy || "codigo";
-  const isConjunto = (filters.isConjunto === true) ? "conjunto" : ((filters.isConjunto === false) ? "produto" : null);
+  const isConjunto =
+    filters.isConjunto === true
+      ? "conjunto"
+      : filters.isConjunto === false
+        ? "produto"
+        : null;
 
   // Precompute matching codes for fabricante/tipoVeiculo by scanning aplicacoes (fast with maps)
   let matchingCodesForFabricante = null;
   if (fabricanteFilter || tipoVeiculoFilter) {
     matchingCodesForFabricante = new Set();
     for (const [codigo_conjunto, apps] of appByConjunto.entries()) {
-      const matchesFabricante = fabricanteFilter ? apps.some(a => normalize(a.fabricante || "").includes(fabricanteFilter)) : true;
-      const matchesTipo = tipoVeiculoFilter ? apps.some(a => ((a.sigla_tipo || a.tipo || "").toString().toUpperCase() === tipoVeiculoFilter)) : true;
+      const matchesFabricante = fabricanteFilter
+        ? apps.some((a) =>
+          normalizeString(a.fabricante || "").includes(fabricanteFilter)
+        )
+        : true;
+      const matchesTipo = tipoVeiculoFilter
+        ? apps.some((a) => {
+          const raw = (a.sigla_tipo || a.tipo || "").toString().trim();
+          if (!raw) return false;
+          const sigla = valueToSigla(raw).toUpperCase();
+          return (
+            sigla === tipoVeiculoFilter ||
+            matchesVehicleAlias(raw, tipoVeiculoFilter)
+          );
+        })
+        : true;
       if (matchesFabricante && matchesTipo) {
         matchingCodesForFabricante.add(codigo_conjunto);
         const filhos = conjuntoChildrenMap.get(codigo_conjunto) || [];
-        filhos.forEach(f => matchingCodesForFabricante.add(f));
+        filhos.forEach((f) => matchingCodesForFabricante.add(f));
       }
     }
   }
 
-  const filtered = items.filter(it => {
+  const filtered = items.filter((it) => {
+    // Filter by type (conjunto/produto)
     if (isConjunto && it.tipo !== isConjunto) return false;
-    if (matchingCodesForFabricante) {
-      if (!matchingCodesForFabricante.has(it.codigo)) return false;
+
+    // Filter by fabricante/tipoVeiculo using the precomputed matching set.
+    if (matchingCodesForFabricante && !matchingCodesForFabricante.has(it.codigo)) {
+      if (it.tipo === "produto" && tipoVeiculoFilter) {
+        const raw = (it.tipoVeiculo || "").toString().trim();
+        if (!raw) return false;
+        const sigla = valueToSigla(raw).toUpperCase();
+        if (
+          sigla === tipoVeiculoFilter ||
+          matchesVehicleAlias(raw, tipoVeiculoFilter)
+        ) {
+          // allow
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     }
+
+    // Filter by group
     if (grupoFilter) {
       const g = (it.grupo || "").toString().trim().toLowerCase();
       if (g !== grupoFilter) return false;
     }
+
+    // Filter by search term (code or description)
     if (search) {
-      const c = normalize(it.codigo || "");
-      const d = normalize(it.descricao || "");
+      const c = normalizeString(it.codigo || "");
+      const d = normalizeString(it.descricao || "");
       if (!c.includes(search) && !d.includes(search)) return false;
     }
     return true;
@@ -255,8 +335,10 @@ export function filterCatalogSnapshot(snapshot, filters = {}, page = 1, limit = 
 
   // Ordena
   filtered.sort((a, b) => {
-    if (sortBy === "descricao") return String(a.descricao || "").localeCompare(String(b.descricao || ""));
-    if (sortBy === "grupo") return String(a.grupo || "").localeCompare(String(b.grupo || ""));
+    if (sortBy === "descricao")
+      return String(a.descricao || "").localeCompare(String(b.descricao || ""));
+    if (sortBy === "grupo")
+      return String(a.grupo || "").localeCompare(String(b.grupo || ""));
     return String(a.codigo || "").localeCompare(String(b.codigo || ""));
   });
 
@@ -270,7 +352,7 @@ export function filterCatalogSnapshot(snapshot, filters = {}, page = 1, limit = 
   // Return shape compatible with CatalogPage usage
   return {
     data: pageItems,
-    pagination: { page: safePage, limit, total, totalPages }
+    pagination: { page: safePage, limit, total, totalPages },
   };
 }
 
@@ -278,7 +360,8 @@ export function filterCatalogSnapshot(snapshot, filters = {}, page = 1, limit = 
 export async function fetchProducts(search = "") {
   try {
     const url = new URL(`${API_BASE_URL}/products`);
-    if (search && typeof search === "string") url.searchParams.set("search", search.trim().substring(0, 100));
+    if (search && typeof search === "string")
+      url.searchParams.set("search", search.trim().substring(0, 100));
     const response = await fetchWithRetry(url.toString());
     const data = await handleResponse(response);
     if (!Array.isArray(data)) {
@@ -301,7 +384,10 @@ export async function fetchProductsPaginated(page = 1, limit = 20, filters = {})
       return { data: result.data, pagination: result.pagination };
     } catch (e) {
       // se der erro, fallback para API
-      console.warn("fetchProductsPaginated: fallback para API (erro no filtro local):", e.message || e);
+      console.warn(
+        "fetchProductsPaginated: fallback para API (erro no filtro local):",
+        e.message || e
+      );
     }
   }
 
@@ -310,11 +396,28 @@ export async function fetchProductsPaginated(page = 1, limit = 20, filters = {})
   url.searchParams.set("page", String(validPage));
   url.searchParams.set("limit", String(validLimit));
 
-  if (filters.search) url.searchParams.set("search", String(filters.search).trim().substring(0, 100));
-  if (filters.grupo) url.searchParams.set("grupo", String(filters.grupo).trim().substring(0, 50));
-  if (filters.fabricante) url.searchParams.set("fabricante", String(filters.fabricante).trim().substring(0, 50));
-  if (filters.tipoVeiculo) url.searchParams.set("tipoVeiculo", String(filters.tipoVeiculo).trim().substring(0, 20));
-  if (filters.sortBy) url.searchParams.set("sortBy", String(filters.sortBy).substring(0, 50));
+  if (filters.search)
+    url.searchParams.set(
+      "search",
+      String(filters.search).trim().substring(0, 100)
+    );
+  if (filters.grupo)
+    url.searchParams.set("grupo", String(filters.grupo).trim().substring(0, 50));
+  if (filters.fabricante)
+    url.searchParams.set(
+      "fabricante",
+      String(filters.fabricante).trim().substring(0, 50)
+    );
+  if (filters.tipoVeiculo)
+    url.searchParams.set(
+      "tipoVeiculo",
+      String(filters.tipoVeiculo).trim().substring(0, 20)
+    );
+  if (filters.sortBy)
+    url.searchParams.set(
+      "sortBy",
+      String(filters.sortBy).substring(0, 50)
+    );
 
   const response = await fetchWithRetry(url.toString());
   const body = await handleResponse(response);
@@ -328,23 +431,43 @@ export async function fetchProductsPaginated(page = 1, limit = 20, filters = {})
       page: parseInt(body.pagination?.page) || validPage,
       limit: parseInt(body.pagination?.limit) || validLimit,
       total: parseInt(body.pagination?.total) || 0,
-      totalPages: parseInt(body.pagination?.totalPages) || Math.max(1, Math.ceil((parseInt(body.pagination?.total) || 0) / validLimit))
-    }
+      totalPages:
+        parseInt(body.pagination?.totalPages) ||
+        Math.max(
+          1,
+          Math.ceil((parseInt(body.pagination?.total) || 0) / validLimit)
+        ),
+    },
   };
 }
 
-export async function fetchConjuntosPaginated(page = 1, limit = 20, filters = {}) {
-  const { page: validPage, limit: validLimit } = validateParams({ page, limit });
+export async function fetchConjuntosPaginated(
+  page = 1,
+  limit = 20,
+  filters = {}
+) {
+  const { page: validPage, limit: validLimit } = validateParams({
+    page,
+    limit,
+  });
 
   // preferir snapshot se disponível
   if (cache.catalog && isCatalogCacheValid()) {
     try {
       // forçar isConjunto = true
       const localFilters = { ...filters, isConjunto: true };
-      const result = filterCatalogSnapshot(cache.catalog, localFilters, validPage, validLimit);
+      const result = filterCatalogSnapshot(
+        cache.catalog,
+        localFilters,
+        validPage,
+        validLimit
+      );
       return { data: result.data, pagination: result.pagination };
     } catch (e) {
-      console.warn("fetchConjuntosPaginated: fallback para API (erro no filtro local):", e.message || e);
+      console.warn(
+        "fetchConjuntosPaginated: fallback para API (erro no filtro local):",
+        e.message || e
+      );
     }
   }
 
@@ -352,11 +475,28 @@ export async function fetchConjuntosPaginated(page = 1, limit = 20, filters = {}
   const url = new URL(`${API_BASE_URL}/conjuntos/paginated`);
   url.searchParams.set("page", String(validPage));
   url.searchParams.set("limit", String(validLimit));
-  if (filters.search) url.searchParams.set("search", String(filters.search).trim().substring(0, 100));
-  if (filters.grupo) url.searchParams.set("grupo", String(filters.grupo).trim().substring(0, 50));
-  if (filters.fabricante) url.searchParams.set("fabricante", String(filters.fabricante).trim().substring(0, 50));
-  if (filters.tipoVeiculo) url.searchParams.set("tipoVeiculo", String(filters.tipoVeiculo).trim().substring(0, 20));
-  if (filters.sortBy) url.searchParams.set("sortBy", String(filters.sortBy).substring(0, 50));
+  if (filters.search)
+    url.searchParams.set(
+      "search",
+      String(filters.search).trim().substring(0, 100)
+    );
+  if (filters.grupo)
+    url.searchParams.set("grupo", String(filters.grupo).trim().substring(0, 50));
+  if (filters.fabricante)
+    url.searchParams.set(
+      "fabricante",
+      String(filters.fabricante).trim().substring(0, 50)
+    );
+  if (filters.tipoVeiculo)
+    url.searchParams.set(
+      "tipoVeiculo",
+      String(filters.tipoVeiculo).trim().substring(0, 20)
+    );
+  if (filters.sortBy)
+    url.searchParams.set(
+      "sortBy",
+      String(filters.sortBy).substring(0, 50)
+    );
 
   const response = await fetchWithRetry(url.toString());
   const body = await handleResponse(response);
@@ -374,8 +514,13 @@ export async function fetchConjuntosPaginated(page = 1, limit = 20, filters = {}
       page: parseInt(body.pagination?.page) || validPage,
       limit: parseInt(body.pagination?.limit) || validLimit,
       total: parseInt(body.pagination?.total) || 0,
-      totalPages: parseInt(body.pagination?.totalPages) || Math.max(1, Math.ceil((parseInt(body.pagination?.total) || 0) / validLimit))
-    }
+      totalPages:
+        parseInt(body.pagination?.totalPages) ||
+        Math.max(
+          1,
+          Math.ceil((parseInt(body.pagination?.total) || 0) / validLimit)
+        ),
+    },
   };
 }
 
@@ -387,21 +532,39 @@ export async function fetchProductDetails(code) {
     if (cache.catalog && isCatalogCacheValid()) {
       const snap = cache.catalog;
       // procura por código exato (procura em products e conjuntos)
-      const byProducts = (Array.isArray(snap.products) ? snap.products : []).find(p => (p.codigo_abr || p.codigo || "").toString().trim().toUpperCase() === normalizedCode);
+      const byProducts = (Array.isArray(snap.products) ? snap.products : []).find(
+        (p) =>
+          (p.codigo_abr || p.codigo || "")
+            .toString()
+            .trim()
+            .toUpperCase() === normalizedCode
+      );
       if (byProducts) return byProducts;
-      const byConjuntos = (Array.isArray(snap.conjuntos) ? snap.conjuntos : []).find(c => (c.pai || c.codigo_conjunto || c.codigo || "").toString().trim().toUpperCase() === normalizedCode);
+      const byConjuntos = (Array.isArray(snap.conjuntos) ? snap.conjuntos : []).find(
+        (c) =>
+          (c.pai || c.codigo_conjunto || c.codigo || "")
+            .toString()
+            .trim()
+            .toUpperCase() === normalizedCode
+      );
       if (byConjuntos) return byConjuntos;
       // else continue to server
     }
 
     // 2) buscar no servidor (rota de detalhe)
-    const url = `${API_BASE_URL}/products/${encodeURIComponent(normalizedCode)}`;
+    const url = `${API_BASE_URL}/products/${encodeURIComponent(
+      normalizedCode
+    )}`;
     const resp = await fetchWithRetry(url);
     // detectar respostas HTML
     const contentType = resp.headers.get("content-type") || "";
     if (contentType.includes("text/html")) {
       const text = await resp.text();
-      throw new Error(`Resposta inesperada (HTML). Conteúdo truncado: ${text.substring(0, 200).replace(/\s+/g, " ")}`);
+      throw new Error(
+        `Resposta inesperada (HTML). Conteúdo truncado: ${text
+          .substring(0, 200)
+          .replace(/\s+/g, " ")}`
+      );
     }
     const body = await handleResponse(resp);
     return body;
@@ -409,14 +572,19 @@ export async function fetchProductDetails(code) {
     // fallback: tentar buscar por search (mesma estratégia que você já havia implementado)
     try {
       const normalizedCode = normalizeCodeFront(code);
-      const searchUrl = `${API_BASE_URL}/products?search=${encodeURIComponent(normalizedCode)}`;
+      const searchUrl = `${API_BASE_URL}/products?search=${encodeURIComponent(
+        normalizedCode
+      )}`;
       const searchResp = await fetchWithRetry(searchUrl);
       const searchData = await handleResponse(searchResp);
-      if (Array.isArray(searchData) && searchData.length > 0) return searchData[0];
+      if (Array.isArray(searchData) && searchData.length > 0)
+        return searchData[0];
     } catch (e) {
       // ignora
     }
-    throw new Error(`Falha ao carregar detalhes do produto: ${error?.message || error}`);
+    throw new Error(
+      `Falha ao carregar detalhes do produto: ${error?.message || error}`
+    );
   }
 }
 
@@ -425,10 +593,39 @@ export async function fetchFilters() {
     // Se snapshot tiver fabricantes/grupos, usamos direto
     if (cache.catalog && isCatalogCacheValid()) {
       const snap = cache.catalog;
-      const grupos = Array.isArray(snap.grupos) ? snap.grupos : (Array.isArray(snap.products) ? Array.from(new Set((snap.products || []).map(p => p.grupo).filter(Boolean))).sort() : []);
-      const fabricantesRaw = Array.isArray(snap.fabricantes) ? snap.fabricantes : [];
-      const fabricantes = fabricantesRaw.map(f => (typeof f === 'string' ? { name: f, count: 0 } : (f && f.name ? { name: f.name, count: Number(f.count) || 0 } : null))).filter(Boolean);
-      const vehicleTypes = Array.isArray(snap.vehicle_types) ? snap.vehicle_types : (Array.isArray(snap.aplicacoes) ? Array.from(new Set((snap.aplicacoes || []).map(a => a.sigla_tipo).filter(Boolean))) : []);
+      const grupos = Array.isArray(snap.grupos)
+        ? snap.grupos
+        : Array.isArray(snap.products)
+          ? Array.from(
+            new Set(
+              (snap.products || [])
+                .map((p) => p.grupo)
+                .filter(Boolean)
+            )
+          ).sort()
+          : [];
+      const fabricantesRaw = Array.isArray(snap.fabricantes)
+        ? snap.fabricantes
+        : [];
+      const fabricantes = fabricantesRaw
+        .map((f) => {
+          if (typeof f === "string") return { name: f, count: 0 };
+          if (f && f.name)
+            return { name: f.name, count: Number(f.count) || 0 };
+          return null;
+        })
+        .filter(Boolean);
+      const vehicleTypes = Array.isArray(snap.vehicle_types)
+        ? snap.vehicle_types
+        : Array.isArray(snap.aplicacoes)
+          ? Array.from(
+            new Set(
+              (snap.aplicacoes || [])
+                .map((a) => a.sigla_tipo)
+                .filter(Boolean)
+            )
+          )
+          : [];
       return { grupos, tipos: [], fabricantes, vehicleTypes };
     }
 
@@ -440,32 +637,55 @@ export async function fetchFilters() {
     }
 
     // Normalize fabricantes
-    const fabricantesRaw = Array.isArray(data.fabricantes) ? data.fabricantes : [];
-    const fabricantes = fabricantesRaw.map(f => {
-      if (typeof f === 'string') return { name: f, count: 0 };
-      if (f && f.name) return { name: f.name, count: Number(f.count) || 0 };
-      return null;
-    }).filter(Boolean);
+    const fabricantesRaw = Array.isArray(data.fabricantes)
+      ? data.fabricantes
+      : [];
+    const fabricantes = fabricantesRaw
+      .map((f) => {
+        if (typeof f === "string") return { name: f, count: 0 };
+        if (f && f.name) return { name: f.name, count: Number(f.count) || 0 };
+        return null;
+      })
+      .filter(Boolean);
 
-    const vtRaw = Array.isArray(data.vehicle_types) ? data.vehicle_types : (Array.isArray(data.vehicleTypes) ? data.vehicleTypes : (Array.isArray(data.tipoVeiculo) ? data.tipoVeiculo : []));
-    const canonical = new Set(['VLL', 'VLP', 'MLL', 'MLP']);
-    const vtNormalized = Array.from(new Set(vtRaw.map(v => String(v).trim().toUpperCase()).filter(Boolean))).filter(s => canonical.has(s));
+    const vtRaw = Array.isArray(data.vehicle_types)
+      ? data.vehicle_types
+      : Array.isArray(data.vehicleTypes)
+        ? data.vehicleTypes
+        : Array.isArray(data.tipoVeiculo)
+          ? data.tipoVeiculo
+          : [];
+    const canonical = new Set(["VLL", "VLP", "MLL", "MLP"]);
+    const vtNormalized = Array.from(
+      new Set(
+        vtRaw
+          .map((v) => String(v).trim().toUpperCase())
+          .filter(Boolean)
+      )
+    ).filter((s) => canonical.has(s));
 
     return {
       grupos: Array.isArray(data.grupos) ? data.grupos : [],
       tipos: Array.isArray(data.tipos) ? data.tipos : [],
       fabricantes,
-      vehicleTypes: vtNormalized.length ? vtNormalized : Array.from(canonical)
+      vehicleTypes: vtNormalized.length
+        ? vtNormalized
+        : Array.from(canonical),
     };
   } catch (error) {
-    return { grupos: [], tipos: [], fabricantes: [], vehicleTypes: ['Leve', 'Pesado'] };
+    return {
+      grupos: [],
+      tipos: [],
+      fabricantes: [],
+      vehicleTypes: ["Leve", "Pesado"],
+    };
   }
 }
 
 export async function seedFabricantes() {
   try {
     const url = `${API_BASE_URL}/filters/seed-fabricantes`;
-    const response = await fetchWithRetry(url, { method: 'POST' }, 1);
+    const response = await fetchWithRetry(url, { method: "POST" }, 1);
     return response && (response.status === 204 || response.ok);
   } catch (error) {
     return false;
@@ -477,9 +697,19 @@ export async function fetchCatalogStatus() {
     // se cache disponível, retorne algo sensato rapidamente
     if (cache.catalog && isCatalogCacheValid()) {
       const snap = cache.catalog;
-      const totalProducts = Array.isArray(snap.products) ? snap.products.length : 0;
-      const totalConjuntos = Array.isArray(snap.conjuntos) ? new Set(snap.conjuntos.map(c => c.pai || c.codigo_conjunto)).size : 0;
-      return { totalProducts, totalConjuntos, lastUpdate: new Date(cache.catalogTimestamp).toISOString() };
+      const totalProducts = Array.isArray(snap.products)
+        ? snap.products.length
+        : 0;
+      const totalConjuntos = Array.isArray(snap.conjuntos)
+        ? new Set(
+          snap.conjuntos.map((c) => c.pai || c.codigo_conjunto)
+        ).size
+        : 0;
+      return {
+        totalProducts,
+        totalConjuntos,
+        lastUpdate: new Date(cache.catalogTimestamp).toISOString(),
+      };
     }
     const url = `${API_BASE_URL}/status`;
     const response = await fetchWithRetry(url);

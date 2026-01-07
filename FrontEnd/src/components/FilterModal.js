@@ -1,7 +1,23 @@
 import React from "react";
 import "../styles/FilterModal.css";
 
+function siglaToLabel(sigla) {
+  if (!sigla) return "";
+  const labelMap = {
+    MLL: "Moto Leve",
+    MLP: "Motor Pesado",
+    VLL: "Veículo Linha leve",
+    VLP: "Veículo Linha pesada"
+  };
+  return labelMap[sigla] || sigla;
+}
+
 function FilterModal({ isOpen, onClose, currentFilters, onFilterChange, availableFilters, onResetFilters }) {
+  // Fallback vehicle types if not loaded
+  const vehicleTypes = availableFilters.vehicleTypes?.length
+    ? availableFilters.vehicleTypes
+    : ["MLL", "MLP", "VLL", "VLP"];
+
   if (!isOpen) return null;
 
   return (
@@ -74,16 +90,9 @@ function FilterModal({ isOpen, onClose, currentFilters, onFilterChange, availabl
               className="filter-select"
             >
               <option value="">Todos os tipos</option>
-              {availableFilters.vehicleTypes?.map(sigla => {
-                const labelMap = {
-                  VLL: 'Veículo - Linha Leve (VLL)',
-                  VLP: 'Veículo - Linha Pesada (VLP)',
-                  MLL: 'Motor - Linha Leve (MLL)',
-                  MLP: 'Motor - Linha Pesada (MLP)'
-                };
-                const upper = String(sigla).toUpperCase();
-                const label = labelMap[upper] || upper;
-                return <option key={upper} value={upper}>{label}</option>;
+              {vehicleTypes?.map(sigla => {
+                const label = siglaToLabel(sigla) || sigla;
+                return <option key={sigla} value={sigla}>{label} ({sigla})</option>;
               })}
             </select>
           </div>
