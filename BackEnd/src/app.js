@@ -11,6 +11,7 @@ import { errorHandler } from "./middlewares/errorHandler.js";
 import { getPoolStatus, query } from "./config/db.js";
 import { preloadCatalog } from "./services/products/productService.js";
 
+// Carrega variáveis de ambiente
 dotenv.config();
 
 // Configurar Winston para logs estruturados
@@ -78,35 +79,35 @@ app.use(helmet({
 app.use(limiter);
 
 // Middleware de segurança: CORS restritivo
-const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'];
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:3000'];
 const corsOptions = {
   origin: (origin, callback) => {
     // Permitir requests sem origin (como mobile apps ou curl)
     if (!origin) return callback(null, true);
-
     if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      logger.warn('CORS blocked request', { origin, path: req?.path });
-      callback(new Error('Not allowed by CORS'));
+      return callback(null, true);
     }
+    // Loga a origem bloqueada; não usa 'req' aqui, pois não está disponível nesse contexto
+    logger.warn('CORS blocked request', { origin });
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  maxAge: 86400, // 24h
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400, // 24 horas
 };
 app.use(cors(corsOptions));
 
 // Middleware de limite de tamanho (proteger contra payloads grandes)
-app.use(express.json({ limit: "1mb" })); // Reduzido para 1MB para segurança
-app.use(express.urlencoded({ limit: "1mb", extended: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ limit: '1mb', extended: true }));
 
 // Middleware de logging estruturado com Winston
 app.use((req, res, next) => {
   req.id = `${Date.now().toString(36)}-${Math.floor(Math.random() * 10000)}`;
   const start = Date.now();
-
   res.on('finish', () => {
     const duration = Date.now() - start;
     const logData = {
@@ -116,9 +117,8 @@ app.use((req, res, next) => {
       statusCode: res.statusCode,
       duration,
       ip: req.ip,
-      userAgent: req.get('User-Agent')
+      userAgent: req.get('User-Agent'),
     };
-
     if (res.statusCode >= 500) {
       logger.error('Request failed', logData);
     } else if (res.statusCode >= 400) {
@@ -127,15 +127,14 @@ app.use((req, res, next) => {
       logger.info('Request completed', logData);
     }
   });
-
   next();
 });
 
 // Health check com status do pool de conexões
-app.get("/health", (req, res) => {
+app.get('/health', (req, res) => {
   const poolStatus = getPoolStatus();
   res.json({
-    status: "ok",
+    status: 'ok',
     timestamp: new Date().toISOString(),
     database: {
       activeConnections: poolStatus.activeConnections,
@@ -145,25 +144,23 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Analytics log endpoint
-app.post("/api/log", async (req, res) => {
+// Rota de log de analytics
+app.post('/api/log', async (req, res) => {
   try {
+    // Dados brutos enviados pelo cliente + informações de servidor
     const logData = {
       ...req.body,
       serverTimestamp: new Date().toISOString(),
       ip: req.ip,
-      userAgent: req.get("User-Agent"),
+      userAgent: req.get('User-Agent'),
     };
-
-    logger.info("Analytics log received", logData);
-
-    // Insert into database
+    logger.info('Analytics log received', logData);
+    // Inserir no banco
     const sql = `
-      INSERT INTO analytics_logs 
+      INSERT INTO analytics_logs
       (client_ip, user_agent, browser_language, platform, current_url, referrer, public_ip, location_lat, location_lng)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
     const params = [
       logData.ip,
       logData.userAgent,
@@ -175,35 +172,105 @@ app.post("/api/log", async (req, res) => {
       logData.location ? logData.location.latitude : null,
       logData.location ? logData.location.longitude : null,
     ];
-
     await query(sql, params);
-
-    // Also write to file as backup (optional)
-    const fs = await import("fs");
-    const path = await import("path");
-
-    const logFilePath = path.join(process.cwd(), "log-leads.txt");
-    const logEntry = `
-=== LEAD LOG ENTRY ===
-Timestamp: ${logData.serverTimestamp}
-Client IP: ${logData.ip}
-User Agent: ${logData.userAgent}
-Browser Language: ${logData.language || "N/A"}
-Platform: ${logData.platform || "N/A"}
-Current URL: ${logData.url || "N/A"}
-Referrer: ${logData.referrer || "N/A"}
-Public IP: ${logData.ip || "N/A"}
-Location: ${logData.location ? `${logData.location.latitude},${logData.location.longitude}` : "N/A"}
-===============================\n`;
-
-    fs.appendFile(logFilePath, logEntry, "utf8", (err) => {
+    // Funções auxiliares para humanizar dados
+    const humanizePlatform = (platform) => {
+      const map = {
+        Win32: 'Windows',
+        MacIntel: 'macOS',
+        'Linux x86_64': 'Linux',
+        iPhone: 'iPhone',
+        iPad: 'iPad',
+        Android: 'Android',
+      };
+      return map[platform] || platform || 'Desconhecido';
+    };
+    const parseUserAgent = (uaString = '') => {
+      const ua = uaString.toLowerCase();
+      let deviceName = 'Desconhecido';
+      let osName = '';
+      let osVersion = '';
+      let browserName = '';
+      let browserVersion = '';
+      if (ua.includes('iphone')) {
+        deviceName = 'iPhone';
+        osName = 'iOS';
+        const m = uaString.match(/iphone os ([0-9_]+)/i);
+        if (m) osVersion = m[1].replace(/_/g, '.');
+        const b = uaString.match(/version\/([0-9.]+).*safari/i);
+        if (b) {
+          browserName = 'Safari';
+          browserVersion = b[1];
+        }
+      } else if (ua.includes('android')) {
+        deviceName = 'Android';
+        osName = 'Android';
+        const m = uaString.match(/android ([0-9.]+)/i);
+        if (m) osVersion = m[1];
+        const b = uaString.match(/chrome\/([0-9.]+)/i);
+        if (b) {
+          browserName = 'Chrome';
+          browserVersion = b[1];
+        }
+      } else if (ua.includes('windows')) {
+        deviceName = 'PC';
+        osName = 'Windows';
+        const m = uaString.match(/windows nt ([0-9.]+)/i);
+        if (m) {
+          const map = { '10.0': '10', '6.3': '8.1', '6.2': '8', '6.1': '7' };
+          osVersion = map[m[1]] || m[1];
+        }
+        const b = uaString.match(/(edge|chrome|firefox|safari)\/([0-9.]+)/i);
+        if (b) {
+          browserName = b[1];
+          browserVersion = b[2];
+        }
+      } else if (ua.includes('mac')) {
+        deviceName = 'Mac';
+        osName = 'macOS';
+        const m = uaString.match(/mac os x ([0-9_]+)/i);
+        if (m) osVersion = m[1].replace(/_/g, '.');
+        const s = uaString.match(/version\/([0-9.]+).*safari/i);
+        const b = uaString.match(/(chrome|firefox|safari)\/([0-9.]+)/i);
+        if (s) {
+          browserName = 'Safari';
+          browserVersion = s[1];
+        } else if (b) {
+          browserName = b[1];
+          browserVersion = b[2];
+        }
+      }
+      return { deviceName, osName, osVersion, browserName, browserVersion };
+    };
+    // Humanização dos dados
+    const formattedTime = new Date(logData.serverTimestamp).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    const clientIP = (logData.ip === '::1' || logData.ip === '127.0.0.1') ? 'localhost' : logData.ip;
+    const { deviceName, osName, osVersion, browserName, browserVersion } = parseUserAgent(logData.userAgent || '');
+    const platformFriendly = humanizePlatform(logData.platform);
+    const locationString = logData.location
+      ? `${logData.location.latitude?.toFixed(4)}, ${logData.location.longitude?.toFixed(4)}`
+      : 'N/A';
+    const logEntry = `\n=== LEAD LOG ENTRY ===\n` +
+      `Data/Hora: ${formattedTime}\n` +
+      `IP do Cliente: ${clientIP}\n` +
+      `Idioma do Navegador: ${logData.language || 'N/A'}\n` +
+      `Dispositivo: ${deviceName}\n` +
+      `Sistema Operacional: ${osName}${osVersion ? ' ' + osVersion : ''}\n` +
+      `Navegador: ${browserName}${browserVersion ? ' ' + browserVersion : ''}\n` +
+      `Plataforma (raw): ${platformFriendly}\n` +
+      `URL Atual: ${logData.url || 'N/A'}\n` +
+      `URL de Referência: ${logData.referrer || 'Direto'}\n` +
+      `Localização Aproximada: ${locationString}\n` +
+      `===============================\n`;
+    // Grava em arquivo (opcional)
+    const fs = await import('fs');
+    const path = await import('path');
+    const logFilePath = path.join(process.cwd(), 'log-leads.txt');
+    fs.appendFile(logFilePath, logEntry, 'utf8', (err) => {
       if (err) {
-        logger.error("Failed to write to log-leads.txt", {
-          error: err.message,
-        });
+        logger.error('Failed to write to log-leads.txt', { error: err.message });
       }
     });
-
     res.json({ success: true });
   } catch (error) {
     logger.error('Error saving analytics log', { error: error.message });
@@ -211,14 +278,10 @@ Location: ${logData.location ? `${logData.location.latitude},${logData.location.
   }
 });
 
-// Get analytics logs (protected - add authentication in production)
-app.get("/api/analytics/logs", async (req, res) => {
+// Endpoint para consultar os logs de analytics (até 1000 registros)
+app.get('/api/analytics/logs', async (req, res) => {
   try {
-    const sql = `
-      SELECT * FROM analytics_logs 
-      ORDER BY timestamp DESC 
-      LIMIT 1000
-    `;
+    const sql = `\n      SELECT * FROM analytics_logs\n      ORDER BY timestamp DESC\n      LIMIT 1000\n    `;
     const results = await query(sql);
     res.json({ logs: results });
   } catch (error) {
@@ -228,7 +291,7 @@ app.get("/api/analytics/logs", async (req, res) => {
 });
 
 // Rotas da aplicação
-app.use("/api", productRoutes);
+app.use('/api', productRoutes);
 
 // Middleware de 404 (deve vir após as rotas)
 app.use(notFound);
@@ -236,8 +299,8 @@ app.use(notFound);
 // Middleware de tratamento de erros (deve ser o último)
 app.use(errorHandler(logger));
 
-// Preload catalog once at startup (best-effort - não bloquear inicialização)
-preloadCatalog().catch(err => {
+// Pré-carregamento do catálogo ao iniciar (best-effort)
+preloadCatalog().catch((err) => {
   logger.error('Erro no preload do catálogo:', err?.message || err);
 });
 
