@@ -1,0 +1,12 @@
+
+=== LEAD LOG ENTRY ===
+Timestamp: 2026-01-07T19:18:45.377Z
+Client IP: ::1
+User Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
+Browser Language: pt-BR
+Platform: Win32
+Current URL: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+Referrer: N/A
+Public IP: ::1
+Location: -23.6847104,-46.5076224
+===============================

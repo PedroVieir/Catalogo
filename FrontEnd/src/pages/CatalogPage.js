@@ -10,9 +10,11 @@ import FilterModal from "../components/FilterModal";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import EmptyState from "../components/EmptyState";
+import CookieConsent from "../components/CookieConsent";
 import useLazyLoad from "../hooks/useLazyLoad";
 import Header from "../components/Header";
 import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import useAnalytics from "../hooks/useAnalytics";
 import {
   fetchProductsPaginated,
   fetchConjuntosPaginated,
@@ -139,6 +141,12 @@ function CatalogPage() {
   const [imageErrors, setImageErrors] = useState({});
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [filtersLoaded, setFiltersLoaded] = useState(true);
+
+  // Analytics consent
+  const [analyticsConsent, setAnalyticsConsent] = useState(false);
+
+  // Use analytics hook
+  useAnalytics(analyticsConsent);
 
   // Progress bar state
   const [progress, setProgress] = useState(0);
@@ -1145,6 +1153,11 @@ function CatalogPage() {
           ↑
         </button>
       )}
+
+      <CookieConsent
+        onAccept={() => setAnalyticsConsent(true)}
+        onReject={() => setAnalyticsConsent(false)}
+      />
     </div>
   );
 }

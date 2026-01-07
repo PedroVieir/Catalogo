@@ -8,7 +8,7 @@ import winston from "winston";
 import productRoutes from "./routes/productRoutes.js";
 import { notFound } from "./middlewares/notFound.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
-import { getPoolStatus } from "./config/db.js";
+import { getPoolStatus, query } from "./config/db.js";
 import { preloadCatalog } from "./services/products/productService.js";
 
 dotenv.config();
@@ -143,6 +143,88 @@ app.get("/health", (req, res) => {
       waitingQueue: poolStatus.waitingQueue,
     },
   });
+});
+
+// Analytics log endpoint
+app.post("/api/log", async (req, res) => {
+  try {
+    const logData = {
+      ...req.body,
+      serverTimestamp: new Date().toISOString(),
+      ip: req.ip,
+      userAgent: req.get("User-Agent"),
+    };
+
+    logger.info("Analytics log received", logData);
+
+    // Insert into database
+    const sql = `
+      INSERT INTO analytics_logs 
+      (client_ip, user_agent, browser_language, platform, current_url, referrer, public_ip, location_lat, location_lng)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const params = [
+      logData.ip,
+      logData.userAgent,
+      logData.language || null,
+      logData.platform || null,
+      logData.url || null,
+      logData.referrer || null,
+      logData.ip || null,
+      logData.location ? logData.location.latitude : null,
+      logData.location ? logData.location.longitude : null,
+    ];
+
+    await query(sql, params);
+
+    // Also write to file as backup (optional)
+    const fs = await import("fs");
+    const path = await import("path");
+
+    const logFilePath = path.join(process.cwd(), "log-leads.txt");
+    const logEntry = `
+=== LEAD LOG ENTRY ===
+Timestamp: ${logData.serverTimestamp}
+Client IP: ${logData.ip}
+User Agent: ${logData.userAgent}
+Browser Language: ${logData.language || "N/A"}
+Platform: ${logData.platform || "N/A"}
+Current URL: ${logData.url || "N/A"}
+Referrer: ${logData.referrer || "N/A"}
+Public IP: ${logData.ip || "N/A"}
+Location: ${logData.location ? `${logData.location.latitude},${logData.location.longitude}` : "N/A"}
+===============================\n`;
+
+    fs.appendFile(logFilePath, logEntry, "utf8", (err) => {
+      if (err) {
+        logger.error("Failed to write to log-leads.txt", {
+          error: err.message,
+        });
+      }
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    logger.error('Error saving analytics log', { error: error.message });
+    res.status(500).json({ error: 'Failed to save log' });
+  }
+});
+
+// Get analytics logs (protected - add authentication in production)
+app.get("/api/analytics/logs", async (req, res) => {
+  try {
+    const sql = `
+      SELECT * FROM analytics_logs 
+      ORDER BY timestamp DESC 
+      LIMIT 1000
+    `;
+    const results = await query(sql);
+    res.json({ logs: results });
+  } catch (error) {
+    logger.error('Error fetching analytics logs', { error: error.message });
+    res.status(500).json({ error: 'Failed to fetch logs' });
+  }
 });
 
 // Rotas da aplicação
