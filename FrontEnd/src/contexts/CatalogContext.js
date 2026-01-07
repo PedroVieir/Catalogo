@@ -33,9 +33,11 @@ export function CatalogProvider({ children }) {
   useEffect(() => {
     let cancelled = false;
     async function doPreload() {
+      console.log('CatalogContext: Starting preload');
       try {
         setPreloadState(s => ({ ...s, loading: true }));
         const snapshot = await fetchCatalogSnapshot();
+        console.log('CatalogContext: Snapshot fetched:', snapshot ? 'success' : 'null');
 
         if (cancelled) return;
 
@@ -65,6 +67,7 @@ export function CatalogProvider({ children }) {
 
         // Add products to cache
         addToProductsCache(products);
+        console.log('CatalogContext: Added', products.length, 'products to cache');
 
         setFiltersLoading(false);
         if (process.env.NODE_ENV === 'development') {

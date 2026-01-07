@@ -43,6 +43,8 @@ function ProductDetailsPage() {
   const loadingTimeoutRef = useRef(null);
 
   async function loadData() {
+    console.log('🔍 ProductDetailsPage: loadData called for code:', code);
+
     // Limpa timeout anterior
     if (loadingTimeoutRef.current) {
       clearTimeout(loadingTimeoutRef.current);
@@ -74,7 +76,9 @@ function ProductDetailsPage() {
       // Primeiro, tenta obter do cache
       let usedSnapshot = false;
       const cachedProduct = getFromProductsCache(code);
+
       if (cachedProduct) {
+        console.log('🔍 ProductDetailsPage: Using cached product');
         setData({ data: { product: cachedProduct, conjuntos: [], aplicacoes: [], benchmarks: [] } });
         usedSnapshot = true;
         lastLoadedCode.current = code;
@@ -88,37 +92,57 @@ function ProductDetailsPage() {
           String(p.codigo || p.code || p.id || '').toUpperCase().replace(/\s+/g, '').trim() === normalizedCode
         );
 
+        console.log('🔍 ProductDetailsPage: Found product in snapshot:', !!product);
+
         if (product) {
           const conjuntos = (Array.isArray(snap.conjuntos) ? snap.conjuntos.filter(c =>
-            (c.pai || c.codigo_conjunto || '').toString().toUpperCase().replace(/\s+/g, '') === normalizedCode
+            String(c.pai || c.codigo_conjunto || '').toUpperCase().replace(/\s+/g, '') === normalizedCode
           ) : []).map(c => ({
-            filho: c.filho || c.codigo || c.codigo_componente || c.child || '',
+            filho: c.filho || c.codigo || c.codigo_componente || '',
             filho_des: c.filho_des || c.descricao || c.des || null,
             qtd_explosao: c.qtd_explosao || c.quantidade || c.qtd || 1
           }));
 
-          const aplicacoes = []; // Will be loaded from server
-
-          const benchmarks = (Array.isArray(snap.benchmarks) ? snap.benchmarks.filter(b =>
-            (b.codigo || '').toString().toUpperCase().replace(/\s+/g, '') === normalizedCode
+          const aplicacoes = (Array.isArray(snap.aplicacoes) ? snap.aplicacoes.filter(a =>
+            String(a.codigo_conjunto || '').toUpperCase().replace(/\s+/g, '') === normalizedCode
           ) : []);
 
-          setData({ data: { product, conjuntos, aplicacoes, benchmarks } });
+          const benchmarks = (Array.isArray(snap.benchmarks) ? snap.benchmarks.filter(b =>
+            String(b.codigo || '').toUpperCase().replace(/\s+/g, '') === normalizedCode
+          ) : []);
+
+          // Get memberships (if this product is part of other conjuntos)
+          const memberships = (Array.isArray(snap.conjuntos) ? snap.conjuntos.filter(c =>
+            String(c.filho || '').toUpperCase().replace(/\s+/g, '') === normalizedCode
+          ) : []).map(c => ({
+            codigo_conjunto: c.pai || c.codigo_conjunto || '',
+            quantidade: c.qtd_explosao || c.quantidade || c.qtd || 1
+          }));
+
+          console.log('🔍 ProductDetailsPage: setData called with snapshot data');
+          setData({ data: { product, conjuntos, aplicacoes, benchmarks, memberships } });
           usedSnapshot = true;
           lastLoadedCode.current = code;
         }
       }
 
-      // Atualiza do servidor em background
-      try {
-        const result = await fetchProductDetails(code);
-        if (result && typeof result === 'object') {
-          setData(result);
-          lastLoadedCode.current = code;
+      // Só tenta API se não encontrou no snapshot/cache
+      if (!usedSnapshot) {
+        console.log('🔍 ProductDetailsPage: Trying API since no snapshot data found');
+        try {
+          const result = await fetchProductDetails(code);
+          console.log('🔍 ProductDetailsPage: API result:', result);
+          if (result && typeof result === 'object') {
+            console.log('🔍 ProductDetailsPage: setData called with API data:', result);
+            setData(result);
+            lastLoadedCode.current = code;
+          }
+        } catch (apiErr) {
+          console.error('ProductDetailsPage: API failed:', apiErr);
+          throw new Error(`Produto não encontrado: ${code}`);
         }
-      } catch (err) {
-        if (!usedSnapshot) throw err;
-        console.warn('Background refresh failed:', err.message);
+      } else {
+        console.log('🔍 ProductDetailsPage: Skipping API call since snapshot data was found');
       }
     } catch (err) {
       const errorMsg = err?.message || "Erro desconhecido ao carregar detalhes";
@@ -186,7 +210,11 @@ function ProductDetailsPage() {
   }, [data, searchParams, setSearchParams]);
 
   // Funções auxiliares para extrair dados
-  const getProduct = (data) => data?.data?.product || data?.product;
+  const getProduct = (data) => {
+    const result = data?.data?.product || data?.product;
+    console.log('🔍 getProduct called with data:', data, 'result:', result);
+    return result;
+  };
   const getConjuntos = (data) => {
     const raw = data?.data?.conjuntos || data?.conjuntos || [];
     return Array.isArray(raw) ? raw : [];
@@ -220,6 +248,8 @@ function ProductDetailsPage() {
   const memberships = getMemberships(data);
   const benchmarks = getBenchmarks(data);
   const aplicacoes = getAplicacoes(data);
+
+  console.log('🔍 ProductDetailsPage render - has product:', !!product, 'loading:', loading, 'error:', !!error);
 
   // Enriquece memberships com nomes
   const enrichedMemberships = memberships.map(membership => {

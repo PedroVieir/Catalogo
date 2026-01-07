@@ -1,94 +1,109 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+// src/pages/CatalogPage.js
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FilterModal from "../components/FilterModal";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import EmptyState from "../components/EmptyState";
+import useLazyLoad from '../hooks/useLazyLoad';
 import Header from "../components/Header";
 import { useNavigationHistory } from "../hooks/useNavigationHistory";
-import useLazyLoad from '../hooks/useLazyLoad';
 import {
   fetchProductsPaginated,
   fetchConjuntosPaginated,
-  fetchFilters,
-  seedFabricantes
+  fetchCatalogSnapshot
 } from "../services/productService";
 import { useCatalogState } from "../contexts/CatalogContext";
 
-// Filtros hardcoded conforme solicitado
+// Hardcoded filters - kept exactly as requested
 const HARDCODED_FABRICANTES = [
-  "AGRALE",
-  "ASIA",
-  "CASE",
-  "CBT",
-  "CITROEN",
-  "CUMMINS",
-  "DODGE",
-  "ENGESA",
-  "FIAT",
-  "FIAT ALLIS",
-  "FIAT/IVECO",
-  "FORD",
-  "FOTON",
-  "GM CHEVROLET",
-  "HONDA",
-  "HYUNDAI",
-  "IVECO",
-  "JCB",
-  "JEEP",
-  "JOHN DEERE",
-  "KIA",
-  "KOMATSU",
-  "LAND ROVER",
-  "MAN",
-  "MASSEY FERGUSON",
-  "MERCEDES BENZ",
-  "MITSUBISHI",
-  "MWM",
-  "NEW HOLLAND",
-  "NISSAN",
-  "PERKINS / MAXION / INTERNATIONAL",
-  "PEUGEOT",
-  "RENAULT",
-  "SCANIA",
-  "SUZUKI",
-  "TOYOTA",
-  "TROLLER",
-  "VALTRA / VALMET",
-  "VOLARE",
-  "VOLKSWAGEN",
-  "VOLVO"
+  "AGRALE", "ASIA", "CASE", "CBT", "CITROEN", "CUMMINS", "DODGE", "ENGESA", "FIAT", "FIAT ALLIS",
+  "FIAT/IVECO", "FORD", "FOTON", "GM CHEVROLET", "HONDA", "HYUNDAI", "IVECO", "JCB", "JEEP",
+  "JOHN DEERE", "KIA", "KOMATSU", "LAND ROVER", "MAN", "MASSEY FERGUSON", "MERCEDES BENZ",
+  "MITSUBISHI", "MWM", "NEW HOLLAND", "NISSAN", "PERKINS / MAXION / INTERNATIONAL",
+  "PEUGEOT", "RENAULT", "SCANIA", "SUZUKI", "TOYOTA", "TROLLER", "VALTRA / VALMET", "VOLARE",
+  "VOLKSWAGEN", "VOLVO"
 ];
 
 const HARDCODED_GRUPOS = [
-  "JOGOS DE JUNTAS",
-  "JUNTA DO CARTER",
-  "JUNTA DO COLETOR DE ADMISSÃO",
-  "JUNTA DO COLETOR DE ADMISSÃO E ESCAPAMENTO",
-  "JUNTA DO COLETOR DE ESCAPAMENTO",
-  "JUNTAS DE CABEÇOTE",
-  "JUNTAS DIVERSAS",
-  "RETENTORES",
-  "TAMPA DE VÁLVULA",
-  "TAMPA FRONTAL"
+  "JOGOS DE JUNTAS", "JUNTA DO CARTER", "JUNTA DO COLETOR DE ADMISSÃO",
+  "JUNTA DO COLETOR DE ADMISSÃO E ESCAPAMENTO", "JUNTA DO COLETOR DE ESCAPAMENTO",
+  "JUNTAS DE CABEÇOTE", "JUNTAS DIVERSAS", "RETENTORES", "TAMPA DE VÁLVULA", "TAMPA FRONTAL"
 ];
 
+// Vehicle options (display label + canonical value)
+const VEHICLE_OPTIONS = [
+  { label: "Moto Leve", value: "MLL" },
+  { label: "Motor Pesado", value: "MLP" },
+  { label: "Veículo Linha leve", value: "VLL" },
+  { label: "Veículo Linha pesada", value: "VLP" }
+];
+
+// Aliases to match aplicacoes.sigla_tipo / tipo / labels more flexibly
+const VEHICLE_ALIASES = {
+  MLL: ["MLL", "MOTO LEVE", "MOTO", "MOTOR LINHA LEVE", "MOTOR LEVE", "ML"],
+  MLP: ["MLP", "MOTOR PESADO", "MOTOR LINHA PESADA", "MP"],
+  VLL: ["VLL", "VEICULO LINHA LEVE", "VEÍCULO LINHA LEVE", "VEICULO LEVE", "VEÍCULO LEVE", "VEÍCULO - LINHA LEVE", "VEICULO - LINHA LEVE"],
+  VLP: ["VLP", "VEICULO LINHA PESADA", "VEÍCULO LINHA PESADA", "VEICULO PESADO", "VEÍCULO PESADO", "VEÍCULO - LINHA PESADA"]
+};
+
+const PAGE_LIMIT = 50;
+
+function normalizeString(v) {
+  if (v === null || v === undefined) return "";
+  return String(v).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+function matchesVehicleAlias(appValue, targetSigla) {
+  if (!appValue || !targetSigla) return false;
+  const normApp = String(appValue).toUpperCase().trim();
+  const aliases = VEHICLE_ALIASES[targetSigla] || [];
+  return aliases.some(a => a === normApp || normApp.includes(a));
+}
+
+function valueToSigla(value) {
+  if (!value) return "";
+  const up = String(value).trim().toUpperCase();
+  const canonical = ["MLL", "MLP", "VLL", "VLP"];
+  if (canonical.includes(up)) return up;
+  const found = VEHICLE_OPTIONS.find(o => o.label.toUpperCase() === up);
+  if (found) return found.value;
+  for (const sigla of Object.keys(VEHICLE_ALIASES)) {
+    const aliases = VEHICLE_ALIASES[sigla];
+    if (aliases.some(a => a === up || up.includes(a))) return sigla;
+  }
+  return up;
+}
+
+function siglaToLabel(sigla) {
+  if (!sigla) return "";
+  const found = VEHICLE_OPTIONS.find(o => o.value === sigla);
+  return found ? found.label : sigla;
+}
+
+function normalizeCodeForRoute(code) {
+  if (!code) return "";
+  return String(code).replace(/\s+/g, "").toUpperCase().trim();
+}
+
 function CatalogPage() {
-  const { catalogState, updateCatalogState, preloadState, addToProductsCache, filtersLoading } = useCatalogState();
+  const { catalogState, updateCatalogState, preloadState, addToProductsCache } = useCatalogState();
   const { clearHistory: clearHistoryOnLogout, pushState: navigateTo } = useNavigationHistory();
-  const PAGE_LIMIT = 50;
   const navigate = useNavigate();
   const location = useLocation();
+  const mountedRef = useRef(true);
+
+  // snapshot + UI state
+  const [catalogSnapshot, setCatalogSnapshot] = useState(() => (preloadState && preloadState.snapshot) ? preloadState.snapshot : null);
+  const [snapshotLoading, setSnapshotLoading] = useState(() => !(preloadState && preloadState.loaded && preloadState.snapshot));
+  const [snapshotError, setSnapshotError] = useState(null);
 
   const [products, setProducts] = useState(() => {
-    // Initialize with preload data if available for instant loading
     if (preloadState && preloadState.loaded && preloadState.snapshot) {
       const snap = preloadState.snapshot;
-      // Always show conjuntos since tipo filter was removed
       const items = Array.isArray(snap.conjuntos) ? snap.conjuntos.slice(0, PAGE_LIMIT) : [];
-
       return items.map(it => ({
-        codigo: String(it.codigo || it.code || it.id || '').trim(),
+        codigo: String(it.codigo || it.pai || it.id || '').trim(),
         descricao: String(it.descricao || it.desc || it.nome || '').trim(),
         grupo: it.grupo || '',
         tipo: 'conjunto',
@@ -101,38 +116,23 @@ function CatalogPage() {
   const [pagination, setPagination] = useState(() => {
     if (preloadState && preloadState.loaded && preloadState.snapshot) {
       const snap = preloadState.snapshot;
-      // Always show conjuntos since tipo filter was removed
       const total = Array.isArray(snap.conjuntos) ? snap.conjuntos.length : 0;
-
-      return {
-        page: 1,
-        limit: PAGE_LIMIT,
-        total,
-        totalPages: Math.max(1, Math.ceil(total / PAGE_LIMIT))
-      };
+      return { page: 1, limit: PAGE_LIMIT, total, totalPages: Math.max(1, Math.ceil(total / PAGE_LIMIT)) };
     }
-    return {
-      page: 1,
-      limit: PAGE_LIMIT,
-      total: 0,
-      totalPages: 0
-    };
+    return { page: 1, limit: PAGE_LIMIT, total: 0, totalPages: 0 };
   });
 
   const [availableFilters, setAvailableFilters] = useState(() => {
-    // Always start with hardcoded filters, merge with preload if available
     const baseFilters = {
       grupos: HARDCODED_GRUPOS,
       subgrupos: [],
-      fabricantes: HARDCODED_FABRICANTES.map(f => ({ name: f, count: 0 })), // Convert to objects for consistency
-      vehicleTypes: []
+      fabricantes: HARDCODED_FABRICANTES.map(f => ({ name: f, count: 0 })),
+      vehicleTypes: VEHICLE_OPTIONS.map(v => v.label) // labels for display only
     };
-
     if (preloadState && preloadState.availableFilters) {
       return {
         ...baseFilters,
         ...preloadState.availableFilters,
-        // Always keep hardcoded groups and manufacturers
         grupos: HARDCODED_GRUPOS,
         fabricantes: HARDCODED_FABRICANTES.map(f => ({ name: f, count: 0 }))
       };
@@ -141,30 +141,40 @@ function CatalogPage() {
   });
 
   const [filterModalOpen, setFilterModalOpen] = useState(false);
-  const [loading, setLoading] = useState(() => {
-    // If we have preload data, don't show loading initially
-    return !(preloadState && preloadState.loaded && preloadState.snapshot);
-  });
+  const [loading, setLoading] = useState(() => !(preloadState && preloadState.loaded && preloadState.snapshot));
   const [error, setError] = useState("");
+  const [imageErrors, setImageErrors] = useState({});
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [filtersLoaded, setFiltersLoaded] = useState(true);
+
+  // Capture unhandled promise rejections to prevent noisy "Uncaught (in promise)" from bubbling to console
+  useEffect(() => {
+    const handler = (ev) => {
+      // Prevent default so Chrome doesn't show Uncaught (in promise) in console
+      try {
+        // ignore expected extension/service worker noise, but keep a controlled log
+        console.warn('Unhandled promise rejection (suppressed):', ev.reason);
+        ev.preventDefault && ev.preventDefault();
+      } catch (e) {
+        // nothing
+      }
+    };
+    window.addEventListener('unhandledrejection', handler);
+    return () => window.removeEventListener('unhandledrejection', handler);
+  }, []);
+
+  // lazy load images
   const { visibleItems: visibleImages, observeElement } = useLazyLoad({
     onVisible: (productCode) => {
-      // Preload next 2 images only (reduced from 3)
       const currentIndex = products.findIndex(p => getProductCode(p) === productCode);
       if (currentIndex !== -1) {
         const preloadCount = 2;
         for (let i = 1; i <= preloadCount; i++) {
-          const nextIndex = currentIndex + i;
-          if (nextIndex < products.length) {
-            const nextProduct = products[nextIndex];
-            const nextCode = getProductCode(nextProduct);
+          const next = products[currentIndex + i];
+          if (next) {
+            const nextCode = getProductCode(next);
             if (nextCode && !visibleImages.has(nextCode)) {
-              // Preload image into browser cache
-              try {
-                const img = new Image();
-                img.src = getImageUrl(nextCode);
-              } catch (e) {
-                // ignore preload errors
-              }
+              try { const img = new Image(); img.src = getImageUrl(nextCode); } catch (e) { /* ignore */ }
             }
           }
         }
@@ -172,252 +182,366 @@ function CatalogPage() {
     }
   });
 
-  // Observar imagens quando products muda - OPTIMIZED
-  useEffect(() => {
-    if (products.length === 0) return;
+  const searchDebounceRef = useRef(null);
 
-    const timeoutId = setTimeout(() => {
-      const imageElements = document.querySelectorAll('[data-lazy-id]');
-      // Process in batches to avoid blocking
-      const batchSize = 10;
-      let processed = 0;
+  const getProductCode = useCallback((product) => {
+    if (!product) return "";
+    return (product.codigo || product.code || product.id || "").toString().trim();
+  }, []);
 
-      const processBatch = () => {
-        const batch = Array.from(imageElements).slice(processed, processed + batchSize);
-        batch.forEach((img) => observeElement(img));
-        processed += batchSize;
+  const getProductDescription = useCallback((product) => {
+    if (!product) return "Sem descrição disponível";
+    return product.descricao || product.desc || product.nome || product.description || product.name || "Sem descrição disponível";
+  }, []);
 
-        if (processed < imageElements.length) {
-          // Schedule next batch
-          setTimeout(processBatch, 0);
-        }
-      };
+  const getProductGroup = useCallback((product) => {
+    if (!product) return "";
+    return product.grupo || product.category || product.group || "Sem grupo";
+  }, []);
 
-      processBatch();
-    }, 50); // Reduced delay
+  const getImageUrl = useCallback((codigo) => {
+    if (!codigo) return null; // return null to avoid src="" warnings
+    return `/vista/${encodeURIComponent(codigo)}.jpg`;
+  }, []);
 
-    return () => clearTimeout(timeoutId);
-  }, [products, observeElement]);
-  const [imageErrors, setImageErrors] = useState({});
-  const [showScrollTop, setShowScrollTop] = useState(false);
-  const [filtersLoaded, setFiltersLoaded] = useState(true); // Always true since we use hardcoded filters
+  const totalItems = useMemo(() => (pagination.total || 0).toLocaleString(), [pagination.total]);
 
-  const activeFiltersCount = Object.values(catalogState.currentFilters || {})
-    .filter(v => v && v !== "").length;
-  // Load products with error handling for data structure
-  async function loadProducts(page = 1) {
+  // snapshot helpers
+  const isSnapshotValid = useCallback(() => {
+    return !!catalogSnapshot;
+  }, [catalogSnapshot]);
+
+  async function ensureSnapshot(force = false) {
+    if (!force && catalogSnapshot && isSnapshotValid()) return catalogSnapshot;
+    setSnapshotLoading(true);
+    setSnapshotError(null);
     try {
-      setLoading(true);
-      setError("");
-
-      // If preload is in progress, wait briefly (up to 3s) for it to finish so we can use snapshot
-      if (preloadState && preloadState.loading && !preloadState.loaded) {
-        const startWait = Date.now();
-        while (preloadState.loading && !preloadState.loaded && Date.now() - startWait < 3000) {
-          // eslint-disable-next-line no-await-in-loop
-          await new Promise(resolve => setTimeout(resolve, 100));
-        }
+      const snap = await fetchCatalogSnapshot(force);
+      if (!snap || typeof snap !== "object") throw new Error("Snapshot inválido");
+      if (!mountedRef.current) return snap;
+      setCatalogSnapshot(snap);
+      setSnapshotLoading(false);
+      return snap;
+    } catch (err) {
+      if (mountedRef.current) {
+        setSnapshotError(err?.message || String(err));
+        setSnapshotLoading(false);
       }
+      throw err;
+    }
+  }
 
-      const validPage = Math.max(1, Math.floor(page) || 1);
+  // build items from snapshot (dedupe: conjunto priority)
+  function buildCatalogItemsFromSnapshot(snap) {
+    const productsArr = Array.isArray(snap.products) ? snap.products : [];
+    const conjuntosArr = Array.isArray(snap.conjuntos) ? snap.conjuntos : [];
+    const aplicacoesArr = Array.isArray(snap.aplicacoes) ? snap.aplicacoes : [];
+
+    const conjuntoChildrenMap = new Map();
+    for (const row of conjuntosArr) {
+      try {
+        const pai = (row.pai || row.codigo_conjunto || row.codigo || "").toString().trim();
+        const filho = (row.filho || row.codigo_componente || "").toString().trim();
+        if (!pai || !filho) continue;
+        if (!conjuntoChildrenMap.has(pai)) conjuntoChildrenMap.set(pai, []);
+        conjuntoChildrenMap.get(pai).push(filho);
+      } catch (e) { /* ignore */ }
+    }
+
+    const appByConjunto = new Map();
+    for (const a of aplicacoesArr) {
+      try {
+        const cc = (a.codigo_conjunto || "").toString().trim();
+        if (!cc) continue;
+        if (!appByConjunto.has(cc)) appByConjunto.set(cc, []);
+        appByConjunto.get(cc).push(a);
+      } catch (e) { /* ignore */ }
+    }
+
+    const itemsMap = new Map();
+
+    // add conjuntos first
+    for (const [pai, filhos] of conjuntoChildrenMap.entries()) {
+      try {
+        const prodInfo = productsArr.find(p => ((p.codigo_abr || p.codigo || "").toString().trim() === pai)) || {};
+        const aplics = appByConjunto.get(pai) || [];
+        const fabricante = aplics.length ? (aplics[0].fabricante || "") : (prodInfo.fabricante || "");
+        const tipoVeiculo = aplics.length ? (aplics[0].sigla_tipo || aplics[0].tipo || "") : (prodInfo.tipo || "");
+        const item = {
+          codigo: pai,
+          descricao: prodInfo.descricao || prodInfo.nome || pai,
+          grupo: prodInfo.grupo || null,
+          tipo: "conjunto",
+          fabricante,
+          tipoVeiculo,
+          conjuntosChildren: filhos
+        };
+        itemsMap.set(pai, item);
+      } catch (e) { /* ignore */ }
+    }
+
+    // add products if not already present as conjunto
+    for (const p of productsArr) {
+      try {
+        const codigo = (p.codigo_abr || p.codigo || "").toString().trim();
+        if (!codigo) continue;
+        if (itemsMap.has(codigo)) continue;
+        const item = {
+          codigo,
+          descricao: p.descricao || p.nome || codigo,
+          grupo: p.grupo || null,
+          tipo: "produto",
+          fabricante: p.fabricante || p.origem || "",
+          tipoVeiculo: p.sigla_tipo || p.tipo || ""
+        };
+        itemsMap.set(codigo, item);
+      } catch (e) { /* ignore */ }
+    }
+
+    return { items: Array.from(itemsMap.values()), conjuntoChildrenMap, appByConjunto };
+  }
+
+  // filter + paginate in-memory (robust)
+  function filterAndPaginateItems(allItems, conjuntoChildrenMap, appByConjunto, filters, page = 1, limit = PAGE_LIMIT) {
+    const search = normalizeString(filters.search || "");
+    const grupoFilter = (filters.grupo || "").toString().trim().toLowerCase();
+    const fabricanteFilter = (filters.fabricante || "").toString().trim().toLowerCase();
+    const tipoVeiculoFilter = valueToSigla(filters.tipoVeiculo || "").toString().trim().toUpperCase();
+    const sortBy = filters.sortBy || "codigo";
+    const isConjunto = (filters.isConjunto === true) ? "conjunto" : ((filters.isConjunto === false) ? "produto" : null);
+
+    let matchingCodesForFabricante = null;
+    if (fabricanteFilter || tipoVeiculoFilter) {
+      matchingCodesForFabricante = new Set();
+      for (const [codigo_conjunto, apps] of appByConjunto.entries()) {
+        try {
+          const matchesFabricante = fabricanteFilter ? apps.some(a => normalizeString(a.fabricante || "").includes(fabricanteFilter)) : true;
+          const matchesTipo = tipoVeiculoFilter ? apps.some(a => {
+            const at = (a.sigla_tipo || a.tipo || "").toString().trim();
+            if (!at) return false;
+            if (String(at).toUpperCase() === tipoVeiculoFilter) return true;
+            return matchesVehicleAlias(at, tipoVeiculoFilter);
+          }) : true;
+          if (matchesFabricante && matchesTipo) {
+            matchingCodesForFabricante.add(codigo_conjunto);
+            const filhos = conjuntoChildrenMap.get(codigo_conjunto) || [];
+            for (const f of filhos) matchingCodesForFabricante.add(f);
+          }
+        } catch (e) { /* ignore */ }
+      }
+    }
+
+    const filtered = allItems.filter(it => {
+      try {
+        if (isConjunto && it.tipo !== isConjunto) return false;
+
+        // Check fabricante/tipoVeiculo filters for conjuntos
+        if (matchingCodesForFabricante && !matchingCodesForFabricante.has(it.codigo)) {
+          // For individual products, also check if they match tipoVeiculo directly
+          if (it.tipo === "produto" && tipoVeiculoFilter) {
+            const itemTipo = (it.tipoVeiculo || "").toString().trim().toUpperCase();
+            if (itemTipo === tipoVeiculoFilter || matchesVehicleAlias(itemTipo, tipoVeiculoFilter)) {
+              // Product matches tipoVeiculo directly, allow it
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        }
+
+        if (grupoFilter) {
+          const g = (it.grupo || "").toString().trim().toLowerCase();
+          if (g !== grupoFilter) return false;
+        }
+        if (search) {
+          const c = normalizeString(it.codigo || "");
+          const d = normalizeString(it.descricao || "");
+          if (!c.includes(search) && !d.includes(search)) return false;
+        }
+        return true;
+      } catch (e) {
+        return false;
+      }
+    });
+
+    filtered.sort((a, b) => {
+      try {
+        if (sortBy === "descricao") return String(a.descricao || "").localeCompare(String(b.descricao || ""));
+        if (sortBy === "grupo") return String(a.grupo || "").localeCompare(String(b.grupo || ""));
+        return String(a.codigo || "").localeCompare(String(b.codigo || ""));
+      } catch (e) { return 0; }
+    });
+
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    const safePage = Math.min(Math.max(1, Number(page) || 1), totalPages);
+    const offset = (safePage - 1) * limit;
+    const pageItems = filtered.slice(offset, offset + limit);
+
+    return { items: pageItems, pagination: { page: safePage, limit, total, totalPages } };
+  }
+
+  // loadProducts: prefer snapshot, fallback to server; fixed combined-server paging
+  async function loadProducts(page = 1) {
+    if (!mountedRef.current) return;
+    setLoading(true);
+    setError("");
+    try {
       const filters = {
         search: catalogState?.currentFilters?.search || "",
         grupo: catalogState?.currentFilters?.grupo || "",
         fabricante: catalogState?.currentFilters?.fabricante || "",
         tipoVeiculo: catalogState?.currentFilters?.tipoVeiculo || "",
+        sortBy: catalogState?.currentFilters?.sortBy || "codigo",
         isConjunto: catalogState?.currentFilters?.isConjunto
       };
 
-      let items = [];
-      let paginationResp = {
-        page: validPage,
-        limit: PAGE_LIMIT,
-        total: 0,
-        totalPages: 0
-      };
-
+      // try snapshot
       try {
-        let resp;
-        if (filters.isConjunto === true) {
-          // Load only conjuntos
-          resp = await fetchConjuntosPaginated(validPage, PAGE_LIMIT, filters);
-          items = Array.isArray(resp.data) ? resp.data : [];
-          items = items.map(it => ({
-            codigo: String(it.pai || it.codigo || "").trim(),
-            descricao: String(it.descricao || "").trim(),
-            grupo: String(it.grupo || "").trim(),
-            tipo: "conjunto",
-            ...it
-          })).filter(it => it.codigo && it.descricao);
-        } else if (filters.isConjunto === false) {
-          // Load only products
-          resp = await fetchProductsPaginated(validPage, PAGE_LIMIT, filters);
-          items = Array.isArray(resp.data) ? resp.data : [];
-          items = items.map(it => ({
-            codigo: String(it.codigo_abr || it.codigo || "").trim(),
-            descricao: String(it.descricao || "").trim(),
-            grupo: String(it.grupo || "").trim(),
-            tipo: "produto",
-            ...it
-          })).filter(it => it.codigo && it.descricao);
-        } else {
-          // Load both: conjuntos first, then products - OPTIMIZED VERSION
-          const [conjResp, prodResp] = await Promise.all([
-            fetchConjuntosPaginated(1, Math.ceil(PAGE_LIMIT / 2), filters),
-            fetchProductsPaginated(1, Math.floor(PAGE_LIMIT / 2), filters)
-          ]);
-
-          // Process conjuntos more efficiently
-          const conjItems = Array.isArray(conjResp.data) ? conjResp.data
-            .filter(it => it && (it.pai || it.codigo || it.id))
-            .map(it => ({
-              codigo: String(it.pai || it.codigo || it.id || '').trim(),
-              descricao: String(it.descricao || it.desc || it.nome || '').trim(),
-              grupo: String(it.grupo || '').trim(),
-              tipo: "conjunto",
-              fabricante: it.fabricante || it.marca || '',
-              tipoVeiculo: it.tipoVeiculo || ''
-            }))
-            .filter(it => it.codigo && it.descricao) : [];
-
-          // Process products more efficiently
-          const prodItems = Array.isArray(prodResp.data) ? prodResp.data
-            .filter(it => it && (it.codigo_abr || it.codigo || it.id))
-            .map(it => ({
-              codigo: String(it.codigo_abr || it.codigo || it.id || '').trim(),
-              descricao: String(it.descricao || it.desc || it.nome || '').trim(),
-              grupo: String(it.grupo || '').trim(),
-              tipo: "produto",
-              fabricante: it.fabricante || it.marca || '',
-              tipoVeiculo: it.tipoVeiculo || ''
-            }))
-            .filter(it => it.codigo && it.descricao) : [];
-
-          items = [...conjItems, ...prodItems];
-
-          // Calculate pagination more efficiently
-          const totalConj = conjResp.pagination?.total || 0;
-          const totalProd = prodResp.pagination?.total || 0;
-          paginationResp.total = totalConj + totalProd;
-          paginationResp.totalPages = Math.ceil(paginationResp.total / PAGE_LIMIT);
-          paginationResp.page = validPage;
-          paginationResp.limit = PAGE_LIMIT;
+        const snap = await ensureSnapshot(false);
+        if (snap) {
+          const { items: allItems, conjuntoChildrenMap, appByConjunto } = buildCatalogItemsFromSnapshot(snap);
+          const { items: pageItems, pagination: pg } = filterAndPaginateItems(allItems, conjuntoChildrenMap, appByConjunto, filters, page, PAGE_LIMIT);
+          if (!mountedRef.current) return;
+          setProducts(pageItems);
+          setPagination(pg);
+          setImageErrors({});
+          if (pageItems.length > 0 && typeof addToProductsCache === "function") addToProductsCache(pageItems);
+          setLoading(false);
+          return;
         }
+      } catch (snapErr) {
+        console.warn("snapshot fallback:", snapErr?.message || snapErr);
+      }
 
-        if (filters.isConjunto !== null && resp) {
-          // For single type, use normal pagination
-          if (resp.pagination && typeof resp.pagination === "object") {
-            const total = Math.max(0, parseInt(resp.pagination.total) || 0);
-            const limit = Math.max(1, parseInt(resp.pagination.limit) || PAGE_LIMIT);
-            const totalPages = Math.ceil(total / limit);
+      // fallback: server paginated endpoints
+      let resp = null;
+      if (filters.isConjunto === true) {
+        resp = await fetchConjuntosPaginated(page, PAGE_LIMIT, filters);
+      } else if (filters.isConjunto === false) {
+        resp = await fetchProductsPaginated(page, PAGE_LIMIT, filters);
+      } else {
+        // Combined fallback: request same page number to both endpoints (fixed)
+        const [conjResp, prodResp] = await Promise.all([
+          fetchConjuntosPaginated(page, Math.ceil(PAGE_LIMIT / 2), filters),
+          fetchProductsPaginated(page, Math.floor(PAGE_LIMIT / 2), filters)
+        ]);
 
-            paginationResp = {
-              page: Math.min(validPage, totalPages) || 1,
-              limit,
-              total,
-              totalPages
+        const conjItems = (Array.isArray(conjResp.data) ? conjResp.data : []).map(it => ({
+          codigo: String(it.pai || it.codigo || it.id || '').trim(),
+          descricao: String(it.descricao || it.desc || it.nome || '').trim(),
+          grupo: String(it.grupo || '').trim(),
+          tipo: "conjunto",
+          fabricante: it.fabricante || it.marca || '',
+          tipoVeiculo: it.tipoVeiculo || ''
+        })).filter(it => it.codigo && it.descricao);
+
+        const prodItems = (Array.isArray(prodResp.data) ? prodResp.data : []).map(it => ({
+          codigo: String(it.codigo_abr || it.codigo || it.id || '').trim(),
+          descricao: String(it.descricao || it.desc || it.nome || '').trim(),
+          grupo: String(it.grupo || '').trim(),
+          tipo: "produto",
+          fabricante: it.fabricante || it.marca || '',
+          tipoVeiculo: it.tipoVeiculo || ''
+        })).filter(it => it.codigo && it.descricao);
+
+        // merge with conjuntos priority
+        const merged = new Map();
+        for (const c of conjItems) merged.set(c.codigo, { ...c, tipo: 'conjunto' });
+        for (const p of prodItems) if (!merged.has(p.codigo)) merged.set(p.codigo, { ...p, tipo: 'produto' });
+
+        const items = Array.from(merged.values());
+        const totalConj = conjResp.pagination?.total || conjItems.length;
+        const totalProd = prodResp.pagination?.total || prodItems.length;
+        const total = totalConj + totalProd;
+        const totalPages = Math.max(1, Math.ceil(total / PAGE_LIMIT));
+        if (!mountedRef.current) return;
+        setProducts(items);
+        setPagination({ page, limit: PAGE_LIMIT, total, totalPages });
+        setLoading(false);
+        return;
+      }
+
+      // single-type server response
+      if (resp && resp.data) {
+        const items = (Array.isArray(resp.data) ? resp.data : []).map(it => {
+          if (it.pai || it.codigo) {
+            return {
+              codigo: String(it.pai || it.codigo || '').trim(),
+              descricao: String(it.descricao || it.nome || '').trim(),
+              grupo: it.grupo || '',
+              tipo: 'conjunto',
+              fabricante: it.fabricante || ''
             };
           }
-        }
+          return {
+            codigo: String(it.codigo_abr || it.codigo || '').trim(),
+            descricao: String(it.descricao || it.nome || '').trim(),
+            grupo: it.grupo || '',
+            tipo: 'produto',
+            fabricante: it.fabricante || ''
+          };
+        }).filter(it => it.codigo && it.descricao);
 
-        // Debug log to see data structure
-        if (items.length > 0) {
-          console.log("First item data:", items[0]);
-        }
-
-        // If backend didn't provide fabricantes, derive them from returned items - OPTIMIZED
-        if ((!availableFilters.fabricantes || availableFilters.fabricantes.length === 0) && items.length > 0) {
-          const fabricantesSet = new Set();
-
-          // Process in batches to avoid blocking the main thread
-          const batchSize = 100;
-          for (let i = 0; i < items.length; i += batchSize) {
-            const batch = items.slice(i, i + batchSize);
-            batch.forEach(it => {
-              const f = (it.fabricante || it.marca || it.manufacturer || it.origem || it.fornecedor || "").toString().trim();
-              if (f) fabricantesSet.add(f);
-            });
-
-            // Allow other tasks to run between batches
-            if (i + batchSize < items.length) {
-              await new Promise(resolve => setTimeout(resolve, 0));
-            }
-          }
-
-          const fabricantesArr = Array.from(fabricantesSet).sort((a, b) => String(a).localeCompare(String(b)));
-          if (fabricantesArr.length > 0) {
-            // Merge with hardcoded manufacturers, keeping all hardcoded ones
-            const mergedFabricantes = new Map();
-            HARDCODED_FABRICANTES.forEach(f => mergedFabricantes.set(f, { name: f, count: 0 }));
-            fabricantesArr.forEach(f => {
-              if (!mergedFabricantes.has(f)) {
-                mergedFabricantes.set(f, { name: f, count: 0 });
-              }
-            });
-            setAvailableFilters(prev => ({ ...prev, fabricantes: Array.from(mergedFabricantes.values()) }));
+        // dedupe by codigo
+        const deduped = [];
+        const seen = new Set();
+        for (const it of items) {
+          if (!seen.has(it.codigo)) {
+            deduped.push(it);
+            seen.add(it.codigo);
           }
         }
 
-        // Ensure vehicleTypes have sensible defaults
-        if (!availableFilters.vehicleTypes || availableFilters.vehicleTypes.length === 0) {
-          setAvailableFilters(prev => ({ ...prev, vehicleTypes: ['Leve', 'Pesado'] }));
-        }
-
-      } catch (apiError) {
-        const errorMsg = apiError?.message || "Error loading data";
-        setError(errorMsg);
-        items = [];
-      }
-
-      setProducts(items);
-      setPagination(paginationResp);
-      setImageErrors({});
-
-      // Add loaded products to cache
-      if (items.length > 0) {
-        addToProductsCache(items);
+        const total = resp.pagination?.total || deduped.length;
+        const totalPages = Math.max(1, Math.ceil(total / PAGE_LIMIT));
+        if (!mountedRef.current) return;
+        setProducts(deduped);
+        setPagination({ page: resp.pagination?.page || page, limit: PAGE_LIMIT, total, totalPages });
+      } else {
+        if (!mountedRef.current) return;
+        setProducts([]);
+        setPagination({ page: 1, limit: PAGE_LIMIT, total: 0, totalPages: 0 });
       }
     } catch (err) {
-      const errorMsg = err?.message || "Unknown error";
-      setError(errorMsg);
+      if (!mountedRef.current) return;
+      console.error("Erro ao carregar produtos:", err);
+      setError(err?.message || "Erro inesperado");
       setProducts([]);
-      setPagination({
-        page: 1,
-        limit: PAGE_LIMIT,
-        total: 0,
-        totalPages: 0
-      });
+      setPagination({ page: 1, limit: PAGE_LIMIT, total: 0, totalPages: 0 });
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
   }
 
-  // Load filters on mount - now using hardcoded/initialized filters
+  // effects
   useEffect(() => {
-    // Filters are now initialized above, no need to fetch
-    setFiltersLoaded(true);
+    mountedRef.current = true;
+    (async () => {
+      try {
+        if (!catalogSnapshot) {
+          await ensureSnapshot(false).catch(() => {/* ignore */ });
+        }
+      } finally {
+        loadProducts(catalogState.currentPage || 1);
+      }
+    })();
+    return () => { mountedRef.current = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Load products when filters change - optimized to avoid unnecessary reloads
   useEffect(() => {
-    // Skip loading if we already have products and filters haven't meaningfully changed
-    const shouldLoad = !preloadState.loaded ||
-      catalogState.currentPage !== 1 ||
-      !products.length ||
-      loading === false;
-
-    if (shouldLoad) {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
       loadProducts(catalogState.currentPage || 1);
-    }
+    }, 220);
+    return () => {
+      if (searchDebounceRef.current) { clearTimeout(searchDebounceRef.current); searchDebounceRef.current = null; }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [catalogState.currentFilters, catalogState.currentPage]);
 
-  // When tipoVeiculo is set to a canonical sigla, show an info tag in the results header
-  useEffect(() => {
-    const t = catalogState.currentFilters?.tipoVeiculo || '';
-    // nothing else for now; UI tag is already shown in active filters section
-  }, [catalogState.currentFilters?.tipoVeiculo]);
-
-  // Scroll detection
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || window.pageYOffset;
@@ -425,24 +549,39 @@ function CatalogPage() {
       const nearBottom = (window.innerHeight + y) >= (docHeight - 120);
       setShowScrollTop(nearBottom);
     };
-
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Parse query params on mount
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!products || !products.length) return;
+    const timeoutId = setTimeout(() => {
+      const imageElements = document.querySelectorAll('[data-lazy-id]');
+      const batchSize = 10;
+      let processed = 0;
+      const processBatch = () => {
+        const batch = Array.from(imageElements).slice(processed, processed + batchSize);
+        batch.forEach(img => observeElement(img));
+        processed += batchSize;
+        if (processed < imageElements.length) setTimeout(processBatch, 0);
+      };
+      processBatch();
+    }, 50);
+    return () => clearTimeout(timeoutId);
+  }, [products, observeElement]);
+
+  // parse query params on mount (ensure tipoVeiculo becomes sigla)
   useEffect(() => {
     const qs = new URLSearchParams(location.search);
     const page = parseInt(qs.get("page")) || catalogState.currentPage || 1;
-    const search = qs.get("search") || catalogState.currentFilters.search || "";
-    const grupo = qs.get("grupo") || catalogState.currentFilters.grupo || "";
-    const fabricante = qs.get("fabricante") || catalogState.currentFilters.fabricante || "";
-    const tipoVeiculo = qs.get("tipoVeiculo") || catalogState.currentFilters.tipoVeiculo || "";
-    const sortBy = qs.get("sortBy") || catalogState.currentFilters.sortBy || "codigo";
+    const search = qs.get("search") || catalogState.currentFilters?.search || "";
+    const grupo = qs.get("grupo") || catalogState.currentFilters?.grupo || "";
+    const fabricante = qs.get("fabricante") || catalogState.currentFilters?.fabricante || "";
+    const tipoVeiculoQs = qs.get("tipoVeiculo") || catalogState.currentFilters?.tipoVeiculo || "";
+    const tipoVeiculo = valueToSigla(tipoVeiculoQs);
+    const sortBy = qs.get("sortBy") || catalogState.currentFilters?.sortBy || "codigo";
 
-    // Check if anything actually changed
     const currentFilters = catalogState.currentFilters || {};
     const hasChanges = page !== catalogState.currentPage ||
       search !== (currentFilters.search || "") ||
@@ -457,10 +596,9 @@ function CatalogPage() {
         currentFilters: { search, grupo, fabricante, tipoVeiculo, sortBy }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Sync URL with state
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const params = new URLSearchParams();
     if (catalogState.currentPage) params.set("page", String(catalogState.currentPage));
@@ -470,34 +608,42 @@ function CatalogPage() {
     if (f.fabricante) params.set("fabricante", f.fabricante);
     if (f.tipoVeiculo) params.set("tipoVeiculo", f.tipoVeiculo);
     if (f.sortBy) params.set("sortBy", f.sortBy);
-
     const query = params.toString();
     const newUrl = query ? `${location.pathname}?${query}` : location.pathname;
     navigate(newUrl, { replace: true });
-  }, [catalogState.currentFilters, catalogState.currentPage]);
+  }, [catalogState.currentFilters, catalogState.currentPage, navigate, location.pathname]);
 
+  // active filters computation (count + list)
+  const activeFilters = useMemo(() => {
+    const f = catalogState.currentFilters || {};
+    const entries = [];
+    if (f.search) entries.push({ key: "search", label: f.search });
+    if (f.grupo) entries.push({ key: "grupo", label: f.grupo });
+    if (f.fabricante) entries.push({ key: "fabricante", label: f.fabricante });
+    if (f.tipoVeiculo) entries.push({ key: "tipoVeiculo", label: siglaToLabel(valueToSigla(f.tipoVeiculo)) });
+    return entries;
+  }, [catalogState.currentFilters]);
+
+  const activeFiltersCount = activeFilters.length;
+
+  // handlers
   const handleFilterChange = (key, value) => {
-    const nextFilters = {
-      ...catalogState.currentFilters,
-      [key]: value
-    };
+    let normalized = (typeof value === 'string') ? value : (value === null || value === undefined ? "" : String(value));
+    if (key === "tipoVeiculo") {
+      normalized = valueToSigla(normalized);
+    }
+    const nextFilters = { ...catalogState.currentFilters, [key]: normalized };
+    updateCatalogState({ currentFilters: nextFilters, currentPage: 1 });
+  };
 
-    updateCatalogState({
-      currentFilters: nextFilters,
-      currentPage: 1
-    });
+  const handleRemoveFilter = (key) => {
+    const nextFilters = { ...catalogState.currentFilters, [key]: "" };
+    updateCatalogState({ currentFilters: nextFilters, currentPage: 1 });
   };
 
   const handleResetFilters = () => {
     updateCatalogState({
-      currentFilters: {
-        search: "",
-        grupo: "",
-        tipo: "",
-        fabricante: "",
-        tipoVeiculo: "",
-        sortBy: "codigo"
-      },
+      currentFilters: { search: "", grupo: "", tipo: "", fabricante: "", tipoVeiculo: "", sortBy: "codigo" },
       currentPage: 1
     });
   };
@@ -509,56 +655,39 @@ function CatalogPage() {
   };
 
   const handleProductClick = (codigo) => {
-    const productUrl = `/produtos/${encodeURIComponent(String(codigo))}`;
-    navigateTo(productUrl, {
-      fromCatalog: true,
-      catalogState: {
-        page: catalogState.currentPage,
-        filters: catalogState.currentFilters
-      }
-    });
+    const raw = (codigo || "").toString().trim();
+    if (!raw) {
+      setError("Código do produto inválido");
+      return;
+    }
+    const normalized = normalizeCodeForRoute(raw);
+    const productUrl = `/produtos/${encodeURIComponent(normalized)}`;
+
+    // Use react-router navigate with state so product page can read from location.state first (faster)
+    navigate(productUrl, { state: { fromCatalog: true, catalogState: { page: catalogState.currentPage, filters: catalogState.currentFilters } } });
+
+    // If you still want to use your custom navigation history helper, call it async to avoid message-channel problems
+    if (typeof navigateTo === "function") {
+      setTimeout(() => {
+        try {
+          navigateTo(productUrl, {
+            fromCatalog: true,
+            catalogState: { page: catalogState.currentPage, filters: catalogState.currentFilters }
+          });
+        } catch (e) {
+          // ignore errors from custom history helper
+        }
+      }, 0);
+    }
   };
 
   const handleImageError = useCallback((codigo) => {
     setImageErrors(prev => ({ ...prev, [codigo]: true }));
   }, []);
 
-  const getImageUrl = useCallback((codigo) => {
-    if (!codigo) return "";
-    return `/vista/${encodeURIComponent(codigo)}.jpg`;
-  }, []);
+  const handleScrollToTop = useCallback(() => window.scrollTo({ top: 0, behavior: 'smooth' }), []);
 
-  const handleScrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  // Memoize expensive computations
-  const totalItems = useMemo(() => pagination.total.toLocaleString(), [pagination.total]);
-
-  // Helper to get product description - memoized
-  const getProductDescription = useCallback((product) => {
-    if (!product) return "Sem descrição disponível";
-
-    // Try multiple field names for description
-    const desc = product.descricao || product.desc || product.nome ||
-      product.description || product.name || product.titulo ||
-      product.title || "";
-
-    return desc || "Sem descrição disponível";
-  }, []);
-
-  // Helper to get product code - memoized
-  const getProductCode = useCallback((product) => {
-    if (!product) return "";
-    return product.codigo || product.code || product.id || "";
-  }, []);
-
-  // Helper to get product group - memoized
-  const getProductGroup = useCallback((product) => {
-    if (!product) return "";
-    return product.grupo || product.category || product.group || "Sem grupo";
-  }, []);
-
+  // render
   return (
     <div className="catalog-wrapper">
       <Header onLogoClick={clearHistoryOnLogout}>
@@ -566,65 +695,35 @@ function CatalogPage() {
           <span className="stats-number">{totalItems}</span>
           <span className="stats-label">itens</span>
         </div>
-        {/* Mobile-only fixed filter button (visible only on small screens) */}
-        <button
-          className="header-filter-btn"
-          onClick={() => setFilterModalOpen(true)}
-          aria-label="Abrir filtros"
-        >
+
+        <button className="header-filter-btn" onClick={() => setFilterModalOpen(true)} aria-label="Abrir filtros">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M21 21l-4.35-4.35" />
             <circle cx="11" cy="11" r="8" />
           </svg>
           <span>Filtros</span>
-          {activeFiltersCount > 0 && (
-            <span className="filter-count small">{activeFiltersCount}</span>
-          )}
+          {activeFiltersCount > 0 && <span className="filter-count small">{activeFiltersCount}</span>}
         </button>
       </Header>
 
       <main className="catalog-main">
-        {/* Mobile Filter Toggle */}
-        <div className="mobile-filter-toggle">
-          <button
-            className="filter-toggle-btn"
-            onClick={() => setFilterModalOpen(true)}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 21l-4.35-4.35" />
-              <circle cx="11" cy="11" r="8" />
-            </svg>
-            <span>Filtros</span>
-            {activeFiltersCount > 0 && (
-              <span className="filter-count">{activeFiltersCount}</span>
-            )}
-          </button>
-        </div>
-
         <div className="catalog-layout">
-          {/* Desktop Filters */}
           <aside className="catalog-filters">
             <div className="filters-header">
               <h2 className="filters-title">Filtros</h2>
-              {activeFiltersCount > 0 && (
-                <button
-                  className="clear-filters-btn"
-                  onClick={handleResetFilters}
-                >
-                  Limpar
-                </button>
-              )}
+              {activeFiltersCount > 0 ? (
+                <button className="clear-filters-btn" onClick={handleResetFilters}>Limpar</button>
+              ) : null}
             </div>
 
             <div className="filters-section">
               <div className="filter-group">
                 <label className="filter-label">Buscar</label>
                 <div className="search-wrapper">
-
                   <input
                     type="text"
-                    placeholder="Código ou descrição..."
-                    value={catalogState.currentFilters.search}
+                    placeholder="Buscar por Código ou descrição..."
+                    value={catalogState.currentFilters.search || ""}
                     onChange={(e) => handleFilterChange("search", e.target.value)}
                     className="search-input"
                   />
@@ -640,9 +739,7 @@ function CatalogPage() {
                   disabled={!filtersLoaded}
                 >
                   <option value="">{filtersLoaded ? "Todos os grupos" : "Carregando..."}</option>
-                  {availableFilters.grupos?.map(grupo => (
-                    <option key={grupo} value={grupo}>{grupo}</option>
-                  ))}
+                  {HARDCODED_GRUPOS.map(gr => <option key={gr} value={gr}>{gr}</option>)}
                 </select>
               </div>
 
@@ -655,43 +752,30 @@ function CatalogPage() {
                   disabled={!filtersLoaded}
                 >
                   <option value="">{filtersLoaded ? "Todos os fabricantes" : "Carregando..."}</option>
-                  {availableFilters.fabricantes?.map(f => {
-                    const name = (typeof f === 'string') ? f : (f && f.name ? f.name : '');
-                    const count = (f && typeof f === 'object' && Number.isFinite(Number(f.count))) ? Number(f.count) : 0;
-                    return (
-                      <option key={name} value={name}>{name}{count ? ` (${count})` : ''}</option>
-                    );
-                  })}
+                  {HARDCODED_FABRICANTES.map(f => <option key={f} value={f}>{f}</option>)}
                 </select>
               </div>
 
               <div className="filter-group">
                 <label className="filter-label">Tipo de veículo</label>
                 <select
+                  /* IMPORTANT: use the raw value saved in state (already canonicalized by handler) */
                   value={catalogState.currentFilters.tipoVeiculo || ""}
                   onChange={(e) => handleFilterChange("tipoVeiculo", e.target.value)}
                   className="filter-select"
                   disabled={!filtersLoaded}
                 >
                   <option value="">{filtersLoaded ? "Todos os tipos" : "Carregando..."}</option>
-                  {availableFilters.vehicleTypes?.map(sigla => {
-                    const labelMap = {
-                      VLL: 'Veículo - Linha Leve (VLL)',
-                      VLP: 'Veículo - Linha Pesada (VLP)',
-                      MLL: 'Motor - Linha Leve (MLL)',
-                      MLP: 'Motor - Linha Pesada (MLP)'
-                    };
-                    const upper = String(sigla).toUpperCase();
-                    const label = labelMap[upper] || upper;
-                    return <option key={upper} value={upper}>{label}</option>;
-                  })}
+                  {VEHICLE_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
                 </select>
               </div>
 
               <div className="filter-group">
                 <label className="filter-label">Ordenar por</label>
                 <select
-                  value={catalogState.currentFilters.sortBy}
+                  value={catalogState.currentFilters.sortBy || "codigo"}
                   onChange={(e) => handleFilterChange("sortBy", e.target.value)}
                   className="filter-select"
                 >
@@ -700,81 +784,37 @@ function CatalogPage() {
                   <option value="grupo">Grupo</option>
                 </select>
               </div>
-            </div>
 
-            {activeFiltersCount > 0 && (
-              <div className="active-filters-section">
-                <h3 className="active-filters-title">Filtros ativos</h3>
-                <div className="active-filters-tags">
-                  {catalogState.currentFilters.search && (
-                    <span className="filter-tag">
-                      {catalogState.currentFilters.search}
-                      <button onClick={() => handleFilterChange("search", "")}>
-                        ×
-                      </button>
-                    </span>
-                  )}
-                  {catalogState.currentFilters.grupo && (
-                    <span className="filter-tag">
-                      {catalogState.currentFilters.grupo}
-                      <button onClick={() => handleFilterChange("grupo", "")}>
-                        ×
-                      </button>
-                    </span>
-                  )}
-                  {catalogState.currentFilters.tipo && (
-                    <span className="filter-tag">
-                      {catalogState.currentFilters.tipo}
-                      <button onClick={() => handleFilterChange("tipo", "")}>
-                        ×
-                      </button>
-                    </span>
-                  )}
+              {activeFiltersCount > 0 && (
+                <div className="active-filters-section" style={{ marginTop: 12 }}>
+                  <h3 className="active-filters-title">Filtros ativos ({activeFiltersCount})</h3>
+                  <div className="active-filters-tags">
+                    {activeFilters.map(f => (
+                      <span key={f.key} className="filter-tag">
+                        {f.label}
+                        <button onClick={() => handleRemoveFilter(f.key)}>×</button>
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </aside>
 
-          {/* Main Content */}
           <div className="catalog-content">
-            {/* Results Header */}
             <div className="results-header">
               <div className="results-info">
                 <span className="results-count">{totalItems} resultados</span>
-                {pagination.totalPages > 1 && (
-                  <span className="results-pages">Página {catalogState.currentPage} de {pagination.totalPages}</span>
-                )}
+                {pagination.totalPages > 1 && <span className="results-pages">Página {catalogState.currentPage} de {pagination.totalPages}</span>}
               </div>
             </div>
 
-            {/* Loading State */}
-            {loading && (
-              <div className="loading-state">
-                <LoadingSpinner />
-                <p>Carregando produtos...</p>
-              </div>
-            )}
+            {loading && <div className="loading-state"><LoadingSpinner /><p>Carregando produtos...</p></div>}
 
-            {/* Error State */}
-            {error && !loading && (
-              <div className="error-state">
-                <ErrorMessage
-                  error={error}
-                  onRetry={() => loadProducts(catalogState.currentPage)}
-                />
-              </div>
-            )}
+            {error && !loading && <div className="error-state"><ErrorMessage error={error} onRetry={() => loadProducts(catalogState.currentPage)} /></div>}
 
-            {/* Empty State */}
-            {!loading && !error && products.length === 0 && (
-              <EmptyState
-                message="Nenhum produto encontrado"
-                onAction={handleResetFilters}
-                actionLabel="Limpar filtros"
-              />
-            )}
+            {!loading && !error && products.length === 0 && <EmptyState message="Nenhum produto encontrado" onAction={handleResetFilters} actionLabel="Limpar filtros" />}
 
-            {/* Products Grid - OPTIMIZED */}
             {!loading && !error && products.length > 0 && (
               <>
                 <div className="products-grid">
@@ -782,10 +822,10 @@ function CatalogPage() {
                     const productCode = getProductCode(product);
                     const productDescription = getProductDescription(product);
                     const productGroup = getProductGroup(product);
-
+                    const key = `${product.tipo || 'p'}-${productCode}`;
                     return (
                       <ProductCard
-                        key={productCode}
+                        key={key}
                         product={product}
                         productCode={productCode}
                         productDescription={productDescription}
@@ -801,7 +841,6 @@ function CatalogPage() {
                   })}
                 </div>
 
-                {/* Pagination */}
                 {pagination.totalPages > 1 && (
                   <div className="pagination">
                     <button
@@ -852,7 +891,6 @@ function CatalogPage() {
         </div>
       </main>
 
-      {/* Filter Modal */}
       <FilterModal
         isOpen={filterModalOpen}
         onClose={() => setFilterModalOpen(false)}
@@ -862,7 +900,6 @@ function CatalogPage() {
         onResetFilters={handleResetFilters}
       />
 
-      {/* Scroll to Top */}
       {showScrollTop && (
         <button
           className="scroll-top-btn"
@@ -878,7 +915,7 @@ function CatalogPage() {
 
 export default CatalogPage;
 
-// Memoized Product Card Component for better performance
+// Memoized Product Card Component
 const ProductCard = React.memo(({
   product,
   productCode,
@@ -891,13 +928,17 @@ const ProductCard = React.memo(({
   onProductClick,
   observeElement
 }) => {
-  // Use useEffect to observe the image element when component mounts
   useEffect(() => {
-    const imgElement = document.querySelector(`[data-lazy-id="${productCode}"]`);
-    if (imgElement) {
-      observeElement(imgElement);
+    try {
+      const imgElement = document.querySelector(`[data-lazy-id="${productCode}"]`);
+      if (imgElement) observeElement(imgElement);
+    } catch (e) {
+      // defensive: ignore DOM errors
     }
   }, [productCode, observeElement]);
+
+  // ensure we don't pass empty string to src (caused warning). Use null to omit attribute.
+  const src = visibleImages.has(productCode) ? getImageUrl(productCode) : null;
 
   return (
     <div
@@ -907,7 +948,7 @@ const ProductCard = React.memo(({
       <div className="product-image-container">
         {!imageErrors[productCode] ? (
           <img
-            src={visibleImages.has(productCode) ? getImageUrl(productCode) : ""}
+            src={src}
             alt={productDescription}
             className="product-image"
             onError={() => onImageError(productCode)}
