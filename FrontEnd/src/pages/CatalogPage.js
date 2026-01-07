@@ -920,20 +920,25 @@ function CatalogPage() {
               </div>
             </div>
 
+            {/* Estado de carregamento – exibe esqueletos de cards para melhorar a experiência */}
             {loading && (
-              <div className="loading-state">
-                <LoadingSpinner />
-                <p>Carregando produtos...</p>
+              <div className="products-grid">
+                {Array.from({ length: 8 }).map((_, idx) => (
+                  <LoadingSpinner key={idx} variant="card" />
+                ))}
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', marginTop: '1rem' }}>
+                  <LoadingSpinner message="Carregando produtos..." />
+                </div>
               </div>
             )}
 
+            {/* Estado de erro – exibe banner de erro profissional com opção de tentar novamente */}
             {error && !loading && (
               <div className="error-state">
                 <ErrorMessage
                   error={error}
-                  onRetry={() =>
-                    loadProducts(catalogState.currentPage)
-                  }
+                  onRetry={() => loadProducts(catalogState.currentPage)}
+                  variant="banner"
                 />
               </div>
             )}

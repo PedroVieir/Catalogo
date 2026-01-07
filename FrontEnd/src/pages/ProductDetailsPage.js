@@ -361,12 +361,13 @@ function ProductDetailsPage() {
             </div>
           )}
 
+          {/* Estado de erro – utiliza banner para uma apresentação profissional */}
           {error && !loading && (
             <div className="product-error-container">
               <ErrorMessage
                 error={error}
                 onRetry={loadData}
-                retryDisabled={isNavigating}
+                variant="banner"
               />
             </div>
           )}

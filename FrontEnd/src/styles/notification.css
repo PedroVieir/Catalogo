@@ -63,7 +63,36 @@
   border: none;
   font-size: 18px;
   cursor: pointer;
-  color: rgba(15, 23, 42, 0.6)
+  color: rgba(15, 23, 42, 0.6);
+  padding: 2px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.notification__close:hover {
+  background-color: rgba(15, 23, 42, 0.1);
+}
+
+.notification-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.notification-icon.success {
+  color: var(--color-success);
+}
+
+.notification-icon.error {
+  color: var(--color-error);
+}
+
+.notification-icon.warning {
+  color: var(--color-warning);
+}
+
+.notification-icon.info {
+  color: var(--primary);
 }
 
 .notification--success {
