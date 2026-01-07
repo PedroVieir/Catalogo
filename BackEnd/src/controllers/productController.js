@@ -1,3 +1,4 @@
+import Joi from "joi";
 import {
   searchProducts,
   getProductWithConjuntos,
@@ -9,6 +10,34 @@ import {
   getConjuntosPaginated,
   getCatalogStats
 } from "../services/products/productService.js";
+
+// Schemas de validação
+const paginationSchema = Joi.object({
+  page: Joi.number().integer().min(1).default(1),
+  limit: Joi.number().integer().min(1).max(100).default(20)
+});
+
+const filtersSchema = Joi.object({
+  search: Joi.string().trim().max(100).allow(''),
+  grupo: Joi.string().trim().max(50).allow(''),
+  fabricante: Joi.string().trim().max(50).allow(''),
+  tipoVeiculo: Joi.string().trim().max(50).allow(''),
+  numero_original: Joi.string().trim().max(50).allow(''),
+  sortBy: Joi.string().valid('codigo', 'nome', 'fabricante', 'grupo').default('codigo')
+});
+
+const productCodeSchema = Joi.object({
+  code: Joi.string().trim().max(50).required()
+});
+
+// Função helper para validar
+const validateQuery = (schema, data) => {
+  const { error, value } = schema.validate(data, { stripUnknown: true });
+  if (error) {
+    throw new Error(`Parâmetros inválidos: ${error.details.map(d => d.message).join(', ')}`);
+  }
+  return value;
+};
 
 // ====== PRODUTOS ======
 
@@ -24,15 +53,8 @@ export async function listProducts(req, res, next) {
 
 export async function listProductsPaginated(req, res, next) {
   try {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 20;
-    const filters = {
-      search: req.query.search || "",
-      grupo: req.query.grupo || "",
-      fabricante: req.query.fabricante || "",
-      tipoVeiculo: req.query.tipoVeiculo || "",
-      numero_original: req.query.numero_original || ""
-    };
+    const { page, limit } = validateQuery(paginationSchema, req.query);
+    const filters = validateQuery(filtersSchema, req.query);
 
     const result = await getProductsPaginated(page, limit, filters);
     res.json(result);
@@ -43,15 +65,8 @@ export async function listProductsPaginated(req, res, next) {
 
 export async function listProductsPaginatedOptimized(req, res, next) {
   try {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 20;
-    const filters = {
-      search: req.query.search || "",
-      grupo: req.query.grupo || "",
-      fabricante: req.query.fabricante || "",
-      tipoVeiculo: req.query.tipoVeiculo || "",
-      sortBy: req.query.sortBy || "codigo"
-    };
+    const { page, limit } = validateQuery(paginationSchema, req.query);
+    const filters = validateQuery(filtersSchema, req.query);
 
     const result = await getProductsPaginatedOptimized(page, limit, filters);
     res.json(result);
@@ -62,7 +77,7 @@ export async function listProductsPaginatedOptimized(req, res, next) {
 
 export async function getProductDetails(req, res, next) {
   try {
-    const { code } = req.params;
+    const { code } = validateQuery(productCodeSchema, req.params);
     const result = await getProductWithConjuntos(code);
 
     if (!result) {
@@ -79,14 +94,8 @@ export async function getProductDetails(req, res, next) {
 
 export async function listConjuntosPaginated(req, res, next) {
   try {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 20;
-    const filters = {
-      search: req.query.search || "",
-      grupo: req.query.grupo || "",
-      fabricante: req.query.fabricante || "",
-      tipoVeiculo: req.query.tipoVeiculo || ""
-    };
+    const { page, limit } = validateQuery(paginationSchema, req.query);
+    const filters = validateQuery(filtersSchema, req.query);
 
     const result = await getConjuntosPaginated(page, limit, filters);
     res.json(result);
@@ -97,7 +106,7 @@ export async function listConjuntosPaginated(req, res, next) {
 
 export async function getConjuntoDetails(req, res, next) {
   try {
-    const { code } = req.params;
+    const { code } = validateQuery(productCodeSchema, req.params);
     const result = await getConjuntoWithProducts(code);
 
     if (!result) {

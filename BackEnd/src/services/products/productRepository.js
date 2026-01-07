@@ -68,7 +68,8 @@ export async function fetchProductsPaginated({ page = 1, limit = 20, filters = {
   }
   const whereClause = whereParts.length ? `WHERE ${whereParts.join(" AND ")}` : "";
 
-  const sortCol = (filters.sortBy === "descricao") ? "p.descricao" : "p.codigo_abr";
+  const sortCol = (filters.sortBy === "descricao") ? "p.descricao" :
+    (filters.sortBy === "grupo") ? "p.grupo" : "p.codigo_abr";
   const orderClause = `ORDER BY ${sortCol} ASC`;
 
   const countSql = `

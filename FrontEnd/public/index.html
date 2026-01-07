@@ -1,49 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <meta name="theme-color" content="#FF6B35" />
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' http://localhost:4000; object-src 'none'; base-uri 'self'; form-action 'self';" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
 
-    <!-- PWA -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="ABR Catálogo" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Branding e SEO -->
-    <meta
-      name="description"
-      content="Catálogo Eletrônico ABR — Consulta rápida e moderna de produtos e conjuntos automotivos."
-    />
+  <meta name="theme-color" content="#FF6B35" />
 
-    <!-- Social Preview -->
-    <meta property="og:title" content="Catálogo Eletrônico ABR" />
-    <meta property="og:description" content="Consulta moderna e ágil de produtos da ABR Auto Peças." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="%PUBLIC_URL%/logo192.png" />
-    <meta property="og:site_name" content="ABR Auto Peças" />
+  <!-- PWA -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="ABR Catálogo" />
 
-    <!-- Mobile Icon -->
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <!-- Branding e SEO -->
+  <meta name="description"
+    content="Catálogo Eletrônico ABR — Consulta rápida e moderna de produtos e conjuntos automotivos." />
 
-    <!-- Manifest -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!-- Social Preview -->
+  <meta property="og:title" content="Catálogo Eletrônico ABR" />
+  <meta property="og:description" content="Consulta moderna e ágil de produtos da ABR Auto Peças." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="%PUBLIC_URL%/logo192.png" />
+  <meta property="og:site_name" content="ABR Auto Peças" />
 
-    <!-- Webfont opcional (melhora MUITO a apresentação) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Mobile Icon -->
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
 
-    <title>Catálogo Eletrônico ABR</title>
-  </head>
+  <!-- Manifest -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-  <body style="font-family: 'Inter', sans-serif;">
-    <noscript>Você precisa ativar o JavaScript para executar este aplicativo.</noscript>
-    <div id="root"></div>
-  </body>
+  <!-- Webfont opcional (melhora MUITO a apresentação) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <title>Catálogo Eletrônico ABR</title>
+</head>
+
+<body style="font-family: 'Inter', sans-serif;">
+  <noscript>Você precisa ativar o JavaScript para executar este aplicativo.</noscript>
+  <div id="root"></div>
+</body>
+
 </html>

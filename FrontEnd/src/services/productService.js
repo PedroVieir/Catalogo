@@ -5,10 +5,43 @@ import {
   matchesVehicleAlias,
   normalizeString,
 } from "../utils/vehicleUtils";
+
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
 
 // Timeout padrão para requisições (ms)
 const REQUEST_TIMEOUT = 15000;
+
+// Sanitização e validação de entrada
+function sanitizeString(str, maxLength = 100) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>\"'&]/g, '').trim().substring(0, maxLength);
+}
+
+function validatePaginationParams(page, limit) {
+  const pageNum = parseInt(page, 10);
+  const limitNum = parseInt(limit, 10);
+
+  return {
+    page: isNaN(pageNum) || pageNum < 1 ? 1 : Math.min(pageNum, 1000),
+    limit: isNaN(limitNum) || limitNum < 1 ? 20 : Math.min(limitNum, 100)
+  };
+}
+
+function validateFilters(filters) {
+  return {
+    search: sanitizeString(filters.search, 100),
+    grupo: sanitizeString(filters.grupo, 50),
+    fabricante: sanitizeString(filters.fabricante, 50),
+    tipoVeiculo: sanitizeString(filters.tipoVeiculo, 50),
+    numero_original: sanitizeString(filters.numero_original, 50),
+    sortBy: ['codigo', 'nome', 'fabricante', 'grupo'].includes(filters.sortBy) ? filters.sortBy : 'codigo'
+  };
+}
+
+function validateProductCode(code) {
+  const normalized = normalizeCodeFront(code);
+  return normalized.length > 0 && normalized.length <= 50 ? normalized : null;
+}
 
 // Cache simples em memória com validação
 const cache = {
@@ -128,11 +161,8 @@ async function handleResponse(response) {
 
 function validateParams(params) {
   const { page = 1, limit = 20 } = params;
-  if (!Number.isInteger(page) || page < 1)
-    throw new Error("Página deve ser um número inteiro maior que 0");
-  if (!Number.isInteger(limit) || limit < 1 || limit > 100)
-    throw new Error("Limite deve ser um número entre 1 e 100");
-  return { page, limit };
+  const { page: validPage, limit: validLimit } = validatePaginationParams(page, limit);
+  return { page: validPage, limit: validLimit };
 }
 
 // ====== Snapshot (catalog) helpers ======
@@ -374,13 +404,14 @@ export async function fetchProducts(search = "") {
 }
 
 export async function fetchProductsPaginated(page = 1, limit = 20, filters = {}) {
-  // validação leve
-  const { page: validPage, limit: validLimit } = validateParams({ page, limit });
+  // validação e sanitização
+  const { page: validPage, limit: validLimit } = validatePaginationParams(page, limit);
+  const validFilters = validateFilters(filters);
 
   // se snapshot válido e disponível, use filtro client-side (muito mais rápido)
   if (cache.catalog && isCatalogCacheValid()) {
     try {
-      const result = filterCatalogSnapshot(cache.catalog, filters, validPage, validLimit);
+      const result = filterCatalogSnapshot(cache.catalog, validFilters, validPage, validLimit);
       return { data: result.data, pagination: result.pagination };
     } catch (e) {
       // se der erro, fallback para API
@@ -396,28 +427,12 @@ export async function fetchProductsPaginated(page = 1, limit = 20, filters = {})
   url.searchParams.set("page", String(validPage));
   url.searchParams.set("limit", String(validLimit));
 
-  if (filters.search)
-    url.searchParams.set(
-      "search",
-      String(filters.search).trim().substring(0, 100)
-    );
-  if (filters.grupo)
-    url.searchParams.set("grupo", String(filters.grupo).trim().substring(0, 50));
-  if (filters.fabricante)
-    url.searchParams.set(
-      "fabricante",
-      String(filters.fabricante).trim().substring(0, 50)
-    );
-  if (filters.tipoVeiculo)
-    url.searchParams.set(
-      "tipoVeiculo",
-      String(filters.tipoVeiculo).trim().substring(0, 20)
-    );
-  if (filters.sortBy)
-    url.searchParams.set(
-      "sortBy",
-      String(filters.sortBy).substring(0, 50)
-    );
+  if (validFilters.search) url.searchParams.set("search", validFilters.search);
+  if (validFilters.grupo) url.searchParams.set("grupo", validFilters.grupo);
+  if (validFilters.fabricante) url.searchParams.set("fabricante", validFilters.fabricante);
+  if (validFilters.tipoVeiculo) url.searchParams.set("tipoVeiculo", validFilters.tipoVeiculo);
+  if (validFilters.numero_original) url.searchParams.set("numero_original", validFilters.numero_original);
+  if (validFilters.sortBy) url.searchParams.set("sortBy", validFilters.sortBy);
 
   const response = await fetchWithRetry(url.toString());
   const body = await handleResponse(response);
@@ -525,8 +540,13 @@ export async function fetchConjuntosPaginated(
 }
 
 export async function fetchProductDetails(code) {
+  const validCode = validateProductCode(code);
+  if (!validCode) {
+    throw new Error("Código do produto inválido");
+  }
+
   try {
-    const normalizedCode = normalizeCodeFront(code);
+    const normalizedCode = normalizeCodeFront(validCode);
 
     // 1) tentativa rápida: buscar no snapshot em memória
     if (cache.catalog && isCatalogCacheValid()) {

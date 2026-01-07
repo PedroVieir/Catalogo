@@ -185,7 +185,15 @@ export async function getConjuntosPaginated({ page = 1, limit = 20, filters = {}
     }
 
     const sortBy = filters.sortBy || "codigo";
-    parents.sort((a, b) => (sortBy === "descricao" ? (a.descricao || "").localeCompare(b.descricao || "") : (a.codigo || "").localeCompare(b.codigo || "")));
+    parents.sort((a, b) => {
+        if (sortBy === "descricao") {
+            return (a.descricao || "").localeCompare(b.descricao || "");
+        } else if (sortBy === "grupo") {
+            return (a.grupo || "").localeCompare(b.grupo || "");
+        } else {
+            return (a.codigo || "").localeCompare(b.codigo || "");
+        }
+    });
 
     const total = parents.length;
     const totalPages = Math.max(1, Math.ceil(total / limit));
