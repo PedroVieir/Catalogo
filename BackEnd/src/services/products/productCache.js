@@ -1,5 +1,5 @@
 const mem = new Map();
-const DEFAULT_TTL_MS = Number(process.env.PRODUCTS_CACHE_TTL_MS || 60 * 60 * 1000);
+const DEFAULT_TTL_MS = Number(process.env.PRODUCTS_CACHE_TTL_MS || 24 * 60 * 60 * 1000);
 
 function memSet(key, value, ttl = DEFAULT_TTL_MS) {
     const expiresAt = Date.now() + ttl;
