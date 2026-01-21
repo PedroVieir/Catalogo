@@ -165,6 +165,23 @@ app.post('/api/log', async (req, res) => {
       userAgent: req.get('User-Agent'),
     };
     logger.info('Analytics log received', logData);
+
+    // Verificar se já existe um log para esta sessão hoje
+    if (logData.sessionId) {
+      const checkSql = `
+        SELECT id FROM analytics_logs
+        WHERE DATE(timestamp) = CURDATE()
+        AND (public_ip = ? OR client_ip = ?)
+        AND user_agent = ?
+        LIMIT 1
+      `;
+      const checkResult = await query(checkSql, [logData.ip, logData.ip, logData.userAgent]);
+      if (checkResult.length > 0) {
+        logger.info('Duplicate analytics log detected, skipping insertion');
+        return res.status(200).json({ message: 'Log already exists for this session' });
+      }
+    }
+
     // Inserir no banco
     const sql = `
       INSERT INTO analytics_logs

@@ -10,3 +10,4072 @@ Referrer: N/A
 Public IP: ::1
 Location: -23.6847104,-46.5076224
 ===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:33:09
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:34:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:38:59
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:24
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:24
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:25
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:25
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:25
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:25
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:25
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:25
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:25
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:26
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:26
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:26
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:26
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:26
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:26
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:26
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:26
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:27
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:29
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:29
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:29
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:29
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:29
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:29
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:29
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:29
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:30
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:31
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:31
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:31
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:31
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:31
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:31
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:31
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:31
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:32
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:32
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:32
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:32
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:32
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:32
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:32
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:32
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:33
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:34
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:40:35
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&grupo=JOGOS+DE+JUNTAS&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:03
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:04
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:05
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:05
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:05
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:05
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:05
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:05
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:05
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 07:44:06
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=codigo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:41
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:41
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:41
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:41
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:41
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:41
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:41
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:42
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:42
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:42
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:42
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:42
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:42
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:42
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:42
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:43
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:43
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:43
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:43
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:43
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:43
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:43
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:43
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:44
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:44
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:44
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:44
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:44
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:44
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:44
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:44
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:45
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:45
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:45
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:45
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:45
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:45
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:45
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:45
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:46
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:46
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:46
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:46
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:46
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:46
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:46
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:46
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:47
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:48
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:48
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:48
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:48
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:48
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:48
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:48
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:48
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:49
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:49
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:49
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:49
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:49
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:49
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:49
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:50
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:50
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:49
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:50
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:50
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:50
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:50
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:50
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:50
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:51
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:51
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:51
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:51
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:51
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:51
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:51
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:51
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:52
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:52
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:52
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:52
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:52
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:52
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:17:52
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:07
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:08
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:09
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:09
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:09
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:09
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:09
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:09
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:10
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:10
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:10
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:10
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:10
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:10
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:10
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:10
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:11
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:11
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:11
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:11
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:11
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:11
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:11
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:11
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:12
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:12
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:12
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:12
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:12
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:12
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:12
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:12
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:13
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:13
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:13
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:13
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:13
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:13
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:13
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:13
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:14
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:14
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:14
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:14
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:14
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:14
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:14
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:14
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:15
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:15
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:15
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:15
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:22:15
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: PC
+Sistema Operacional: Windows 10
+Navegador: Chrome 143.0.0.0
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================
+
+=== LEAD LOG ENTRY ===
+Data/Hora: 08/01/2026, 11:32:28
+IP do Cliente: localhost
+Idioma do Navegador: pt-BR
+Dispositivo: iPhone
+Sistema Operacional: iOS 18.5
+Navegador: Safari 18.5
+Plataforma (raw): Windows
+URL Atual: http://localhost:3000/?page=1&sortBy=grupo
+URL de Referência: Direto
+Localização Aproximada: -23.6847, -46.5076
+===============================

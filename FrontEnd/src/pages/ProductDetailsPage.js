@@ -88,11 +88,28 @@ function ProductDetailsPage() {
       if (preloadState && preloadState.loaded && preloadState.snapshot) {
         const snap = preloadState.snapshot;
         const normalizedCode = String(code || '').toUpperCase().replace(/\s+/g, '').trim();
-        const product = (Array.isArray(snap.products) ? snap.products : []).find(p =>
+        let product = (Array.isArray(snap.products) ? snap.products : []).find(p =>
           String(p.codigo || p.code || p.id || '').toUpperCase().replace(/\s+/g, '').trim() === normalizedCode
         );
 
         console.log('🔍 ProductDetailsPage: Found product in snapshot:', !!product);
+
+        // Se não encontrou como produto, verificar se é um conjunto pai
+        if (!product) {
+          const conjuntoRelations = (Array.isArray(snap.conjuntos) ? snap.conjuntos : []).filter(c =>
+            String(c.pai || c.codigo_conjunto || '').toUpperCase().replace(/\s+/g, '') === normalizedCode
+          );
+          if (conjuntoRelations.length > 0) {
+            product = (Array.isArray(snap.products) ? snap.products : []).find(p =>
+              String(p.codigo || p.code || p.id || '').toUpperCase().replace(/\s+/g, '').trim() === normalizedCode
+            );
+            // Se encontrou relações mas não o produto pai, talvez o pai não seja um produto separado
+            // Nesse caso, criar um produto fictício ou pular
+            if (!product) {
+              console.log('🔍 ProductDetailsPage: Conjunto pai não encontrado como produto, pulando para API');
+            }
+          }
+        }
 
         if (product) {
           const conjuntos = (Array.isArray(snap.conjuntos) ? snap.conjuntos.filter(c =>

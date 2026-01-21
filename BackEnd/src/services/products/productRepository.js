@@ -1,12 +1,16 @@
-// src/services/products/productRepository.js
 import { query, beginTransaction } from "../../config/db.js";
 
-/**
- * productRepository: apenas SQL e operações DB.
- * Retorna rows "brutos" (strings conforme DB).
- */
+function norm(v) {
+  return String(v || "").trim();
+}
+function up(v) {
+  return norm(v).toUpperCase();
+}
+function isCanonicalSigla(v) {
+  const s = up(v);
+  return s === "VLL" || s === "VLP" || s === "MLL" || s === "MLP";
+}
 
-// Paginated fetch: COUNT + SELECT (params seguros)
 export async function fetchProductsPaginated({ page = 1, limit = 20, filters = {} } = {}) {
   page = Math.max(1, Number(page) || 1);
   limit = Math.min(100, Math.max(1, Number(limit) || 20));
@@ -15,39 +19,70 @@ export async function fetchProductsPaginated({ page = 1, limit = 20, filters = {
   const where = [];
   const params = [];
 
-  // normalizar filtros simples
-  if (filters.grupo && String(filters.grupo).trim()) {
+  if (filters.grupo && norm(filters.grupo)) {
     where.push("TRIM(p.grupo) = ?");
-    params.push(String(filters.grupo).trim());
+    params.push(norm(filters.grupo));
   }
 
-  if (filters.search && String(filters.search).trim()) {
-    const s = `%${String(filters.search).trim()}%`;
+  if (filters.search && norm(filters.search)) {
+    const s = `%${norm(filters.search)}%`;
     where.push("(p.codigo_abr LIKE ? OR p.descricao LIKE ?)");
     params.push(s, s);
   }
 
-  // fabricante / tipoVeiculo via subqueries (vamos montar sem prefixo aqui)
   const fabParams = [];
-  let fabricanteSubCondition = ""; // será apenas o conteúdo (sem WHERE/AND)
+  let subCondition = "";
 
-  if ((filters.fabricante && String(filters.fabricante).trim()) || (filters.tipoVeiculo && String(filters.tipoVeiculo).trim())) {
-    const fabConds = [];
+  const hasFab = filters.fabricante && norm(filters.fabricante);
+  const hasTipo = filters.tipoVeiculo && norm(filters.tipoVeiculo);
+  const hasLinha = filters.linha && norm(filters.linha);
 
-    if (filters.fabricante && String(filters.fabricante).trim()) {
-      fabConds.push("TRIM(a.fabricante) LIKE ?");
-      fabParams.push(`%${String(filters.fabricante).trim()}%`);
+  if (hasFab || hasTipo || hasLinha) {
+    const conds = [];
+
+    if (hasFab) {
+      conds.push("TRIM(a.fabricante) LIKE ?");
+      fabParams.push(`%${norm(filters.fabricante)}%`);
     }
 
-    if (filters.tipoVeiculo && String(filters.tipoVeiculo).trim()) {
-      fabConds.push("a.sigla_tipo = ?");
-      fabParams.push(String(filters.tipoVeiculo).trim());
+    if (hasTipo) {
+      const tv = up(filters.tipoVeiculo);
+      if (isCanonicalSigla(tv)) {
+        conds.push("a.sigla_tipo = ?");
+        fabParams.push(tv);
+      } else if (tv === "MOTOR" || tv === "M") {
+        conds.push("a.sigla_tipo LIKE ?");
+        fabParams.push("M%");
+      } else if (tv === "VEICULO" || tv === "VEÍCULO" || tv === "V") {
+        conds.push("a.sigla_tipo LIKE ?");
+        fabParams.push("V%");
+      } else {
+        conds.push("a.sigla_tipo = ?");
+        fabParams.push(tv);
+      }
     }
 
-    if (fabConds.length) {
-      const cond = fabConds.join(" AND ");
-      // montamos a condição completa (sem prefixo) para depois encaixar em whereParts
-      fabricanteSubCondition = `(
+    if (hasLinha) {
+      const ln = up(filters.linha);
+      if (isCanonicalSigla(ln)) {
+        conds.push("a.sigla_tipo = ?");
+        fabParams.push(ln);
+      } else if (ln === "LEVE" || ln === "L") {
+        conds.push("a.sigla_tipo LIKE ?");
+        fabParams.push("%L");
+      } else if (ln === "PESADA" || ln === "PESADO" || ln === "P") {
+        conds.push("a.sigla_tipo LIKE ?");
+        fabParams.push("%P");
+      } else {
+        // fallback: tenta por texto (se existir)
+        conds.push("TRIM(a.tipo) LIKE ?");
+        fabParams.push(`%${ln}%`);
+      }
+    }
+
+    if (conds.length) {
+      const cond = conds.join(" AND ");
+      subCondition = `(
         p.codigo_abr IN (
           SELECT DISTINCT a.codigo_conjunto FROM aplicacoes a
           WHERE a.codigo_conjunto IS NOT NULL AND ${cond}
@@ -61,15 +96,14 @@ export async function fetchProductsPaginated({ page = 1, limit = 20, filters = {
     }
   }
 
-  // Combine todas as condições (where simples + fabricanteSubCondition) em um único WHERE
   const whereParts = [...where];
-  if (fabricanteSubCondition) {
-    whereParts.push(fabricanteSubCondition);
-  }
+  if (subCondition) whereParts.push(subCondition);
   const whereClause = whereParts.length ? `WHERE ${whereParts.join(" AND ")}` : "";
 
-  const sortCol = (filters.sortBy === "descricao") ? "p.descricao" :
-    (filters.sortBy === "grupo") ? "p.grupo" : "p.codigo_abr";
+  const sortCol =
+    (filters.sortBy === "descricao") ? "p.descricao" :
+      (filters.sortBy === "grupo") ? "p.grupo" :
+        "p.codigo_abr";
   const orderClause = `ORDER BY ${sortCol} ASC`;
 
   const countSql = `
@@ -86,7 +120,7 @@ export async function fetchProductsPaginated({ page = 1, limit = 20, filters = {
     LIMIT ? OFFSET ?
   `;
 
-  // params order must match placeholders: where params first, then fabricante params repeated for the two subqueries, then limit/offset
+  // params: simples + fabParams duplicados (duas subqueries) + limit/offset
   const repeatedFabParams = fabParams.length ? [...fabParams, ...fabParams] : [];
   const countParams = [...params, ...repeatedFabParams];
   const dataParams = [...params, ...repeatedFabParams, limit, offset];
@@ -164,7 +198,6 @@ export async function fetchProdutosFromConjuntos(conjuntoCodes = []) {
 }
 
 export async function ensureFabricantesPopulated() {
-  // create table if not exists and insert distinct fabricantes from aplicacoes
   await query(`
     CREATE TABLE IF NOT EXISTS fabricantes (
       id INT AUTO_INCREMENT PRIMARY KEY,

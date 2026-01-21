@@ -1,4 +1,3 @@
-// src/services/products/productService.js
 import * as repo from "./productRepository.js";
 import * as cache from "./productCache.js";
 import * as utils from "./productUtils.js";
@@ -13,7 +12,6 @@ const CACHE_KEYS = {
 
 const CACHE_TTL_MS = Number(process.env.PRODUCTS_CACHE_TTL_MS || 60 * 60 * 1000);
 
-// ----- Cached getters (normalized) -----
 export async function getAllProductsCached() {
     const cached = await cache.cacheGet(CACHE_KEYS.PRODUCTS_ALL);
     if (cached) return cached.slice();
@@ -78,12 +76,14 @@ export async function getFabricantesCached() {
     const cached = await cache.cacheGet(CACHE_KEYS.FABRICANTES_ALL);
     if (cached) return cached.slice();
     const rows = await repo.fetchFabricantesRaw();
-    const normalized = (rows || []).map(r => ({ name: utils.normalizeTexto(r.name), count: Number(r.count) || 0 }));
+    const normalized = (rows || []).map(r => ({
+        name: utils.normalizeTexto(r.name),
+        count: Number(r.count) || 0
+    }));
     await cache.cacheSet(CACHE_KEYS.FABRICANTES_ALL, normalized, CACHE_TTL_MS);
     return normalized.slice();
 }
 
-// ----- Preload / invalidate -----
 export async function preloadCatalog() {
     await Promise.all([
         getAllProductsCached(),
@@ -109,7 +109,6 @@ export async function reloadCatalog() {
     await preloadCatalog();
 }
 
-// ----- Core APIs used by controllers (normalized) -----
 export async function getProductsPaginated({ page = 1, limit = 20, filters = {} } = {}) {
     const { total, data: rawRows } = await repo.fetchProductsPaginated({ page, limit, filters });
     const normalized = (rawRows || []).map(r => ({
@@ -121,28 +120,30 @@ export async function getProductsPaginated({ page = 1, limit = 20, filters = {} 
     const totalPages = Math.max(1, Math.ceil(total / limit));
     return {
         data: normalized,
-        pagination: {
-            page,
-            limit,
-            total,
-            totalPages,
-            hasNext: page < totalPages,
-            hasPrev: page > 1
-        },
+        pagination: { page, limit, total, totalPages, hasNext: page < totalPages, hasPrev: page > 1 },
         meta: { queryOptimized: true }
     };
 }
 
-// Optimized route kept for compatibility (delegates to same implementation)
 export async function getProductsPaginatedOptimized(page = 1, limit = 20, filters = {}) {
     return getProductsPaginated({ page, limit, filters });
 }
 
 export async function getConjuntosPaginated({ page = 1, limit = 20, filters = {} } = {}) {
-    // Build parents with children in-memory but using cached conjuntos/products (reasonable for conjuntos view)
     page = Math.max(1, Number(page) || 1);
     limit = Math.min(100, Math.max(1, Number(limit) || 20));
-    const [conjuntos, products, aplicacoes] = await Promise.all([getAllConjuntosCached(), getAllProductsCached(), (filters.fabricante || filters.tipoVeiculo) ? getAllAplicacoesCached() : Promise.resolve([])]);
+
+    const shouldLoadAplicacoes = !!(
+        (filters.fabricante && String(filters.fabricante).trim()) ||
+        (filters.tipoVeiculo && String(filters.tipoVeiculo).trim()) ||
+        (filters.linha && String(filters.linha).trim())
+    );
+
+    const [conjuntos, products, aplicacoes] = await Promise.all([
+        getAllConjuntosCached(),
+        getAllProductsCached(),
+        shouldLoadAplicacoes ? getAllAplicacoesCached() : Promise.resolve([])
+    ]);
 
     const productMap = new Map(products.map(p => [p.codigo, p]));
     const parentsMap = new Map();
@@ -151,23 +152,37 @@ export async function getConjuntosPaginated({ page = 1, limit = 20, filters = {}
         const pai = row.pai;
         if (!parentsMap.has(pai)) {
             const prod = productMap.get(pai) || {};
-            parentsMap.set(pai, { codigo: pai, descricao: prod.descricao || pai, grupo: prod.grupo || null, children: [] });
+            parentsMap.set(pai, {
+                codigo: pai,
+                descricao: prod.descricao || pai,
+                grupo: prod.grupo || null,
+                children: []
+            });
         }
         const parent = parentsMap.get(pai);
-        parent.children.push({ filho: row.filho, filho_des: row.filho_des || null, qtd_explosao: row.qtd_explosao });
+        parent.children.push({
+            filho: row.filho,
+            filho_des: row.filho_des || null,
+            qtd_explosao: row.qtd_explosao
+        });
     }
 
     let parents = Array.from(parentsMap.values());
 
-    // aplicar filtros (fabricante / tipoVeiculo)
-    if (filters.fabricante || filters.tipoVeiculo) {
-        const fabricanteFilter = filters.fabricante ? (s => (s || "").toLowerCase().includes(filters.fabricante.trim().toLowerCase())) : () => true;
+    if (shouldLoadAplicacoes) {
+        const fabricanteFilter = (filters.fabricante && String(filters.fabricante).trim())
+            ? (s => (s || "").toLowerCase().includes(String(filters.fabricante).trim().toLowerCase()))
+            : () => true;
+
         const matchingConjuntos = new Set();
         aplicacoes.forEach(a => {
             const fabricaMatch = fabricanteFilter(a.fabricante || "");
-            const tipoMatch = !filters.tipoVeiculo || utils.matchesTipoFilter(a, filters.tipoVeiculo);
-            if (fabricaMatch && tipoMatch) matchingConjuntos.add(a.codigo_conjunto);
+            const tipoMatch = !filters.tipoVeiculo || utils.matchesTipoVeiculoFilter(a, filters.tipoVeiculo);
+            const linhaMatch = !filters.linha || utils.matchesLinhaFilter(a, filters.linha);
+
+            if (fabricaMatch && tipoMatch && linhaMatch) matchingConjuntos.add(a.codigo_conjunto);
         });
+
         parents = parents.filter(p => matchingConjuntos.has(p.codigo));
     }
 
@@ -186,13 +201,9 @@ export async function getConjuntosPaginated({ page = 1, limit = 20, filters = {}
 
     const sortBy = filters.sortBy || "codigo";
     parents.sort((a, b) => {
-        if (sortBy === "descricao") {
-            return (a.descricao || "").localeCompare(b.descricao || "");
-        } else if (sortBy === "grupo") {
-            return (a.grupo || "").localeCompare(b.grupo || "");
-        } else {
-            return (a.codigo || "").localeCompare(b.codigo || "");
-        }
+        if (sortBy === "descricao") return (a.descricao || "").localeCompare(b.descricao || "");
+        if (sortBy === "grupo") return (a.grupo || "").localeCompare(b.grupo || "");
+        return (a.codigo || "").localeCompare(b.codigo || "");
     });
 
     const total = parents.length;
@@ -202,26 +213,28 @@ export async function getConjuntosPaginated({ page = 1, limit = 20, filters = {}
 
     return {
         data,
-        pagination: {
-            page,
-            limit,
-            total,
-            totalPages,
-            hasNext: page < totalPages,
-            hasPrev: page > 1
-        }
+        pagination: { page, limit, total, totalPages, hasNext: page < totalPages, hasPrev: page > 1 }
     };
 }
 
 export async function getProductWithConjuntos(code) {
     if (!code) return null;
     const upCode = utils.normalizeCodigo(code);
-    const [products, conjuntos, benchmarks, aplicacoes] = await Promise.all([getAllProductsCached(), getAllConjuntosCached(), getAllBenchmarksCached(), getAllAplicacoesCached()]);
+    const [products, conjuntos, benchmarks, aplicacoes] = await Promise.all([
+        getAllProductsCached(),
+        getAllConjuntosCached(),
+        getAllBenchmarksCached(),
+        getAllAplicacoesCached()
+    ]);
+
     const product = products.find(p => utils.normalizeCodigo(p.codigo) === upCode);
     if (!product) return null;
 
     const productConjuntos = conjuntos.filter(c => utils.normalizeCodigo(c.pai) === utils.normalizeCodigo(product.codigo));
-    const memberships = conjuntos.filter(c => utils.normalizeCodigo(c.filho) === utils.normalizeCodigo(product.codigo)).map(c => ({ codigo_conjunto: c.pai, quantidade: c.qtd_explosao }));
+    const memberships = conjuntos
+        .filter(c => utils.normalizeCodigo(c.filho) === utils.normalizeCodigo(product.codigo))
+        .map(c => ({ codigo_conjunto: c.pai, quantidade: c.qtd_explosao }));
+
     const productBenchmarks = benchmarks.filter(b => utils.normalizeCodigo(b.codigo) === utils.normalizeCodigo(product.codigo));
 
     let productAplicacoes = [];
@@ -250,7 +263,6 @@ export async function getConjuntoWithProducts(code) {
 
 export async function searchProducts(searchTerm = "") {
     if (!searchTerm || typeof searchTerm !== "string") {
-        // return top results from cache quickly
         const products = await getAllProductsCached();
         return products.slice(0, 100);
     }
@@ -259,19 +271,26 @@ export async function searchProducts(searchTerm = "") {
 }
 
 export async function getAvailableFilters() {
-    const [products, benchmarks, aplicacoes, fabricantes] = await Promise.all([getAllProductsCached(), getAllBenchmarksCached(), getAllAplicacoesCached(), getFabricantesCached()]);
+    const [products, benchmarks, aplicacoes, fabricantes] = await Promise.all([
+        getAllProductsCached(),
+        getAllBenchmarksCached(),
+        getAllAplicacoesCached(),
+        getFabricantesCached()
+    ]);
+
     const grupos = new Set();
     products.forEach(p => { if (p.grupo) grupos.add(p.grupo); });
     const numeros = [...new Set(benchmarks.map(b => b.numero_original).filter(Boolean))].slice(0, 50);
-    const canonicalSet = new Set(["VLL", "VLP", "MLL", "MLP"]);
-    const foundSiglas = new Set();
-    aplicacoes.forEach(a => { if (a.sigla_tipo && canonicalSet.has(a.sigla_tipo)) foundSiglas.add(a.sigla_tipo); });
 
     return {
         grupos: Array.from(grupos).sort(),
         numeros_original: numeros,
         fabricantes,
-        vehicle_types: Array.from(foundSiglas).sort(),
+
+        // NOVO: opções “destrinchadas”
+        vehicle_types: ["MOTOR", "VEICULO"],
+        linhas: ["LEVE", "PESADA"],
+
         metadata: {
             totalProdutos: products.length,
             totalConjuntos: new Set((await getAllConjuntosCached()).map(c => c.pai)).size,
@@ -282,7 +301,13 @@ export async function getAvailableFilters() {
 
 export async function getCatalogSnapshot() {
     await preloadCatalog();
-    const [products, conjuntos, benchmarks, aplicacoes, fabricantes] = await Promise.all([getAllProductsCached(), getAllConjuntosCached(), getAllBenchmarksCached(), getAllAplicacoesCached(), getFabricantesCached()]);
+    const [products, conjuntos, benchmarks, aplicacoes, fabricantes] = await Promise.all([
+        getAllProductsCached(),
+        getAllConjuntosCached(),
+        getAllBenchmarksCached(),
+        getAllAplicacoesCached(),
+        getFabricantesCached()
+    ]);
     return { products: products.slice(), conjuntos: conjuntos.slice(), benchmarks: benchmarks.slice(), aplicacoes: aplicacoes.slice(), fabricantes: fabricantes.slice(), _cachedAtMs: Date.now() };
 }
 
@@ -300,5 +325,4 @@ export async function getCatalogStats() {
     };
 }
 
-// Expose ensureFabricantesPopulated and repo-level helpers
 export async function ensureFabricantesPopulated() { return repo.ensureFabricantesPopulated(); }

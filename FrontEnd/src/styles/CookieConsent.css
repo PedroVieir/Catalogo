@@ -46,11 +46,147 @@
     background: var(--primary-dark);
 }
 
-.reject-btn {
+.config-btn {
+    background: var(--primary);
+    color: white;
+}
+
+.config-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* Modal de configuração */
+.cookie-config-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+.cookie-config-content {
+    background: var(--color-bg);
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cookie-config-content h3 {
+    margin: 0 0 1rem 0;
+    color: var(--color-text);
+    font-size: 1.2rem;
+}
+
+.cookie-config-content>p {
+    margin: 0 0 1.5rem 0;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.cookie-option {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-bg-secondary);
+}
+
+.cookie-option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.cookie-option-header h4 {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 1rem;
+}
+
+.cookie-option p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+/* Switch toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-border);
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: var(--primary);
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+.cookie-config-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.back-btn {
     background: var(--color-border);
     color: var(--color-text);
 }
 
-.reject-btn:hover {
+.back-btn:hover {
     background: #ddd;
+}
+
+.save-btn {
+    background: var(--primary);
+    color: white;
+}
+
+.save-btn:hover {
+    background: var(--primary-dark);
 }
