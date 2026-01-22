@@ -34,10 +34,6 @@ const CookieConsent = ({ onAccept }) => {
         }
     };
 
-    const handleReject = () => {
-        // Removido - não deve existir opção de rejeitar
-    };
-
     const handleSaveConfig = () => {
         localStorage.setItem('cookieConsent', 'custom');
         localStorage.setItem('cookiePreferences', JSON.stringify(preferences));

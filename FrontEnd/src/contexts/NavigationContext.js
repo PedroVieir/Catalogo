@@ -1,3 +1,4 @@
+// src/contexts/NavigationContext.js
 import React, { createContext, useContext, useReducer, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -88,13 +89,6 @@ function navigationReducer(state, action) {
             const newIndex = state.currentIndex - 1;
             const poppedPath = state.history[newIndex]?.path;
 
-            // Atualiza pilha de produtos
-            let newNavigationStack = [...state.navigationStack];
-            if (poppedPath && poppedPath.startsWith('/produtos/')) {
-                const productCode = poppedPath.split('/produtos/')[1];
-                // Não remove da pilha imediatamente, apenas se for um loop
-            }
-
             return {
                 ...state,
                 currentIndex: newIndex,
@@ -105,7 +99,8 @@ function navigationReducer(state, action) {
                     timestamp: Date.now(),
                     type: 'POP'
                 },
-                navigationStack: newNavigationStack
+                // Mantém a pilha como está no POP (a lógica de loop é tratada no PUSH)
+                navigationStack: state.navigationStack
             };
         }
 

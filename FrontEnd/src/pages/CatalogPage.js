@@ -1,3 +1,4 @@
+// src/pages/CatalogPage.js
 import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FilterModal from "../components/FilterModal";
@@ -95,10 +96,6 @@ function CatalogPage() {
   const [catalogSnapshot, setCatalogSnapshot] = useState(() =>
     preloadState && preloadState.snapshot ? preloadState.snapshot : null
   );
-  const [snapshotLoading, setSnapshotLoading] = useState(
-    () => !(preloadState && preloadState.loaded && preloadState.snapshot)
-  );
-  const [snapshotError, setSnapshotError] = useState(null);
 
   const [products, setProducts] = useState(() => {
     if (preloadState && preloadState.loaded && preloadState.snapshot) {
@@ -131,7 +128,8 @@ function CatalogPage() {
     return { page: 1, limit: PAGE_LIMIT, total: 0, totalPages: 0 };
   });
 
-  const [availableFilters, setAvailableFilters] = useState(() => {
+  // Removido setter (não usado) para evitar no-unused-vars
+  const [availableFilters] = useState(() => {
     const baseFilters = {
       grupos: HARDCODED_GRUPOS,
       subgrupos: [],
@@ -208,20 +206,16 @@ function CatalogPage() {
 
   async function ensureSnapshot(force = false) {
     if (!force && catalogSnapshot && isSnapshotValid()) return catalogSnapshot;
-    setSnapshotLoading(true);
-    setSnapshotError(null);
+
     try {
       const snap = await fetchCatalogSnapshot(force);
       if (!snap || typeof snap !== "object") throw new Error("Snapshot inválido");
       if (!mountedRef.current) return snap;
       setCatalogSnapshot(snap);
-      setSnapshotLoading(false);
       return snap;
     } catch (err) {
-      if (mountedRef.current) {
-        setSnapshotError(err?.message || String(err));
-        setSnapshotLoading(false);
-      }
+      // Mantém comportamento de fallback (API) já implementado em loadProducts
+      console.warn("Erro ao carregar snapshot:", err?.message || err);
       throw err;
     }
   }
