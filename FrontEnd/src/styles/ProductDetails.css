@@ -116,8 +116,8 @@
   grid-template-columns: 1fr 320px;
   gap: 3rem;
   padding: 2.5rem;
-  background: var(--secondary);
-  color: white;
+  background: var(--header);
+  color: var(--color-text);
 }
 
 .product-header-info {
@@ -131,7 +131,7 @@
   font-weight: 700;
   line-height: 1.3;
   margin: 0 0 1rem 0;
-  color: white;
+  color: #000000;
 }
 
 .product-subtitle {
@@ -1005,4 +1005,59 @@ button:disabled,
 .conjunto-item.navigating {
   opacity: 0.7;
   transform: scale(0.98);
+}
+
+/* Imagem extra no header (desktop only) - não altera o layout */
+.product-header {
+  position: relative;
+}
+
+/* escondida por padrão */
+.product-header-desktop-image {
+  display: none;
+}
+
+/* desktop: centraliza na área livre do header */
+@media (min-width: 1025px) {
+  .product-header-desktop-image {
+    display: flex;
+    position: absolute;
+
+    /* respeita o padding do header (2.5rem) */
+    left: 2.5rem;
+
+    /* reserva: coluna direita (320px) + gap do grid (3rem) + padding direito (2.5rem) */
+    right: calc(320px + 3rem + 2.5rem);
+
+    /* empurra para baixo para não brigar com o título */
+    top: 5.5rem;
+
+    /* deixa espaço para o “Código/Grupo” */
+    bottom: 2rem;
+
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .product-header-desktop-image img {
+    /* controla o tamanho real da arte (não do container) */
+    width: min(760px, 100%);
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+
+    /* opcional: se o PNG tiver muita transparência e ficar “pequeno”, descomente */
+    /* transform: scale(1.15); */
+  }
+
+  /* garante que texto e imagem principal fiquem na frente */
+  .product-header-info,
+  .product-image-preview {
+    position: relative;
+    z-index: 2;
+  }
 }

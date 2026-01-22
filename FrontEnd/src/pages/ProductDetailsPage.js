@@ -14,6 +14,7 @@ import ProductTransition from "../components/ProductTransition";
 import NavigationProgress from "../components/NavigationProgress";
 import "../styles/CatalogPage.css";
 import "../styles/ProductDetails.css";
+import caixasImg from "../assets/caixas_2.png";
 
 function ProductDetailsPage() {
   const { code } = useParams();
@@ -413,6 +414,12 @@ function ProductDetailsPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Imagem decorativa (somente desktop) - não interfere no layout */}
+                <div className="product-header-desktop-image" aria-hidden="true">
+                  <img src={caixasImg} alt="" loading="lazy" />
+                </div>
+
 
                 <div className="product-image-preview">
                   {!imageError ? (

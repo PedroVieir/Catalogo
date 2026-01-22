@@ -5,6 +5,7 @@
   --primary-dark: #0052a3;
   --secondary: #00a7d6;
   --accent: #ff6b35;
+  --header: #faf9f6;
 
   /* Semantic Colors */
   --color-text: #1f2933;
@@ -76,4 +77,8 @@ code {
 }
 
 /* Small utility */
-.btn-icon-only { padding: 0.5rem; width: 40px; height: 40px; }
+.btn-icon-only {
+  padding: 0.5rem;
+  width: 40px;
+  height: 40px;
+}
