@@ -5,7 +5,8 @@ const REQUEST_TIMEOUT = 15000;
 
 function sanitizeString(str, maxLength = 100) {
   if (typeof str !== "string") return "";
-  return str.replace(/[<>\"'&]/g, "").trim().substring(0, maxLength);
+  // remove caracteres potencialmente perigosos; o escape de " não é necessário dentro do []
+  return str.replace(/[<>"'&]/g, "").trim().substring(0, maxLength);
 }
 
 function validatePaginationParams(page, limit) {
@@ -83,12 +84,12 @@ const cache = {
 
 const CACHE_DURATION = Number(process.env.REACT_APP_CATALOG_TTL_MS || 60 * 60 * 1000);
 
-function isCacheValid() {
-  return Date.now() - cache.timestamp < CACHE_DURATION;
-}
+// Removido: isCacheValid() (não era usado e quebrava o build em CI)
+
 function isCatalogCacheValid() {
   return Date.now() - cache.catalogTimestamp < CACHE_DURATION;
 }
+
 function invalidateCache() {
   cache.products = null;
   cache.conjuntos = null;
@@ -96,6 +97,7 @@ function invalidateCache() {
   cache.status = null;
   cache.timestamp = 0;
 }
+
 function invalidateCatalog() {
   cache.catalog = null;
   cache.catalogTimestamp = 0;
@@ -299,9 +301,10 @@ export function filterCatalogSnapshot(snapshot, filters = {}, page = 1, limit = 
         ? apps.some((a) => normalizeString(a.fabricante || "").includes(fabricanteFilter))
         : true;
 
-      const matchesTipoLinha = (tipoVeiculoFilter || linhaFilter)
-        ? apps.some((a) => matchesAplicacaoSigla(a.sigla_tipo || a.tipo, tipoVeiculoFilter, linhaFilter))
-        : true;
+      const matchesTipoLinha =
+        tipoVeiculoFilter || linhaFilter
+          ? apps.some((a) => matchesAplicacaoSigla(a.sigla_tipo || a.tipo, tipoVeiculoFilter, linhaFilter))
+          : true;
 
       if (matchesFab && matchesTipoLinha) {
         matchingCodes.add(codigo_conjunto);
@@ -475,7 +478,10 @@ export async function fetchProductDetails(code) {
       );
       const memberships = (Array.isArray(snap.conjuntos) ? snap.conjuntos : [])
         .filter((c) => (c.filho || "").toString().trim().toUpperCase() === normalizedCode)
-        .map((c) => ({ codigo_conjunto: c.pai || c.codigo_conjunto || "", quantidade: c.qtd_explosao || c.quantidade || c.qtd || 1 }));
+        .map((c) => ({
+          codigo_conjunto: c.pai || c.codigo_conjunto || "",
+          quantidade: c.qtd_explosao || c.quantidade || c.qtd || 1,
+        }));
 
       return { data: { product: byProducts, conjuntos, aplicacoes, benchmarks, memberships } };
     }
@@ -487,7 +493,9 @@ export async function fetchProductDetails(code) {
   const contentType = resp.headers.get("content-type") || "";
   if (contentType.includes("text/html")) {
     const text = await resp.text();
-    throw new Error(`Resposta inesperada (HTML). Conteúdo truncado: ${text.substring(0, 200).replace(/\s+/g, " ")}`);
+    throw new Error(
+      `Resposta inesperada (HTML). Conteúdo truncado: ${text.substring(0, 200).replace(/\s+/g, " ")}`
+    );
   }
   return await handleResponse(resp);
 }
@@ -500,7 +508,13 @@ export async function fetchFilters() {
 
     const fabricantesRaw = Array.isArray(data.fabricantes) ? data.fabricantes : [];
     const fabricantes = fabricantesRaw
-      .map((f) => (typeof f === "string" ? { name: f, count: 0 } : f && f.name ? { name: f.name, count: Number(f.count) || 0 } : null))
+      .map((f) =>
+        typeof f === "string"
+          ? { name: f, count: 0 }
+          : f && f.name
+            ? { name: f.name, count: Number(f.count) || 0 }
+            : null
+      )
       .filter(Boolean);
 
     return {
