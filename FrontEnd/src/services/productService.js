@@ -86,7 +86,6 @@ const cache = {
 // 7 dias em millisegundos = 604.800.000ms (alterado de 1 hora)
 const CACHE_DURATION = Number(process.env.REACT_APP_CATALOG_TTL_MS || 7 * 24 * 60 * 60 * 1000);
 const STORAGE_KEY_CATALOG = "abr_catalog_snapshot";
-const STORAGE_KEY_TIMESTAMP = "abr_catalog_timestamp";
 
 /**
  * Funções de persistência localStorage com expiração
@@ -120,14 +119,6 @@ function getFromLocalStorage(key) {
   }
 }
 
-function clearLocalStorage(key) {
-  try {
-    localStorage.removeItem(key);
-  } catch (e) {
-    console.warn(`Falha ao limpar localStorage (${key}):`, e.message);
-  }
-}
-
 // Removido: isCacheValid() (não era usado e quebrava o build em CI)
 
 function isCatalogCacheValid() {
@@ -143,19 +134,6 @@ function restoreCatalogFromStorage() {
     return true;
   }
   return false;
-}
-
-function invalidateCache() {
-  cache.products = null;
-  cache.conjuntos = null;
-  cache.filters = null;
-  cache.status = null;
-  cache.timestamp = 0;
-}
-
-function invalidateCatalog() {
-  cache.catalog = null;
-  cache.catalogTimestamp = 0;
 }
 
 async function fetchWithTimeout(url, options = {}) {

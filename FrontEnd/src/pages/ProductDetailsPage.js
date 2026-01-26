@@ -88,7 +88,6 @@ function ProductDetailsPage() {
 
       // Primeiro, tenta obter do cache
       let usedSnapshot = false;
-      const cachedProduct = getFromProductsCache(code);
 
       // Se temos snapshot pré-carregado, extrai dados completos (conjuntos, aplicacoes, etc)
       if (preloadState && preloadState.loaded && preloadState.snapshot) {

@@ -10,8 +10,6 @@ import Header from "../components/Header";
 import { useNavigationHistory } from "../hooks/useNavigationHistory";
 import useAnalytics from "../hooks/useAnalytics";
 import {
-  fetchProductsPaginated,
-  fetchConjuntosPaginated,
   fetchCatalogSnapshot,
   filterCatalogSnapshot,
 } from "../services/productService";
