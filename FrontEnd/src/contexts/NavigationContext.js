@@ -174,40 +174,32 @@ export function NavigationProvider({ children }) {
     const location = useLocation();
     const lastNavigationRef = useRef(null);
     const isInitialMount = useRef(true);
+    const hasInitializedRef = useRef(false); // Flag para garantir inicialização única
 
-    // Limpa localStorage no mount inicial se estiver corrompido
+    // ÚNICO useEffect de inicialização - ordena: valida → limpa → restaura
     useEffect(() => {
+        if (hasInitializedRef.current) return; // Previne execução duplicada
+        hasInitializedRef.current = true;
+
         try {
             const savedHistory = localStorage.getItem(NAVIGATION_STORAGE_KEY);
             if (savedHistory) {
                 const parsed = JSON.parse(savedHistory);
-                // Se o histórico tem menos de 2 items ou a data é muito antiga, limpa
+                
+                // PASSO 1: Valida se está corrompido/desatualizado
                 const isTooOld = parsed.timestamp && (Date.now() - parsed.timestamp > 24 * 60 * 60 * 1000);
                 const isCorrupted = !Array.isArray(parsed.history) || parsed.history.length === 0;
 
                 if (isCorrupted || isTooOld) {
                     console.log('[Navigation] Limpando histórico corrompido ou desatualizado');
                     localStorage.removeItem(NAVIGATION_STORAGE_KEY);
+                    return; // Sai aqui, começa fresco
                 }
-            }
-        } catch (error) {
-            console.error('[Navigation] Erro ao validar histórico:', error);
-            localStorage.removeItem(NAVIGATION_STORAGE_KEY);
-        }
-    }, []);
 
-    // Carrega histórico do localStorage apenas se for válido e não houver produtos com erro
-    useEffect(() => {
-        try {
-            const savedHistory = localStorage.getItem(NAVIGATION_STORAGE_KEY);
-            if (savedHistory) {
-                const parsed = JSON.parse(savedHistory);
+                // PASSO 2: Se passou na validação, restaura história filtrada
                 let validHistory = Array.isArray(parsed.history) ? parsed.history : [];
 
-                // Limpa histórico corrompido: remove entradas de produtos que não deveriam estar lá
-                // (ex: produtos de teste que ficaram salvos)
                 validHistory = validHistory.filter(item => {
-                    // Aceita apenas rotas válidas e conhecidas
                     return item && item.path && (
                         item.path === '/' ||
                         item.path.startsWith('/produtos/') ||
@@ -215,12 +207,13 @@ export function NavigationProvider({ children }) {
                     );
                 });
 
-                // Se o histórico ficou vazio após limpeza, começa fresco
+                // Se ficou vazio, limpa localStorage
                 if (validHistory.length === 0) {
                     localStorage.removeItem(NAVIGATION_STORAGE_KEY);
                     return;
                 }
 
+                // PASSO 3: Restaura histórico validado
                 const currentIdx = Math.max(
                     -1,
                     Math.min(parsed.currentIndex || -1, validHistory.length - 1)
@@ -230,13 +223,14 @@ export function NavigationProvider({ children }) {
                     type: actionTypes.SYNC_FROM_STORAGE,
                     payload: { history: validHistory, currentIndex: currentIdx }
                 });
+                
+                console.log('[Navigation] Histórico restaurado com sucesso');
             }
         } catch (error) {
-            console.error('Erro ao carregar histórico:', error);
-            // Limpa localStorage corrompido
+            console.error('[Navigation] Erro ao inicializar histórico:', error);
             localStorage.removeItem(NAVIGATION_STORAGE_KEY);
         }
-    }, []);
+    }, []); // Executa UMA VEZ no mount
 
     // Salva histórico no localStorage
     useEffect(() => {
