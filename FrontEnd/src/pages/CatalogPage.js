@@ -224,6 +224,7 @@ function CatalogPage() {
     if (!mountedRef.current) return;
     setLoading(true);
     setError("");
+
     try {
       const filters = {
         search: catalogState?.currentFilters?.search || "",
@@ -235,9 +236,11 @@ function CatalogPage() {
         isConjunto: catalogState?.currentFilters?.isConjunto,
       };
 
+      let snap = null; // <-- DEFINA AQUI (escopo externo)
+
       try {
-        const snap = await ensureSnapshot(false);
-        if (snap) {
+        snap = await ensureSnapshot(false); // <-- ATRIBUA AQUI
+        if (snap && typeof snap === "object") {
           const result = filterCatalogSnapshot(snap, filters, page, PAGE_LIMIT);
           if (!mountedRef.current) return;
           setProducts(result.data);
@@ -250,103 +253,23 @@ function CatalogPage() {
           return;
         }
       } catch (snapErr) {
-        console.warn("snapshot fallback:", snapErr?.message || snapErr);
+        console.log("[LoadProducts] Snapshot inválido, forçando reload...");
       }
 
-      let resp = null;
-      if (filters.isConjunto === true) {
-        resp = await fetchConjuntosPaginated(page, PAGE_LIMIT, filters);
-      } else if (filters.isConjunto === false) {
-        resp = await fetchProductsPaginated(page, PAGE_LIMIT, filters);
-      } else {
-        const [conjResp, prodResp] = await Promise.all([
-          fetchConjuntosPaginated(page, Math.ceil(PAGE_LIMIT / 2), filters),
-          fetchProductsPaginated(page, Math.floor(PAGE_LIMIT / 2), filters),
-        ]);
-
-        const conjItems = (Array.isArray(conjResp.data) ? conjResp.data : [])
-          .map((it) => ({
-            codigo: String(it.pai || it.codigo || it.id || "").trim(),
-            descricao: String(it.descricao || it.desc || it.nome || "").trim(),
-            grupo: String(it.grupo || "").trim(),
-            tipo: "conjunto",
-            fabricante: it.fabricante || it.marca || "",
-            tipoVeiculo: it.tipoVeiculo || "",
-            linha: it.linha || "",
-            conjuntosChildren: Array.isArray(it.conjuntosChildren) && it.conjuntosChildren,
-          }))
-          .filter((it) => it.codigo && it.descricao);
-
-        const prodItems = (Array.isArray(prodResp.data) ? prodResp.data : [])
-          .map((it) => ({
-            codigo: String(it.codigo_abr || it.codigo || it.id || "").trim(),
-            descricao: String(it.descricao || it.desc || it.nome || "").trim(),
-            grupo: String(it.grupo || "").trim(),
-            tipo: "produto",
-            fabricante: it.fabricante || it.marca || "",
-            tipoVeiculo: it.tipoVeiculo || "",
-            linha: it.linha || "",
-          }))
-          .filter((it) => it.codigo && it.descricao);
-
-        const merged = new Map();
-        for (const c of conjItems) merged.set(c.codigo, { ...c, tipo: "conjunto" });
-        for (const p of prodItems) if (!merged.has(p.codigo)) merged.set(p.codigo, { ...p, tipo: "produto" });
-
-        const items = Array.from(merged.values());
-        const totalConj = conjResp.pagination?.total || conjItems.length;
-        const totalProd = prodResp.pagination?.total || prodItems.length;
-        const total = totalConj + totalProd;
-        const totalPages = Math.max(1, Math.ceil(total / PAGE_LIMIT));
-
-        if (!mountedRef.current) return;
-        setProducts(items);
-        setPagination({ page, limit: PAGE_LIMIT, total, totalPages });
-        setLoading(false);
-        return;
+      // APENAS use snapshot - SEM requisições adicionais de rede
+      if (!snap || typeof snap !== "object") {
+        throw new Error("Catálogo indisponível");
       }
 
-      if (resp && resp.data) {
-        const items = (Array.isArray(resp.data) ? resp.data : [])
-          .map((it) => {
-            if (it.pai || it.codigo) {
-              return {
-                codigo: String(it.pai || it.codigo || "").trim(),
-                descricao: String(it.descricao || it.nome || "").trim(),
-                grupo: it.grupo || "",
-                tipo: "conjunto",
-                fabricante: it.fabricante || "",
-              };
-            }
-            return {
-              codigo: String(it.codigo_abr || it.codigo || "").trim(),
-              descricao: String(it.descricao || it.nome || "").trim(),
-              grupo: it.grupo || "",
-              tipo: "produto",
-              fabricante: it.fabricante || "",
-            };
-          })
-          .filter((it) => it.codigo && it.descricao);
-
-        const deduped = [];
-        const seen = new Set();
-        for (const it of items) {
-          if (!seen.has(it.codigo)) {
-            deduped.push(it);
-            seen.add(it.codigo);
-          }
-        }
-
-        const total = resp.pagination?.total || deduped.length;
-        const totalPages = Math.max(1, Math.ceil(total / PAGE_LIMIT));
-        if (!mountedRef.current) return;
-        setProducts(deduped);
-        setPagination({ page: resp.pagination?.page || page, limit: PAGE_LIMIT, total, totalPages });
-      } else {
-        if (!mountedRef.current) return;
-        setProducts([]);
-        setPagination({ page: 1, limit: PAGE_LIMIT, total: 0, totalPages: 0 });
+      const result = filterCatalogSnapshot(snap, filters, page, PAGE_LIMIT);
+      if (!mountedRef.current) return;
+      setProducts(result.data);
+      setPagination(result.pagination);
+      setImageErrors({});
+      if (result.data.length > 0 && typeof addToProductsCache === "function") {
+        addToProductsCache(result.data);
       }
+      console.log("[LoadProducts] ✓ Sucesso (snapshot):", result.data.length, "itens");
     } catch (err) {
       if (!mountedRef.current) return;
       console.error("Erro ao carregar produtos:", err);
@@ -357,6 +280,7 @@ function CatalogPage() {
       if (mountedRef.current) setLoading(false);
     }
   }
+
 
   useEffect(() => {
     mountedRef.current = true;

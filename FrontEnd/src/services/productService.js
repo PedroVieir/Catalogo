@@ -1,7 +1,7 @@
 import { normalizeString } from "../utils/vehicleUtils";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
-const REQUEST_TIMEOUT = 15000;
+const REQUEST_TIMEOUT = 30000; // 30s para cobrir latência backend (~15s) + margem
 
 function sanitizeString(str, maxLength = 100) {
   if (typeof str !== "string") return "";
@@ -80,6 +80,7 @@ const cache = {
   timestamp: 0,
   catalog: null,
   catalogTimestamp: 0,
+  catalogFetching: null, // Promise para evitar requisições duplicadas
 };
 
 // 7 dias em millisegundos = 604.800.000ms (alterado de 1 hora)
@@ -171,27 +172,11 @@ async function fetchWithTimeout(url, options = {}) {
   }
 }
 
-async function fetchWithRetry(url, options = {}, maxRetries = 2) {
-  let lastError;
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      const response = await fetchWithTimeout(url, options);
-      if ((response.status === 503 || response.status === 504) && attempt < maxRetries) {
-        const delay = Math.pow(2, attempt) * 500;
-        await new Promise((r) => setTimeout(r, delay));
-        continue;
-      }
-      return response;
-    } catch (error) {
-      lastError = error;
-      if (attempt < maxRetries) {
-        const delay = Math.pow(2, attempt) * 500;
-        await new Promise((r) => setTimeout(r, delay));
-        continue;
-      }
-    }
-  }
-  throw lastError;
+async function fetchWithRetry(url, options = {}, maxRetries = 0) {
+  // OTIMIZAÇÃO: Sem retrys automáticos - backend é rápido e confiável
+  // Se precisar de retrys, será feito no nível da aplicação (ex: em useEffect com estado)
+  const response = await fetchWithTimeout(url, options);
+  return response;
 }
 
 async function handleResponse(response) {
@@ -226,6 +211,12 @@ export async function fetchCatalogSnapshot(force = false) {
     return cache.catalog;
   }
 
+  // Se há uma requisição em andamento, aguarda ela (evita requisições duplicadas)
+  if (cache.catalogFetching) {
+    console.log("[Cache] Aguardando requisição em andamento...");
+    return cache.catalogFetching;
+  }
+
   // Se não foi forçado, tenta restaurar do localStorage
   if (!force && !cache.catalog) {
     if (restoreCatalogFromStorage()) {
@@ -235,19 +226,29 @@ export async function fetchCatalogSnapshot(force = false) {
 
   console.log("[Cache] Buscando catálogo do servidor...");
   const url = `${API_BASE_URL}/catalog` + (force ? "?reload=1" : "");
-  const resp = await fetchWithRetry(url, undefined, 2);
-  const body = await handleResponse(resp);
+  
+  // Envolve em Promise para evitar requisições duplicadas enquanto uma está em andamento
+  cache.catalogFetching = (async () => {
+    try {
+      const resp = await fetchWithRetry(url);
+      const body = await handleResponse(resp);
 
-  if (!body || !body.data) throw new Error("Resposta inválida ao buscar snapshot do catálogo");
+      if (!body || !body.data) throw new Error("Resposta inválida ao buscar snapshot do catálogo");
 
-  cache.catalog = body.data;
-  cache.catalogTimestamp = Date.now();
+      cache.catalog = body.data;
+      cache.catalogTimestamp = Date.now();
 
-  // Salva no localStorage para persistência entre sessões (7 dias)
-  saveToLocalStorage(STORAGE_KEY_CATALOG, cache.catalog, CACHE_DURATION);
-  console.log("[Cache] Catálogo salvo em localStorage");
+      // Salva no localStorage para persistência entre sessões (7 dias)
+      saveToLocalStorage(STORAGE_KEY_CATALOG, cache.catalog, CACHE_DURATION);
+      console.log("[Cache] Catálogo salvo em localStorage");
 
-  return cache.catalog;
+      return cache.catalog;
+    } finally {
+      cache.catalogFetching = null; // Limpa após completar
+    }
+  })();
+
+  return cache.catalogFetching;
 }
 
 export function getCachedCatalog() {
