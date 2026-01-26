@@ -94,7 +94,7 @@ function ProductDetailsPage() {
       if (preloadState && preloadState.loaded && preloadState.snapshot) {
         const snap = preloadState.snapshot;
         const normalizedCode = String(code || "").toUpperCase().replace(/\s+/g, "").trim();
-        
+
         // Procura o produto no snapshot (usar sempre, mesmo se cache tem)
         let product = (Array.isArray(snap.products) ? snap.products : []).find(
           (p) =>
