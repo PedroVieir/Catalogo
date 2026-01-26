@@ -185,7 +185,7 @@ export function NavigationProvider({ children }) {
             const savedHistory = localStorage.getItem(NAVIGATION_STORAGE_KEY);
             if (savedHistory) {
                 const parsed = JSON.parse(savedHistory);
-                
+
                 // PASSO 1: Valida se está corrompido/desatualizado
                 const isTooOld = parsed.timestamp && (Date.now() - parsed.timestamp > 24 * 60 * 60 * 1000);
                 const isCorrupted = !Array.isArray(parsed.history) || parsed.history.length === 0;
@@ -223,7 +223,7 @@ export function NavigationProvider({ children }) {
                     type: actionTypes.SYNC_FROM_STORAGE,
                     payload: { history: validHistory, currentIndex: currentIdx }
                 });
-                
+
                 console.log('[Navigation] Histórico restaurado com sucesso');
             }
         } catch (error) {
