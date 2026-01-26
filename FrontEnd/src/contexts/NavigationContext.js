@@ -175,13 +175,52 @@ export function NavigationProvider({ children }) {
     const lastNavigationRef = useRef(null);
     const isInitialMount = useRef(true);
 
-    // Carrega histórico do localStorage
+    // Limpa localStorage no mount inicial se estiver corrompido
     useEffect(() => {
         try {
             const savedHistory = localStorage.getItem(NAVIGATION_STORAGE_KEY);
             if (savedHistory) {
                 const parsed = JSON.parse(savedHistory);
-                const validHistory = Array.isArray(parsed.history) ? parsed.history : [];
+                // Se o histórico tem menos de 2 items ou a data é muito antiga, limpa
+                const isTooOld = parsed.timestamp && (Date.now() - parsed.timestamp > 24 * 60 * 60 * 1000);
+                const isCorrupted = !Array.isArray(parsed.history) || parsed.history.length === 0;
+
+                if (isCorrupted || isTooOld) {
+                    console.log('[Navigation] Limpando histórico corrompido ou desatualizado');
+                    localStorage.removeItem(NAVIGATION_STORAGE_KEY);
+                }
+            }
+        } catch (error) {
+            console.error('[Navigation] Erro ao validar histórico:', error);
+            localStorage.removeItem(NAVIGATION_STORAGE_KEY);
+        }
+    }, []);
+
+    // Carrega histórico do localStorage apenas se for válido e não houver produtos com erro
+    useEffect(() => {
+        try {
+            const savedHistory = localStorage.getItem(NAVIGATION_STORAGE_KEY);
+            if (savedHistory) {
+                const parsed = JSON.parse(savedHistory);
+                let validHistory = Array.isArray(parsed.history) ? parsed.history : [];
+
+                // Limpa histórico corrompido: remove entradas de produtos que não deveriam estar lá
+                // (ex: produtos de teste que ficaram salvos)
+                validHistory = validHistory.filter(item => {
+                    // Aceita apenas rotas válidas e conhecidas
+                    return item && item.path && (
+                        item.path === '/' ||
+                        item.path.startsWith('/produtos/') ||
+                        item.path.startsWith('/catalogo')
+                    );
+                });
+
+                // Se o histórico ficou vazio após limpeza, começa fresco
+                if (validHistory.length === 0) {
+                    localStorage.removeItem(NAVIGATION_STORAGE_KEY);
+                    return;
+                }
+
                 const currentIdx = Math.max(
                     -1,
                     Math.min(parsed.currentIndex || -1, validHistory.length - 1)
@@ -194,6 +233,8 @@ export function NavigationProvider({ children }) {
             }
         } catch (error) {
             console.error('Erro ao carregar histórico:', error);
+            // Limpa localStorage corrompido
+            localStorage.removeItem(NAVIGATION_STORAGE_KEY);
         }
     }, []);
 
@@ -263,18 +304,25 @@ export function NavigationProvider({ children }) {
         navigate(path, { state: routeState });
     }, [navigate, state.navigationStack]);
 
-    // Função para voltar
+    // Função para voltar com validação de histórico
     const goBack = useCallback(() => {
-        if (state.currentIndex > 0) {
-            const previousEntry = state.history[state.currentIndex - 1];
-            if (previousEntry) {
-                dispatch({ type: actionTypes.POP });
-                navigate(previousEntry.path, { state: previousEntry.state });
-                return true;
+        if (state.currentIndex > 0 && state.history.length > 1) {
+            // Sempre volta para a entrada anterior válida
+            let targetIndex = state.currentIndex - 1;
+
+            // Procura pela primeira entrada válida anterior
+            while (targetIndex >= 0) {
+                const previousEntry = state.history[targetIndex];
+                if (previousEntry && previousEntry.path) {
+                    dispatch({ type: actionTypes.POP });
+                    navigate(previousEntry.path, { state: previousEntry.state });
+                    return true;
+                }
+                targetIndex--;
             }
         }
 
-        // Fallback: vai para home
+        // Se não há histórico válido, volta para home
         push('/');
         return false;
     }, [state.currentIndex, state.history, navigate, push]);
