@@ -242,11 +242,11 @@ export async function fetchCatalogSnapshot(force = false) {
 
   cache.catalog = body.data;
   cache.catalogTimestamp = Date.now();
-  
+
   // Salva no localStorage para persistência entre sessões (7 dias)
   saveToLocalStorage(STORAGE_KEY_CATALOG, cache.catalog, CACHE_DURATION);
   console.log("[Cache] Catálogo salvo em localStorage");
-  
+
   return cache.catalog;
 }
 
