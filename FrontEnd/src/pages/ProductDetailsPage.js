@@ -209,7 +209,7 @@ function ProductDetailsPage() {
         clearTimeout(loadingTimeoutRef.current);
       }
     }
-  }, [code, notify, preloadState, getFromProductsCache]);
+  }, [code, notify, preloadState]);
 
   useEffect(() => {
     loadData();
