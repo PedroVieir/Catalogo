@@ -82,12 +82,66 @@ const cache = {
   catalogTimestamp: 0,
 };
 
-const CACHE_DURATION = Number(process.env.REACT_APP_CATALOG_TTL_MS || 60 * 60 * 1000);
+// 7 dias em millisegundos = 604.800.000ms (alterado de 1 hora)
+const CACHE_DURATION = Number(process.env.REACT_APP_CATALOG_TTL_MS || 7 * 24 * 60 * 60 * 1000);
+const STORAGE_KEY_CATALOG = "abr_catalog_snapshot";
+const STORAGE_KEY_TIMESTAMP = "abr_catalog_timestamp";
+
+/**
+ * Funções de persistência localStorage com expiração
+ */
+function saveToLocalStorage(key, data, ttlMs = CACHE_DURATION) {
+  try {
+    const payload = {
+      data,
+      expiresAt: Date.now() + ttlMs,
+    };
+    localStorage.setItem(key, JSON.stringify(payload));
+  } catch (e) {
+    // localStorage pode estar cheio ou desabilitado
+    console.warn(`Falha ao salvar em localStorage (${key}):`, e.message);
+  }
+}
+
+function getFromLocalStorage(key) {
+  try {
+    const item = localStorage.getItem(key);
+    if (!item) return null;
+    const payload = JSON.parse(item);
+    if (payload.expiresAt && Date.now() > payload.expiresAt) {
+      localStorage.removeItem(key);
+      return null;
+    }
+    return payload.data;
+  } catch (e) {
+    console.warn(`Falha ao ler localStorage (${key}):`, e.message);
+    return null;
+  }
+}
+
+function clearLocalStorage(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch (e) {
+    console.warn(`Falha ao limpar localStorage (${key}):`, e.message);
+  }
+}
 
 // Removido: isCacheValid() (não era usado e quebrava o build em CI)
 
 function isCatalogCacheValid() {
   return Date.now() - cache.catalogTimestamp < CACHE_DURATION;
+}
+
+function restoreCatalogFromStorage() {
+  const stored = getFromLocalStorage(STORAGE_KEY_CATALOG);
+  if (stored && typeof stored === "object") {
+    cache.catalog = stored;
+    cache.catalogTimestamp = Date.now();
+    console.log("[Cache] Catálogo restaurado do localStorage");
+    return true;
+  }
+  return false;
 }
 
 function invalidateCache() {
@@ -166,8 +220,20 @@ function validateParams(params) {
 
 // ====== Snapshot (catalog) helpers ======
 export async function fetchCatalogSnapshot(force = false) {
-  if (!force && cache.catalog && isCatalogCacheValid()) return cache.catalog;
+  // Se não foi forçado e cache em-memória é válido, retorna
+  if (!force && cache.catalog && isCatalogCacheValid()) {
+    console.log("[Cache] Usando catálogo em-memória");
+    return cache.catalog;
+  }
 
+  // Se não foi forçado, tenta restaurar do localStorage
+  if (!force && !cache.catalog) {
+    if (restoreCatalogFromStorage()) {
+      return cache.catalog;
+    }
+  }
+
+  console.log("[Cache] Buscando catálogo do servidor...");
   const url = `${API_BASE_URL}/catalog` + (force ? "?reload=1" : "");
   const resp = await fetchWithRetry(url, undefined, 2);
   const body = await handleResponse(resp);
@@ -176,6 +242,11 @@ export async function fetchCatalogSnapshot(force = false) {
 
   cache.catalog = body.data;
   cache.catalogTimestamp = Date.now();
+  
+  // Salva no localStorage para persistência entre sessões (7 dias)
+  saveToLocalStorage(STORAGE_KEY_CATALOG, cache.catalog, CACHE_DURATION);
+  console.log("[Cache] Catálogo salvo em localStorage");
+  
   return cache.catalog;
 }
 
@@ -551,4 +622,4 @@ export async function fetchCatalogStatus() {
   }
 }
 
-export { invalidateCache as invalidateSimpleCache, invalidateCatalog };
+// Tentar restaurar catálogo do localStorage na inicialização\nif (typeof window !== \"undefined\" && window.localStorage) {\n  restoreCatalogFromStorage();\n}\n\nexport { invalidateCache as invalidateSimpleCache, invalidateCatalog };

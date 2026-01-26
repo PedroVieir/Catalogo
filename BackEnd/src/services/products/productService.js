@@ -10,7 +10,7 @@ const CACHE_KEYS = {
     FABRICANTES_ALL: "fabricantes:all"
 };
 
-const CACHE_TTL_MS = Number(process.env.PRODUCTS_CACHE_TTL_MS || 60 * 60 * 1000);
+const CACHE_TTL_MS = Number(process.env.PRODUCTS_CACHE_TTL_MS || 7 * 24 * 60 * 60 * 1000);
 
 export async function getAllProductsCached() {
     const cached = await cache.cacheGet(CACHE_KEYS.PRODUCTS_ALL);
