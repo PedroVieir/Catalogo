@@ -90,17 +90,12 @@ function ProductDetailsPage() {
       let usedSnapshot = false;
       const cachedProduct = getFromProductsCache(code);
 
-      if (cachedProduct) {
-        console.log("🔍 ProductDetailsPage: Using cached product");
-        setData({ data: { product: cachedProduct, conjuntos: [], aplicacoes: [], benchmarks: [] } });
-        usedSnapshot = true;
-        lastLoadedCode.current = code;
-      }
-
-      // Se temos snapshot pré-carregado, usa para detalhes instantâneos
+      // Se temos snapshot pré-carregado, extrai dados completos (conjuntos, aplicacoes, etc)
       if (preloadState && preloadState.loaded && preloadState.snapshot) {
         const snap = preloadState.snapshot;
         const normalizedCode = String(code || "").toUpperCase().replace(/\s+/g, "").trim();
+        
+        // Procura o produto no snapshot (usar sempre, mesmo se cache tem)
         let product = (Array.isArray(snap.products) ? snap.products : []).find(
           (p) =>
             String(p.codigo || p.code || p.id || "")
@@ -109,9 +104,7 @@ function ProductDetailsPage() {
               .trim() === normalizedCode
         );
 
-        console.log("🔍 ProductDetailsPage: Found product in snapshot:", !!product);
-
-        // Se não encontrou como produto, verificar se é um conjunto pai
+        // Se não encontrou como produto, pode ser um conjunto pai
         if (!product) {
           const conjuntoRelations = (Array.isArray(snap.conjuntos) ? snap.conjuntos : []).filter(
             (c) =>
@@ -127,12 +120,10 @@ function ProductDetailsPage() {
                   .replace(/\s+/g, "")
                   .trim() === normalizedCode
             );
-            if (!product) {
-              console.log("🔍 ProductDetailsPage: Conjunto pai não encontrado como produto, pulando para API");
-            }
           }
         }
 
+        // Se encontrou no snapshot, extrai TODOS os dados relacionados
         if (product) {
           const conjuntos = (Array.isArray(snap.conjuntos)
             ? snap.conjuntos
@@ -188,7 +179,7 @@ function ProductDetailsPage() {
         }
       }
 
-      // Só tenta API se não encontrou no snapshot/cache
+      // Se NÃO encontrou no snapshot, tenta API
       if (!usedSnapshot) {
         console.log("🔍 ProductDetailsPage: Trying API since no snapshot data found");
         try {
