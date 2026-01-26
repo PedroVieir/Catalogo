@@ -446,9 +446,11 @@ function ProductDetailsPage() {
                   </div>
                 </div>
 
-                <div className="product-header-desktop-image" aria-hidden="true">
-                  <img src={caixasImg} alt="" loading="lazy" />
-                </div>
+                {product.grupo === "JOGOS DE JUNTAS" && (
+                  <div className="product-header-desktop-image" aria-hidden="true">
+                    <img src={caixasImg} alt="" loading="lazy" />
+                  </div>
+                )}
 
                 <div className="product-image-preview">
                   {!imageError ? (
