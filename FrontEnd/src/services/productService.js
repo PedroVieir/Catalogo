@@ -226,7 +226,7 @@ export async function fetchCatalogSnapshot(force = false) {
 
   console.log("[Cache] Buscando catálogo do servidor...");
   const url = `${API_BASE_URL}/catalog` + (force ? "?reload=1" : "");
-  
+
   // Envolve em Promise para evitar requisições duplicadas enquanto uma está em andamento
   cache.catalogFetching = (async () => {
     try {
