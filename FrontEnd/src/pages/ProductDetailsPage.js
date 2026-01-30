@@ -14,7 +14,7 @@ import ProductTransition from "../components/ProductTransition";
 import NavigationProgress from "../components/NavigationProgress";
 import "../styles/CatalogPage.css";
 import "../styles/ProductDetails.css";
-import caixasImg from "../assets/caixas_2.png";
+import caixasImg from "../assets/caixas_2.webp";
 
 function ProductDetailsPage() {
   const { code } = useParams();
