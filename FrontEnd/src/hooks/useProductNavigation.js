@@ -61,16 +61,16 @@ export const useProductNavigation = () => {
 
     // Volta para o produto anterior com contexto
     const goBackToPreviousProduct = useCallback((fallbackPath = '/') => {
-            const previous = navigation.getPreviousRoute();
+        const previous = navigation.getPreviousRoute();
 
-            if (previous) {
-                // Se existe uma rota anterior (pode ser '/' ou outra), apenas faz goBack
-                return navigation.goBack();
-            }
+        if (previous) {
+            // Se existe uma rota anterior (pode ser '/' ou outra), apenas faz goBack
+            return navigation.goBack();
+        }
 
-            // Se não há rota anterior registrada, vai para fallback (home)
-            navigation.push(fallbackPath);
-            return false;
+        // Se não há rota anterior registrada, vai para fallback (home)
+        navigation.push(fallbackPath);
+        return false;
     }, [navigation]);
 
     // Verifica se pode voltar para o produto específico
