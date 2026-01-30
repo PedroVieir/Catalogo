@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { useNavigation } from '../../src/contexts/NavigationContext';
+import { useNavigation } from '../contexts/NavigationContext';
 
 export const useProductNavigation = () => {
     const navigation = useNavigation();
@@ -61,15 +61,16 @@ export const useProductNavigation = () => {
 
     // Volta para o produto anterior com contexto
     const goBackToPreviousProduct = useCallback((fallbackPath = '/') => {
-        const previous = navigation.getPreviousRoute();
+            const previous = navigation.getPreviousRoute();
 
-        if (previous && previous.path.startsWith('/produtos/')) {
-            return navigation.goBack();
-        }
+            if (previous) {
+                // Se existe uma rota anterior (pode ser '/' ou outra), apenas faz goBack
+                return navigation.goBack();
+            }
 
-        // Se não veio de um produto, vai para fallback
-        navigation.push(fallbackPath);
-        return false;
+            // Se não há rota anterior registrada, vai para fallback (home)
+            navigation.push(fallbackPath);
+            return false;
     }, [navigation]);
 
     // Verifica se pode voltar para o produto específico

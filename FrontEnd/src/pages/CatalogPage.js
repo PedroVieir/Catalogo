@@ -7,7 +7,7 @@ import EmptyState from "../components/EmptyState";
 import CookieConsent from "../components/CookieConsent";
 import useLazyLoad from "../hooks/useLazyLoad";
 import Header from "../components/Header";
-import { useNavigationHistory } from "../hooks/useNavigationHistory";
+import { useNavigation } from "../contexts/NavigationContext";
 import useAnalytics from "../hooks/useAnalytics";
 import {
   fetchCatalogSnapshot,
@@ -84,7 +84,7 @@ function labelLinha(v) {
 
 function CatalogPage() {
   const { catalogState, updateCatalogState, preloadState, addToProductsCache } = useCatalogState();
-  const { clearHistory: clearHistoryOnLogout, pushState: navigateTo } = useNavigationHistory();
+  const navigation = useNavigation();
   const navigate = useNavigate();
   const location = useLocation();
   const mountedRef = useRef(true);
@@ -125,6 +125,21 @@ function CatalogPage() {
     }
     return { page: 1, limit: PAGE_LIMIT, total: 0, totalPages: 0 };
   });
+
+  // Se vier com `pageState` no location (voltando de detalhes), restaura estado
+  useEffect(() => {
+    try {
+      const prev = location.state && location.state.pageState ? location.state.pageState : null;
+      if (prev) {
+        if (Array.isArray(prev.products) && prev.products.length > 0) setProducts(prev.products);
+        if (prev.pagination) setPagination(prev.pagination);
+        if (prev.filters) updateCatalogState({ currentFilters: prev.filters });
+        if (prev.scrollPosition) {
+          setTimeout(() => window.scrollTo(0, prev.scrollPosition), 50);
+        }
+      }
+    } catch (e) { }
+  }, [location.state, updateCatalogState]);
 
   // Removido setter (não usado) para evitar no-unused-vars
   const [availableFilters] = useState(() => {
@@ -466,22 +481,32 @@ function CatalogPage() {
     const normalized = normalizeCodeForRoute(raw);
     const productUrl = `/produtos/${encodeURIComponent(normalized)}`;
 
-    navigate(productUrl, {
-      state: {
+    // Salva o estado atual da página (produtos, paginação, filtros e posição de scroll)
+    const pageState = {
+      products,
+      pagination,
+      filters: catalogState?.currentFilters || {},
+      scrollPosition: typeof window !== 'undefined' ? window.scrollY || 0 : 0,
+    };
+
+    // Usa NavigationContext para push (guarda state completo na entry)
+    try {
+      navigation.push(productUrl, {
         fromCatalog: true,
         catalogState: { page: catalogState.currentPage, filters: catalogState.currentFilters },
-      },
-    });
-
-    if (typeof navigateTo === "function") {
-      setTimeout(() => {
-        try {
-          navigateTo(productUrl, {
+        pageState,
+      });
+    } catch (e) {
+      // Fallback: use react-router navigate if NavigationContext falhar
+      try {
+        navigate(productUrl, {
+          state: {
             fromCatalog: true,
             catalogState: { page: catalogState.currentPage, filters: catalogState.currentFilters },
-          });
-        } catch (e) { }
-      }, 0);
+            pageState,
+          },
+        });
+      } catch (er) { }
     }
   };
 
@@ -502,7 +527,7 @@ function CatalogPage() {
 
   return (
     <div className="catalog-wrapper">
-      <Header onLogoClick={clearHistoryOnLogout}>
+      <Header onLogoClick={navigation.clearHistory}>
         <div className="stats-badge">
           <span className="stats-number">{totalItems}</span>
           <span className="stats-label">itens</span>
