@@ -358,6 +358,109 @@ function ProductDetailsPage() {
     return `/vista/${encodeURIComponent(product.codigo)}.jpg`;
   }, [product?.codigo]);
 
+  const handlePrint = useCallback(() => {
+    if (!product) return;
+
+    const logoPath = '/logo192.png';
+    const productImage = getImageUrl();
+
+    const renderItemsList = (items) => {
+      const useColumns = items.length > 10;
+      const colCount = items.length > 20 ? 3 : 2;
+      const style = useColumns ? `column-count: ${colCount}; column-gap: 24px;` : '';
+      return `<ul class="print-list" style="${style}">${items
+        .map((it) => `<li><strong>${it.filho || it.codigo || it.codigo_conjunto || it.numero_original || it.veiculo || ''}</strong> — ${it.filho_des || it.descricao || it.nome_conjunto || it.origem || it.fabricante || ''} ${it.modelo ? '- ' + it.modelo : ''} ${it.ano ? '(' + it.ano + ')' : ''}</li>`)
+        .join('')}</ul>`;
+    };
+
+    const style = `
+      body{font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial; color:#222; margin:0}
+      .page{padding:28px;box-sizing:border-box;width:100%;}
+      .header{display:flex;gap:18px;align-items:center;margin-bottom:10px}
+      .logo{width:88px;height:88px;object-fit:contain}
+      .title{font-size:30px;font-weight:800;margin:0}
+      .subtitle{font-size:16px;color:#444;margin-top:6px}
+      .meta-line{margin-top:8px;font-size:14px;color:#333}
+      .divider{height:1px;background:#e6e6e6;margin:12px 0}
+      .product-image-large{width:100%;height:540px;object-fit:contain;border:1px solid #eee;padding:10px;background:#fff}
+      h2.section-title{font-size:22px;margin:0 0 8px 0}
+      .print-list{list-style:none;padding:0;margin:0;line-height:1.7}
+      .print-list li{padding:8px 0;border-bottom:1px solid #f0f0f0}
+      .print-table{width:100%;border-collapse:collapse}
+      .print-table th,.print-table td{border:1px solid #e6e6e6;padding:8px;text-align:left}
+      .page-break{page-break-after:always}
+      @page { margin: 18mm }
+      @media print{ .page{padding:12mm} .logo{width:72px;height:72px} }
+    `;
+
+    // Build pages
+    let pages = [];
+
+    // First page: main product and large image
+    pages.push(`
+      <div class="page">
+        <div class="header">
+          <img src="${logoPath}" class="logo" alt="Logo" />
+          <div>
+            <h1 class="title">${product.descricao || ''}</h1>
+            <div class="subtitle">Código: <strong>${product.codigo || ''}</strong> &nbsp; • &nbsp; Grupo: <strong>${product.grupo || '—'}</strong></div>
+            <div class="meta-line">Gerado em: ${new Date().toLocaleString()}</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div>
+          <img src="${productImage}" class="product-image-large" alt="${product.codigo || ''} - ${product.descricao || ''}" />
+        </div>
+      </div>
+      <div class="page-break"></div>
+    `);
+
+    // Sections - each section starts on new page; if > 10 items, divide in columns
+    const sections = [
+      { key: 'Peças do Conjunto', items: validConjuntos },
+      { key: 'Usado em Conjuntos', items: enrichedMemberships },
+      { key: 'Benchmarks', items: benchmarks },
+      { key: 'Aplicações', items: aplicacoes },
+    ];
+
+    sections.forEach((sec) => {
+      const items = Array.isArray(sec.items) ? sec.items : [];
+      if (items.length === 0) return;
+      pages.push(`
+        <div class="page">
+          <div class="header">
+            <img src="${logoPath}" class="logo" alt="Logo" />
+            <div>
+              <h2 class="section-title">${sec.key}</h2>
+            </div>
+          </div>
+          <div class="divider"></div>
+          ${renderItemsList(items)}
+        </div>
+        <div class="page-break"></div>
+      `);
+    });
+
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>Ficha - ${product.codigo || ''}</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>${style}</style></head><body>${pages.join('')}</body></html>`;
+
+    const w = window.open('', '_blank');
+    if (!w) {
+      notify.error('Não foi possível abrir a janela de impressão. Verifique bloqueadores de pop-up.');
+      return;
+    }
+
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    w.onload = () => {
+      setTimeout(() => {
+        try { w.print(); } catch (e) { console.warn('Erro ao imprimir:', e); }
+        try { w.close(); } catch (e) { }
+      }, 500);
+    };
+  }, [product, getImageUrl, validConjuntos, enrichedMemberships, benchmarks, aplicacoes, notify]);
+
   return (
     <>
       <NavigationProgress isActive={isNavigating} />
@@ -697,7 +800,7 @@ function ProductDetailsPage() {
                 </button>
 
                 <div className="action-group">
-                  <button className="action-btn" onClick={() => window.print()} disabled={isNavigating}>
+                  <button className="action-btn" onClick={handlePrint} disabled={isNavigating}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <polyline points="6 9 6 2 18 2 18 9" />
                       <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
