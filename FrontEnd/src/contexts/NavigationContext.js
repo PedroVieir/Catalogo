@@ -264,8 +264,8 @@ export function NavigationProvider({ children }) {
     useEffect(() => {
         dispatch({
             type: actionTypes.UPDATE_CURRENT,
-            payload: { 
-                path: location.pathname, 
+            payload: {
+                path: location.pathname,
                 state: location.state,
                 isGoingBack: isGoingBackRef.current
             }
@@ -325,18 +325,18 @@ export function NavigationProvider({ children }) {
                         path: previousEntry.path,
                         state: previousEntry.state
                     });
-                    
+
                     // Marca que estamos voltando
                     isGoingBackRef.current = true;
-                    
+
                     dispatch({ type: actionTypes.POP });
                     navigate(previousEntry.path, { state: previousEntry.state });
-                    
+
                     // Reseta a flag após um curto delay
                     setTimeout(() => {
                         isGoingBackRef.current = false;
                     }, 100);
-                    
+
                     return true;
                 }
                 targetIndex--;

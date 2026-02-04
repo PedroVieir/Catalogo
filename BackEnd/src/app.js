@@ -86,20 +86,39 @@ app.use(helmet({
 app.use(limiter);
 
 // Middleware de segurança: CORS restritivo
-// Lista padrão de origens permitidas. Inclui a URL da aplicação Vercel.
-const defaultAllowedOrigins = ['http://localhost:3000', 'https://abr-catalogo.vercel.app'];
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',')
-  : defaultAllowedOrigins;
+// Configurações de CORS: permite definir origens via env `CORS_ORIGIN`.
+// Aceita uma lista separada por vírgula. Sempre permite requisições de `localhost` (qualquer porta)
+// e também permite requisições sem origin (ex: curl, mobile apps).
+const configuredCors = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map(s => s.trim()).filter(Boolean)
+  : (process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()).filter(Boolean) : []);
+
+const defaultAllowedOrigins = configuredCors.length > 0
+  ? configuredCors
+  : ['https://abr-catalogo.vercel.app'];
+
+const allowedOrigins = defaultAllowedOrigins;
+
 const corsOptions = {
   origin: (origin, callback) => {
     // Permitir requisições sem origin (como mobile apps ou curl)
     if (!origin) return callback(null, true);
-    // Se a origem estiver na lista de permitidas, autoriza
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
+
+    // Se a origem estiver explicitamente na lista de permitidas, autoriza
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+
+    // Permitir qualquer origem de localhost ou 127.0.0.1 (qualquer porta)
+    try {
+      const parsed = new URL(origin);
+      const host = parsed.hostname;
+      if (host === 'localhost' || host === '127.0.0.1' || host === '::1') {
+        return callback(null, true);
+      }
+    } catch (e) {
+      // Se origin não for uma URL válida, não autoriza abaixo
     }
-    // Caso contrário, registra o bloqueio e responde com false (não lança erro para evitar status 500)
+
+    // Caso contrário, registra o bloqueio e responde com false (retorna 403 pelo CORS middleware)
     logger.warn('CORS blocked request', { origin });
     return callback(null, false);
   },
