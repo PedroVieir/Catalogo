@@ -66,10 +66,22 @@ const app = express();
 app.set('trust proxy', true);
 
 // Aplicar Helmet para headers de segurança
-// Desabilitamos CSP no backend pois é uma API e não executa JavaScript no cliente
-// CSP é aplicável apenas ao frontend
+// Para APIs, CSP pode ser desabilitado ou muito permissivo
+// Lê ALLOWED_FRONTEND_URL do env para permitir dynamic frontend URLs
+const allowedFrontendUrls = process.env.ALLOWED_FRONTEND_URL
+  ? process.env.ALLOWED_FRONTEND_URL.split(',').map(s => s.trim()).filter(Boolean)
+  : ['https://abr-catalogo.vercel.app', 'http://localhost:3000'];
+
 app.use(helmet({
-  contentSecurityPolicy: false,  // Desabilitado: não aplicável para APIs
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", ...allowedFrontendUrls, 'http://localhost:*', 'https://localhost:*'],
+    },
+  },
   hsts: {
     maxAge: 31536000,
     includeSubDomains: true,
@@ -123,6 +135,16 @@ const corsOptions = {
   maxAge: 86400, // 24 horas
 };
 app.use(cors(corsOptions));
+
+// Headers adicionais para garantir requisições cross-origin
+app.use((req, res, next) => {
+  // Permitir qualquer origem em responses (redundante com CORS mas explícito)
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 // Middleware de limite de tamanho (proteger contra payloads grandes)
 app.use(express.json({ limit: '1mb' }));
