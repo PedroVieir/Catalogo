@@ -130,15 +130,25 @@ function CatalogPage() {
   useEffect(() => {
     try {
       const prev = location.state && location.state.pageState ? location.state.pageState : null;
+      console.log('[CatalogPage] location.state restored:', {
+        hasPageState: !!prev,
+        filters: prev?.filters,
+        fabricante: prev?.filters?.fabricante
+      });
       if (prev) {
         if (Array.isArray(prev.products) && prev.products.length > 0) setProducts(prev.products);
         if (prev.pagination) setPagination(prev.pagination);
-        if (prev.filters) updateCatalogState({ currentFilters: prev.filters });
+        if (prev.filters) {
+          console.log('[CatalogPage] Updating catalog state with filters:', prev.filters);
+          updateCatalogState({ currentFilters: prev.filters });
+        }
         if (prev.scrollPosition) {
           setTimeout(() => window.scrollTo(0, prev.scrollPosition), 50);
         }
       }
-    } catch (e) { }
+    } catch (e) {
+      console.error('[CatalogPage] Error restoring state:', e);
+    }
   }, [location.state, updateCatalogState]);
 
   // Removido setter (não usado) para evitar no-unused-vars
@@ -363,10 +373,16 @@ function CatalogPage() {
     const page = parseInt(qs.get("page")) || catalogState.currentPage || 1;
     const search = qs.get("search") || catalogState.currentFilters?.search || "";
     const grupo = qs.get("grupo") || catalogState.currentFilters?.grupo || "";
-    const fabricante = qs.get("fabricante") || "";
+    const fabricante = qs.get("fabricante") || catalogState.currentFilters?.fabricante || "";
     const tipoVeiculo = normalizeTipoVeiculo(qs.get("tipoVeiculo") || catalogState.currentFilters?.tipoVeiculo || "");
     const linha = normalizeLinha(qs.get("linha") || catalogState.currentFilters?.linha || "");
     const sortBy = qs.get("sortBy") || catalogState.currentFilters?.sortBy || "grupo";
+
+    console.log('[CatalogPage] URL sync - fabricante from state:', {
+      qsFabricante: qs.get("fabricante"),
+      catalogStateFabricante: catalogState.currentFilters?.fabricante,
+      resolvedFabricante: fabricante
+    });
 
     const currentFilters = catalogState.currentFilters || {};
     const hasChanges =
@@ -488,6 +504,12 @@ function CatalogPage() {
       filters: catalogState?.currentFilters || {},
       scrollPosition: typeof window !== 'undefined' ? window.scrollY || 0 : 0,
     };
+
+    console.log('[CatalogPage] handleProductClick - saving state:', {
+      normalizedCode: normalized,
+      pageState,
+      currentFilters: catalogState?.currentFilters
+    });
 
     // Usa NavigationContext para push (guarda state completo na entry)
     try {

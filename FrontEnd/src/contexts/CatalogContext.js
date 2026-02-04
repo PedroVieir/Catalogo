@@ -9,7 +9,7 @@ export function CatalogProvider({ children }) {
     currentFilters: {
       search: "",
       grupo: "",
-      fabricante: "", // Forçado como string vazia
+      fabricante: "",
       tipoVeiculo: "",
       sortBy: "grupo"
     }
@@ -33,11 +33,11 @@ export function CatalogProvider({ children }) {
   useEffect(() => {
     let cancelled = false;
     async function doPreload() {
-      console.log('CatalogContext: Starting preload');
+      console.log('[CatalogContext] Starting preload');
       try {
         setPreloadState(s => ({ ...s, loading: true }));
         const snapshot = await fetchCatalogSnapshot();
-        console.log('CatalogContext: Snapshot fetched:', snapshot ? 'success' : 'null');
+        console.log('[CatalogContext] Snapshot fetched:', snapshot ? 'success' : 'null');
 
         if (cancelled) return;
 
@@ -71,7 +71,7 @@ export function CatalogProvider({ children }) {
 
         setFiltersLoading(false);
         if (process.env.NODE_ENV === 'development') {
-          console.info('CatalogContext: snapshot preloaded', {
+          console.info('[CatalogContext] snapshot preloaded', {
             products: Array.isArray(snapshot.products) ? snapshot.products.length : 0,
             conjuntos: Array.isArray(snapshot.conjuntos) ? snapshot.conjuntos.length : 0
           });
@@ -82,7 +82,6 @@ export function CatalogProvider({ children }) {
           ...prev,
           currentFilters: {
             ...prev.currentFilters,
-            fabricante: "", // Forçar fabricante sempre vazio
             tipoVeiculo: prev.currentFilters.tipoVeiculo || ''
           }
         }));

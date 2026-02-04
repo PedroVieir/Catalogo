@@ -8,7 +8,6 @@ const NAVIGATION_STORAGE_KEY = 'product_navigation_history';
 const MAX_HISTORY_ITEMS = 50;
 const NAVIGATION_DEBOUNCE_MS = 300;
 
-// Tipos de ações
 const actionTypes = {
     PUSH: 'PUSH',
     POP: 'POP',
@@ -144,7 +143,18 @@ function navigationReducer(state, action) {
             const existingIndex = state.history.findIndex(item => item.path === path);
 
             if (existingIndex >= 0) {
-                // Atualiza o estado da rota existente
+                // Se estamos voltando (goBack), não sobrescreve o state já guardado
+                // Apenas sincroniza o índice
+                if (action.payload.isGoingBack) {
+                    return {
+                        ...state,
+                        currentIndex: existingIndex,
+                        canGoBack: existingIndex > 0,
+                        canGoForward: existingIndex < state.history.length - 1
+                    };
+                }
+
+                // Caso contrário, atualiza o estado da rota existente
                 const newHistory = [...state.history];
                 newHistory[existingIndex] = {
                     ...newHistory[existingIndex],
@@ -154,9 +164,7 @@ function navigationReducer(state, action) {
                 return {
                     ...state,
                     history: newHistory,
-                    currentIndex: existingIndex,
-                    canGoBack: existingIndex > 0,
-                    canGoForward: existingIndex < newHistory.length - 1
+                    currentIndex: existingIndex
                 };
             }
 
@@ -175,6 +183,7 @@ export function NavigationProvider({ children }) {
     const lastNavigationRef = useRef(null);
     const isInitialMount = useRef(true);
     const hasInitializedRef = useRef(false); // Flag para garantir inicialização única
+    const isGoingBackRef = useRef(false); // Flag para rastrear goBack
 
     // ÚNICO useEffect de inicialização - ordena: valida → limpa → restaura
     useEffect(() => {
@@ -255,7 +264,11 @@ export function NavigationProvider({ children }) {
     useEffect(() => {
         dispatch({
             type: actionTypes.UPDATE_CURRENT,
-            payload: { path: location.pathname, state: location.state }
+            payload: { 
+                path: location.pathname, 
+                state: location.state,
+                isGoingBack: isGoingBackRef.current
+            }
         });
     }, [location.pathname, location.state]);
 
@@ -308,8 +321,22 @@ export function NavigationProvider({ children }) {
             while (targetIndex >= 0) {
                 const previousEntry = state.history[targetIndex];
                 if (previousEntry && previousEntry.path) {
+                    console.log('[Navigation] goBack - restoring state:', {
+                        path: previousEntry.path,
+                        state: previousEntry.state
+                    });
+                    
+                    // Marca que estamos voltando
+                    isGoingBackRef.current = true;
+                    
                     dispatch({ type: actionTypes.POP });
                     navigate(previousEntry.path, { state: previousEntry.state });
+                    
+                    // Reseta a flag após um curto delay
+                    setTimeout(() => {
+                        isGoingBackRef.current = false;
+                    }, 100);
+                    
                     return true;
                 }
                 targetIndex--;
