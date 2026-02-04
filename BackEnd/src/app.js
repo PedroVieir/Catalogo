@@ -66,6 +66,8 @@ const app = express();
 app.set('trust proxy', true);
 
 // Aplicar Helmet para headers de segurança
+// CSP permite requisições fetch do frontend (ALLOWED_FRONTEND_URL)
+const frontendUrl = process.env.ALLOWED_FRONTEND_URL || 'https://abr-catalogo.vercel.app';
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -73,6 +75,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", frontendUrl],  // Permite requisições fetch do frontend
     },
   },
   hsts: {
